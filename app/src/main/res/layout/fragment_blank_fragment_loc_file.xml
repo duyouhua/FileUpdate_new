@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bind_bg"
+    tools:context="com.leng.fileupdate_new.moudle.BlankFragmentLocFile">
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_above="@+id/default_bottom_locfile_id"
+        android:layout_height="match_parent">
+        <ListView
+            android:id="@+id/listview_locfile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            />
+    </RelativeLayout>
+
+    <include
+
+
+        android:id="@+id/shouKONG"
+
+        layout="@layout/kongbaibuju" />
+    <include
+        android:id="@+id/default_bottom_locfile_id"
+        layout="@layout/default_bottom_locfile"/>
+
+
+</RelativeLayout>

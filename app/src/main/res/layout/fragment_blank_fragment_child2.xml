@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.leng.fileupdate_new.moudle.BlankFragmentChild2">
+
+    <RelativeLayout
+        android:id="@+id/child2Relative_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/child2_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:id="@+id/child2Relative_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/kongbaibuju" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

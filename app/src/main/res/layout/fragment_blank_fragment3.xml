@@ -1,0 +1,389 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bind_bg"
+    tools:context="com.leng.fileupdate_new.moudle.BlankFragment3">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/shezhimoren"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:text="设置默认目录"
+        android:textColor="#000" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_1dp"
+        android:layout_below="@+id/shezhimoren"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:background="#ccc" />
+
+    <LinearLayout
+        android:id="@+id/setting_linear1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view1"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view1"
+            android:gravity="center_vertical">
+
+            <CheckBox
+                android:id="@+id/checkbox1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="25dp" />
+
+            <TextView
+                android:gravity="center_vertical"
+                android:id="@+id/setting_path_1"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:paddingLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@+id/setting_btn1"
+                android:layout_toRightOf="@+id/checkbox1"
+                android:hint="请选择目录"
+                android:background="@drawable/edit_normal"
+                />
+
+            <Button
+
+                android:text="浏览"
+                android:id="@+id/setting_btn1"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="10dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view2"
+            android:gravity="center_vertical">
+
+            <CheckBox
+                android:id="@+id/checkbox2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="25dp" />
+
+            <TextView
+                android:gravity="center_vertical"
+                android:id="@+id/setting_path_2"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:paddingLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@+id/setting_btn2"
+                android:layout_toRightOf="@+id/checkbox2"
+                android:hint="请选择目录"
+                android:background="@drawable/edit_normal" />
+
+            <Button
+                android:id="@+id/setting_btn2"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="浏览"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="10dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view4"
+            android:gravity="center_vertical">
+
+            <CheckBox
+                android:id="@+id/checkbox3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="25dp" />
+
+            <TextView
+                android:gravity="center_vertical"
+                android:id="@+id/setting_path_3"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:paddingLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@+id/setting_btn3"
+                android:layout_toRightOf="@+id/checkbox3"
+                android:hint="请选择目录"
+                android:background="@drawable/edit_normal"/>
+
+            <Button
+                android:id="@+id/setting_btn3"
+                android:text="浏览"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="10dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view1"
+            android:gravity="center_vertical">
+
+            <CheckBox
+                android:id="@+id/checkbox4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="25dp" />
+
+            <TextView
+                android:gravity="center_vertical"
+                android:id="@+id/setting_path_4"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:paddingLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@+id/setting_btn4"
+                android:layout_toRightOf="@+id/checkbox4"
+                android:hint="请选择目录"
+                android:background="@drawable/edit_normal" />
+
+            <Button
+                android:id="@+id/setting_btn4"
+                android:text="浏览"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="10dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view5"
+            android:gravity="center_vertical">
+
+            <CheckBox
+                android:id="@+id/checkbox5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="25dp" />
+
+            <TextView
+                android:gravity="center_vertical"
+                android:id="@+id/setting_path_5"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@+id/setting_btn5"
+                android:layout_toRightOf="@+id/checkbox5"
+                android:hint="请选择目录"
+                android:paddingLeft="10dp"
+                android:background="@drawable/edit_normal"/>
+
+            <Button
+                android:id="@+id/setting_btn5"
+                android:text="浏览"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="10dp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_below="@+id/setting_linear1"
+        android:id="@+id/shezhimoren2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:text="选择自动上传使用的网络环境"
+        android:textColor="#000" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_1dp"
+        android:layout_below="@+id/shezhimoren2"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+
+        android:background="#ccc" />
+
+     <RelativeLayout
+         android:id="@+id/setting_relative_mobnet"
+         android:layout_below="@+id/view2"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content">
+         <TextView
+             android:paddingLeft="30dp"
+             android:textColor="#000"
+             android:gravity="center_vertical"
+             android:text="移动网络"
+             android:layout_width="match_parent"
+             android:layout_height="50dp" />
+         <CheckBox
+             android:layout_marginRight="35dp"
+             android:layout_centerVertical="true"
+             android:layout_alignParentRight="true"
+             android:id="@+id/checkbox6"
+             android:clickable="false"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content" />
+     </RelativeLayout>
+    <View
+        android:id="@+id/view3"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_1dp"
+        android:layout_below="@+id/setting_relative_mobnet"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:background="#ccc" />
+
+    <RelativeLayout
+        android:id="@+id/setting_relative_wifinet"
+        android:layout_below="@+id/view3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:paddingLeft="30dp"
+            android:textColor="#000"
+            android:gravity="center_vertical"
+            android:text="WIFI"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+        <CheckBox
+            android:clickable="false"
+            android:layout_marginRight="35dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:id="@+id/checkbox7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_below="@+id/setting_relative_wifinet"
+        android:id="@+id/shezhimoren3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:text="上传文件配置"
+        android:textColor="#000" />
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_1dp"
+        android:layout_below="@+id/shezhimoren3"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:background="#ccc" />
+
+
+    <TextView
+        android:layout_below="@+id/view4"
+        android:id="@+id/shezhimoren_yesorno"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:textSize="16sp"
+        android:text="上传完成后是否删除源文件"
+        android:textColor="#000" />
+    <TextView
+        android:layout_below="@+id/shezhimoren_yesorno"
+        android:id="@+id/shezhimoren5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:text="ip设置"
+        android:textColor="#000" />
+    <View
+        android:id="@+id/view5"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_1dp"
+        android:layout_below="@+id/shezhimoren5"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:background="#ccc" />
+    <TextView
+        android:id="@+id/setting_serverip_btn"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:textSize="16sp"
+        android:textColor="#000"
+        android:text="Server IP设置"
+        android:layout_below="@+id/view5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <View
+
+        android:id="@+id/view6"
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:layout_below="@+id/setting_serverip_btn"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:background="#ccc" />
+    <TextView
+        android:id="@+id/setting_changepwd_btn"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:textSize="16sp"
+        android:textColor="#000"
+        android:text="更改密码"
+        android:layout_below="@+id/view6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+    </ScrollView>
+
+
+</RelativeLayout>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:id="@+id/dirRl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:background="@drawable/fileexplorer_item_bg"
+        android:padding="@dimen/view_10dp"
+        >
+
+        <CheckBox
+            android:focusable="false"
+            android:clickable="false"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/dir_list_Check"
+            style="@style/CustomCheckBoxTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_marginLeft="@dimen/view_10dp"
+            android:layout_toRightOf="@+id/dir_list_Check"
+            android:id="@+id/icon_image"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/bxfile_file_dir" />
+
+        <TextView
+            android:id="@+id/icon_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/view_10dp"
+            android:layout_toRightOf="@id/icon_image"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_12sp" />
+
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

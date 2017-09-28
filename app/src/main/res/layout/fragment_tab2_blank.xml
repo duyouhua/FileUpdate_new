@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="500dp"
+    android:background="@color/bind_bg"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:id="@+id/contttttttt"
+        android:layout_width="match_parent"
+        android:layout_height="399.5dp">
+        <ListView
+            android:background="@null"
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+
+    <View
+        android:layout_above="@+id/xxxxxxx"
+        android:id="@+id/asdasdasdas"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#000" />
+
+    <LinearLayout
+        android:background="#fff"
+        android:layout_below="@+id/contttttttt"
+        android:id="@+id/xxxxxxx"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+
+            android:id="@+id/moove_queren"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+
+
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="@dimen/view_50dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:drawableTop="@drawable/ic_tab_btn_comfim"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="确定" />
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="#000" />
+        <TextView
+            android:id="@+id/moove_quxaio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:drawableTop="@drawable/ic_tab_btn_chancl"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="取消" />
+    </LinearLayout>
+</RelativeLayout>

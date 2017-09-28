@@ -1,0 +1,318 @@
+package com.leng.fileupdate_new.moudle;
+
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.leng.fileupdate_new.MainActivity;
+import com.leng.fileupdate_new.R;
+import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
+
+
+public class BlankFragment3 extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+    private String TAG = "BlankFragment3";
+    private View view;
+    private Button mSettingBtn1;
+    private Button mSettingBtn2;
+    private Button mSettingBtn3;
+    private Button mSettingBtn4;
+    private Button mSettingBtn5;
+    /**
+     * 上传完成后是否删除源文件
+     */
+    private TextView mShezhimorenYesorno;
+    /**
+     * Server IP设置
+     */
+    private TextView mSettingServeripBtn;
+    /**
+     * 更改密码
+     */
+    private TextView mSettingChangepwdBtn;
+    private CheckBox mCheckbox1,mCheckbox2,mCheckbox3,mCheckbox4,mCheckbox5,mCheckbox6,mCheckbox7;
+
+    private Context mContext;
+    private RelativeLayout mSettingRelativeMobnet;
+    private RelativeLayout mSettingRelativeWifinet;
+    private boolean check6boolean = true;
+    private boolean check7boolean = true;
+    private int startType1, startType2, startType3, startType4, startType5;
+    private MainActivity mActivity;
+
+    public Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+           String resultPath= msg.obj.toString();
+            switch (msg.what) {
+                case 1:
+                    mSettingPath1.setText(resultPath+"");
+                    SharedPreferencesUtils.setParam(mContext,"mSettingPath1",resultPath);
+                    break;
+                case 2:
+                    mSettingPath2.setText(resultPath+"");
+                    SharedPreferencesUtils.setParam(mContext,"mSettingPath2",resultPath);
+                    break;
+                case 3:
+                    mSettingPath3.setText(resultPath+"");
+                    SharedPreferencesUtils.setParam(mContext,"mSettingPath3",resultPath);
+                    break;
+                case 4:
+                    mSettingPath4.setText(resultPath+"");
+                    SharedPreferencesUtils.setParam(mContext,"mSettingPath4",resultPath);
+                    break;
+                case 5:
+                    mSettingPath5.setText(resultPath+"");
+                    SharedPreferencesUtils.setParam(mContext,"mSettingPath5",resultPath);
+                    break;
+                default:
+                    Log.i(TAG, "BlankFragment3 mHandler default");
+                    break;
+            }
+        }
+    };
+    private TextView mSettingPath1,mSettingPath2,mSettingPath3,mSettingPath4,mSettingPath5;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mActivity = (MainActivity) activity;
+        mActivity.setHandler3(mHandler);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        view = inflater.inflate(R.layout.fragment_blank_fragment3, container, false);
+        mContext = getActivity();
+        initView(view);
+        return view;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume");
+        initSetPathTxt();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause");
+    }
+    private void initSetPathTxt(){
+        mSettingPath1.setText((String) SharedPreferencesUtils.getParam(mContext,"mSettingPath1",""));
+        mSettingPath2.setText((String) SharedPreferencesUtils.getParam(mContext,"mSettingPath2",""));
+        mSettingPath3.setText((String) SharedPreferencesUtils.getParam(mContext,"mSettingPath3",""));
+        mSettingPath4.setText((String) SharedPreferencesUtils.getParam(mContext,"mSettingPath4",""));
+        mSettingPath5.setText((String) SharedPreferencesUtils.getParam(mContext,"mSettingPath5",""));
+        mCheckbox1.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext,"checkbox1",false));
+        mCheckbox2.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext,"checkbox2",false));
+        mCheckbox3.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext,"checkbox3",false));
+        mCheckbox4.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext,"checkbox4",false));
+        mCheckbox5.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext,"checkbox5",false));
+        mCheckbox6.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext,"checkbox6",false));
+        mCheckbox7.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext,"checkbox7",false));
+    }
+
+    private void initView(View view) {
+
+        mSettingBtn1 = (Button) view.findViewById(R.id.setting_btn1);
+        mSettingBtn1.setOnClickListener(this);
+        mSettingBtn2 = (Button) view.findViewById(R.id.setting_btn2);
+        mSettingBtn2.setOnClickListener(this);
+        mSettingBtn3 = (Button) view.findViewById(R.id.setting_btn3);
+        mSettingBtn3.setOnClickListener(this);
+        mSettingBtn4 = (Button) view.findViewById(R.id.setting_btn4);
+        mSettingBtn4.setOnClickListener(this);
+        mSettingBtn5 = (Button) view.findViewById(R.id.setting_btn5);
+        mSettingBtn5.setOnClickListener(this);
+        mShezhimorenYesorno = (TextView) view.findViewById(R.id.shezhimoren_yesorno);
+        mShezhimorenYesorno.setOnClickListener(this);
+        mSettingServeripBtn = (TextView) view.findViewById(R.id.setting_serverip_btn);
+        mSettingServeripBtn.setOnClickListener(this);
+        mSettingChangepwdBtn = (TextView) view.findViewById(R.id.setting_changepwd_btn);
+        mSettingChangepwdBtn.setOnClickListener(this);
+
+        mCheckbox1 = (CheckBox) view.findViewById(R.id.checkbox1);
+        mCheckbox2 = (CheckBox) view.findViewById(R.id.checkbox2);
+        mCheckbox3 = (CheckBox) view.findViewById(R.id.checkbox3);
+        mCheckbox4 = (CheckBox) view.findViewById(R.id.checkbox4);
+        mCheckbox5 = (CheckBox) view.findViewById(R.id.checkbox5);
+        mCheckbox6 = (CheckBox) view.findViewById(R.id.checkbox6);
+        mCheckbox7 = (CheckBox) view.findViewById(R.id.checkbox7);
+        mCheckbox1.setOnCheckedChangeListener(this);
+        mCheckbox2.setOnCheckedChangeListener(this);
+        mCheckbox3.setOnCheckedChangeListener(this);
+        mCheckbox4.setOnCheckedChangeListener(this);
+        mCheckbox5.setOnCheckedChangeListener(this);
+        mCheckbox6.setOnCheckedChangeListener(this);
+        mCheckbox7.setOnCheckedChangeListener(this);
+        mSettingRelativeMobnet = (RelativeLayout) view.findViewById(R.id.setting_relative_mobnet);
+        mSettingRelativeMobnet.setOnClickListener(this);
+        mSettingRelativeWifinet = (RelativeLayout) view.findViewById(R.id.setting_relative_wifinet);
+        mSettingRelativeWifinet.setOnClickListener(this);
+        mSettingPath1 = (TextView) view.findViewById(R.id.setting_path_1);
+        mSettingPath2 = (TextView) view.findViewById(R.id.setting_path_2);
+        mSettingPath3 = (TextView) view.findViewById(R.id.setting_path_3);
+        mSettingPath4 = (TextView) view.findViewById(R.id.setting_path_4);
+        mSettingPath5 = (TextView) view.findViewById(R.id.setting_path_5);
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        Intent i1, i2, i3, i4, i5;
+        switch (v.getId()) {
+            case R.id.setting_btn1:
+                i1 = new Intent(mContext, LiuLanActivity.class);
+                startType1 = 1;
+                i1.putExtra("startType", startType1);
+                startActivityForResult(i1, 1);
+                break;
+            case R.id.setting_btn2:
+                i2 = new Intent(mContext, LiuLanActivity.class);
+                startType2 = 2;
+                i2.putExtra("startType", startType2);
+                startActivityForResult(i2, 2);
+                break;
+            case R.id.setting_btn3:
+                i3 = new Intent(mContext, LiuLanActivity.class);
+                startType3 = 3;
+                i3.putExtra("startType", startType3);
+                startActivityForResult(i3, 3);
+                break;
+            case R.id.setting_btn4:
+                i4 = new Intent(mContext, LiuLanActivity.class);
+                startType4 = 4;
+                i4.putExtra("startType", startType4);
+                startActivityForResult(i4, 4);
+                break;
+            case R.id.setting_btn5:
+                i5 = new Intent(mContext, LiuLanActivity.class);
+                startType5 = 5;
+                i5.putExtra("startType", startType5);
+                startActivityForResult(i5, 5);
+                break;
+            case R.id.shezhimoren_yesorno:
+                Toast.makeText(mContext, "1", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.setting_serverip_btn:
+                break;
+            case R.id.setting_changepwd_btn:
+                break;
+            case R.id.checkbox2:
+                break;
+            case R.id.setting_relative_mobnet:
+                relativeCheckStatus(mCheckbox6, check6boolean);
+                break;
+            case R.id.setting_relative_wifinet:
+                relativeCheckStatus(mCheckbox7, check7boolean);
+                break;
+        }
+    }
+
+
+    private void relativeCheckStatus(View v, boolean b) {
+        switch (v.getId()) {
+            case R.id.checkbox6:
+                if (b) {
+                    mCheckbox6.setChecked(b);
+                    check6boolean = false;
+                    SharedPreferencesUtils.setParam(mContext, "checkbox6", true);
+                } else {
+                    mCheckbox6.setChecked(b);
+                    check6boolean = true;
+                    SharedPreferencesUtils.setParam(mContext, "checkbox6", false);
+                }
+                break;
+            case R.id.checkbox7:
+                if (b) {
+                    mCheckbox7.setChecked(b);
+                    check7boolean = false;
+                    SharedPreferencesUtils.setParam(mContext, "checkbox7", true);
+                } else {
+                    mCheckbox7.setChecked(b);
+                    check7boolean = true;
+                    SharedPreferencesUtils.setParam(mContext, "checkbox7", false);
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        switch (compoundButton.getId()) {
+            case R.id.checkbox1:
+                saveCheckStatus(mCheckbox1, b);
+                break;
+            case R.id.checkbox2:
+                saveCheckStatus(mCheckbox2, b);
+                break;
+            case R.id.checkbox3:
+                saveCheckStatus(mCheckbox3, b);
+                break;
+            case R.id.checkbox4:
+                saveCheckStatus(mCheckbox4, b);
+                break;
+            case R.id.checkbox5:
+                saveCheckStatus(mCheckbox5, b);
+                break;
+
+        }
+    }
+
+    private void saveCheckStatus(View v, boolean b) {
+        switch (v.getId()) {
+            case R.id.checkbox1:
+                if (b)
+                    SharedPreferencesUtils.setParam(mContext, "checkbox1", true);
+                else
+                    SharedPreferencesUtils.setParam(mContext, "checkbox1", false);
+                break;
+            case R.id.checkbox2:
+                if (b)
+                    SharedPreferencesUtils.setParam(mContext, "checkbox2", true);
+                else
+                    SharedPreferencesUtils.setParam(mContext, "checkbox2", false);
+                break;
+            case R.id.checkbox3:
+                if (b)
+                    SharedPreferencesUtils.setParam(mContext, "checkbox3", true);
+                else
+                    SharedPreferencesUtils.setParam(mContext, "checkbox3", false);
+                break;
+            case R.id.checkbox4:
+                if (b)
+                    SharedPreferencesUtils.setParam(mContext, "checkbox4", true);
+                else
+                    SharedPreferencesUtils.setParam(mContext, "checkbox4", false);
+                break;
+            case R.id.checkbox5:
+                if (b)
+                    SharedPreferencesUtils.setParam(mContext, "checkbox5", true);
+                else
+                    SharedPreferencesUtils.setParam(mContext, "checkbox5", false);
+                break;
+
+        }
+    }
+}

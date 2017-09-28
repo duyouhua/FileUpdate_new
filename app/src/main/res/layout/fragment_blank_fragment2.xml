@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.leng.fileupdate_new.moudle.BlankFragment2">
+
+<LinearLayout
+
+    android:layout_width="match_parent"
+    android:layout_height="50dp">
+    <Button
+        android:text="@string/fileunupdate"
+        android:id="@+id/btn_wei"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent" />
+    <View
+        android:background="#Ccc"
+        android:layout_width="0.5dp"
+        android:layout_height="match_parent"/>
+    <Button
+        android:text="@string/fileupdateing"
+        android:id="@+id/btn_shang"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent" />
+    <View
+        android:background="#Ccc"
+        android:layout_width="0.5dp"
+        android:layout_height="match_parent"/>
+    <Button
+        android:text="@string/fileupdated"
+        android:id="@+id/btn_yi"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent" />
+</LinearLayout>
+<View
+    android:background="#ccc"
+    android:layout_width="match_parent"
+    android:layout_height="0.5dp"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/content_container2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </LinearLayout>
+
+</LinearLayout>

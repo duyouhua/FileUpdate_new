@@ -1,0 +1,27 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bind_bg"
+    android:orientation="vertical"
+    tools:context="com.leng.fileupdate_new.moudle.BlankFragmentChild1">
+
+    <RelativeLayout
+        android:id="@+id/rLISTVIEW"
+        android:layout_above="@+id/default_bottom_is"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+
+    <include
+        android:id="@+id/shouKONG"
+        layout="@layout/kongbaibuju" />
+    <include layout="@layout/default_bottom"
+        android:id="@+id/default_bottom_is"/>
+</RelativeLayout>
