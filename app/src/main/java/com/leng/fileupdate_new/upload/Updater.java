@@ -6,11 +6,16 @@
  * @date 2015-5-6 下午4:38:05
  * @version V1.0
  */
-package com.leng.fileupdate_new.uploadUtil;
+package com.leng.fileupdate_new.upload;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+
+
+import com.leng.fileupdate_new.upload.uploadUtil.PreferenceUtil;
+import com.leng.fileupdate_new.upload.uploadUtil.httpUtils;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -58,7 +63,7 @@ public class Updater {
 
     public FTPClient ftpClient = new FTPClient();
     private String LOCAL_CHARSET = "GBK";
-    private TestUpload bean;
+    private TestBean bean;
     private Context context;
     // FTP协议里面，规定文件名编码为iso-8859-1
     private String SERVER_CHARSET = "ISO-8859-1";
@@ -70,8 +75,8 @@ public class Updater {
     private int FtpHostPort = 21; // 端口
     private String FtpRmtPath = "/web/KuaiChuan/web/Upload/"; // 服务器端路径
 
-    public Updater(Context mContext, TestUpload bean) {
-
+    public Updater(Context mContext, TestBean bean, Handler mHandler) {
+        this.mHandler = mHandler;
         this.bean = bean;
         this.context = mContext;
         FtpHostAdress = "218.246.35.197";
@@ -132,18 +137,17 @@ public class Updater {
 //	}
 
     // 暂停上传
-//    public void pause() {
-////        pause();
+    public void pause() {
 //        bean.setUpLoadStatus("2");
-//        try {
-//            disconnect();
-//        } catch (Exception e) { // IOException
-//            // TODO Auto-generated catch block
-//            System.out.println("暂停失败");
-//            e.printStackTrace();
-//
-//        }
-//    }
+        try {
+            disconnect();
+        } catch (Exception e) { // IOException
+            // TODO Auto-generated catch block
+            System.out.println("暂停失败");
+            e.printStackTrace();
+
+        }
+    }
 
     /**
      * @return
@@ -206,8 +210,9 @@ public class Updater {
     public UploadStatus upload() throws IOException {
         UploadStatus result;
         // 对远程目录的处理
-        String localFilePath = bean.getFilePath();
-        String remoteFileName= bean.getFileNameFromFtp() ;
+        String localFilePath = bean.getLocfilepath();
+        String remoteFileName= bean.getRemotefilepath() ;
+        Log.i("QWEQWE",""+localFilePath+"====="+remoteFileName);
         //创建远程文件
         String remoteFilePath = "/Audios/"+remoteFileName;
         CreateDirecroty(remoteFilePath, ftpClient);
@@ -270,14 +275,14 @@ public class Updater {
                 try {
                     Thread.sleep(3000);
                     if (mHttpUtils.getHttpResult() == 1) {
-                       removeFileName(localFilePath);
+                        removeFileName(localFilePath);
                         break;
                     } else if (mHttpUtils.getHttpResult() == 0) {
                         httpNums++;
                     } else {
                         Thread.sleep(3000);
                         if (mHttpUtils.getHttpResult() == 1) {
-                        removeFileName(localFilePath);
+                             removeFileName(localFilePath);
                             break;
                         }
                     }
@@ -291,6 +296,8 @@ public class Updater {
 
         return result;
     }
+
+
     public static void removeFileName(String oldFile) {
         PreferenceUtil mPrefManager = PreferenceUtil.getInstance(null, null);
         if (mPrefManager != null) {
@@ -354,25 +361,19 @@ public class Updater {
     public void sendMsg(int process) {
 
 
-//        // 使用下面的语句 好像是可以实时更新 上传状态的 true or false
-//        if ((process > 0) && (process < 100)) {
-//            mBxFile.setfUpdatingStatus(true);
-//        } else {
-//            mBxFile.setfUpdatingStatus(false);
-//        }
-//        synchronized (mHandler) {
-//            bean.setUploadProgress(process);
-//            if (99 < process) {
-//                bean.setUpLoadStatus("3");
-//            }else{
-//                bean.setUpLoadStatus("1");
-//            }
-//            Message message = new Message();
-//            message.what = 100;
-//            message.obj = bean;
-//            mHandler.sendMessage(message);
-//
-//        }
+        synchronized (mHandler) {
+            bean.setUploadProgress(process);
+            if (99 < process) {
+                bean.setUpLoadStatus("3");
+            }else{
+                bean.setUpLoadStatus("1");
+            }
+            Message message = new Message();
+            message.what = 100;
+            message.obj = bean;
+            mHandler.sendMessage(message);
+
+        }
 
     }
 
@@ -409,25 +410,25 @@ public class Updater {
             out.write(bytes, 0, c);
             localreadbytes += c;
 
-//            if (step != 0) {
-//                if ((localreadbytes / step) != process&&!bean.getUpLoadStatus().equals("2")) {
-//                    process = localreadbytes / step;
-//                    // Log.d(TAG, "localFile " + localFile.getName()
-//                    // + " , update process :" + process);
-//                    sendMsg((int) process);
-////					// 更新数据库信息
-////					mDbFile.updataInfos(mBxFile.getFileProgress(),
-////							BXFile.FileStateSwitch(mBxFile.getFileState()),
-////							mBxFile.getFileName(), mBxFile.getFilePath());
-//                }
-//            } else {
+            if (step != 0) {
+                if ((localreadbytes / step) != process&&!bean.getUpLoadStatus().equals("2")) {
+                    process = localreadbytes / step;
+                    // Log.d(TAG, "localFile " + localFile.getName()
+                    // + " , update process :" + process);
+                    sendMsg((int) process);
+//					// 更新数据库信息
+//					mDbFile.updataInfos(mBxFile.getFileProgress(),
+//							BXFile.FileStateSwitch(mBxFile.getFileState()),
+//							mBxFile.getFileName(), mBxFile.getFilePath());
+                }
+            } else {
 //				sendMsg(100);
 //				// 更新数据库信息
 //				mDbFile.updataInfos(mBxFile.getFileProgress(),
 //						BXFile.FileStateSwitch(mBxFile.getFileState()),
 //						mBxFile.getFileName(), mBxFile.getFilePath());
             }
-//        }
+        }
 
         out.flush();
         raf.close();

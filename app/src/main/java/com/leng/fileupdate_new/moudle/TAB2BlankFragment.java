@@ -28,7 +28,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class TAB2BlankFragment extends ListFragment implements View.OnClickListener {
-    private static final String ROOT_PATH = "/";
+    private static final String ROOT_PATH = "/mnt/";
     //存储文件名称
     private ArrayList<String> mFileName = null;
     //存储文件路径

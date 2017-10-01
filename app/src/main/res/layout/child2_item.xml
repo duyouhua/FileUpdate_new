@@ -1,49 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/dirRl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:background="@drawable/fileexplorer_item_bg"
-        android:padding="@dimen/view_10dp"
-        >
+        android:gravity="center_vertical"
+        android:padding="@dimen/view_10dp">
 
         <CheckBox
-            android:focusable="false"
-            android:clickable="false"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
             android:id="@+id/dir_list_Check"
             style="@style/CustomCheckBoxTheme"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:clickable="false"
+            android:focusable="false" />
 
         <ImageView
-            android:layout_marginLeft="@dimen/view_10dp"
-            android:layout_toRightOf="@+id/dir_list_Check"
             android:id="@+id/icon_image"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/view_10dp"
+            android:layout_toRightOf="@+id/dir_list_Check"
             android:src="@drawable/bxfile_file_dir" />
 
         <TextView
+            android:gravity="start"
             android:id="@+id/icon_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_height="20dp"
             android:layout_marginLeft="@dimen/view_10dp"
             android:layout_toRightOf="@id/icon_image"
             android:textColor="@color/black"
             android:textSize="@dimen/text_12sp" />
 
+        <RelativeLayout
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/icon_image"
+            android:layout_below="@+id/icon_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <com.leng.fileupdate_new.utils.HorizontalProgressBarWithNumber
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:progress="10"
+                android:id="@+id/hpr"
+                app:progress_text_color="#ff2903FC"
+                app:progress_unreached_color="#ffBCB4E8" />
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:layout_alignParentRight="true"
+            android:focusableInTouchMode="false"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/pause_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:text="@string/pause"
+                android:textSize="@dimen/text_14sp" />
+
+            <Button
+                android:id="@+id/start_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:text="@string/start"
+                android:textSize="@dimen/text_14sp"
+                android:visibility="gone" />
+        </LinearLayout>
     </RelativeLayout>
-
 
 
 </RelativeLayout>

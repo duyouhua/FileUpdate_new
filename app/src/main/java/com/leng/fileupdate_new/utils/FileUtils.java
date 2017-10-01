@@ -567,8 +567,8 @@ public class FileUtils {
                     }
                 }
             }
-        }else {
-            Log.i("QWEQWE","没有隐藏的文件夹");
+        } else {
+            Log.i("QWEQWE", "没有隐藏的文件夹");
         }
     }
 
@@ -597,11 +597,20 @@ public class FileUtils {
 //    }
 
     /**
+     * 转换LONG
+     */
+    public static Long longPressLong(String path) {
+
+        return Long.parseLong(String.valueOf(path.hashCode()));
+    }
+
+    /**
      * 判断照片是否被旋转
+     *
      * @param path
      * @return
      */
-    public  static boolean isPictureIsRotated(String path) {
+    public static boolean isPictureIsRotated(String path) {
         int tag = 0;
         try {
             ExifInterface exifInterface = new ExifInterface(path);
@@ -613,7 +622,9 @@ public class FileUtils {
             e.printStackTrace();
         }
         return false;
-    }  /**
+    }
+
+    /**
      * 将照片纠正
      *
      * @param bm

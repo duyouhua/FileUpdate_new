@@ -2,14 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bind_bg"
     tools:context="com.leng.fileupdate_new.moudle.BlankFragmentChild2">
 
     <RelativeLayout
+        android:layout_above="@+id/default_bottom_upding_xxxx"
         android:id="@+id/child2Relative_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ListView
+
             android:id="@+id/child2_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -20,6 +23,7 @@
 
 
     <RelativeLayout
+        android:layout_above="@+id/default_bottom_upding_xxxx"
         android:id="@+id/child2Relative_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -28,4 +32,7 @@
 
     </RelativeLayout>
 
+    <include
+        android:id="@+id/default_bottom_upding_xxxx"
+        layout="@layout/default_bottom_upding"/>
 </RelativeLayout>

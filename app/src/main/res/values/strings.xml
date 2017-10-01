@@ -107,6 +107,8 @@
     <string name="select_all">全选</string>
     <string name="desselect_all">取消全选</string>
     <string name="no_deauflt_text">没有设置默认目录</string>
+    <string name="text_chexiao">撤销</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

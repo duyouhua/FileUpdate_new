@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,14 +22,16 @@ import com.leng.fileupdate_new.contrl.FileManger;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/9/27.
  */
 
-public class Child2Adapter extends BaseAdapter{
+public class Child2Adapter extends BaseAdapter {
     private LayoutInflater inflater;
     private Bitmap directory, file;
+    int pvaluas;
     //存储文件名称
     private ArrayList<String> names = null;
     //存储文件路径
@@ -36,13 +39,14 @@ public class Child2Adapter extends BaseAdapter{
     private Context mContext;
     // 用来控制CheckBox的选中状况
     private static HashMap<Integer, Boolean> isSelectedchild2;
-//    private static HashMap<String, String> mapFamt;
-//    private static HashMap<String, String> mapType;
+    private List<View> viewList;
+
 
     //参数初始化
-    public Child2Adapter(Context context, ArrayList<String> na, ArrayList<String> pa) {
+    public Child2Adapter(Context context, ArrayList<String> na, ArrayList<String> pa ) {
         names = na;
         paths = pa;
+        viewList = new ArrayList<>();
         mContext = context;
         directory = BitmapFactory.decodeResource(context.getResources(), R.mipmap.wenjianjia);
 //        file = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_weishibie);
@@ -60,7 +64,7 @@ public class Child2Adapter extends BaseAdapter{
     private void initDate() {
         for (int i = 0; i < paths.size(); i++) {
 
-            getIsSelected().put(i, false);
+            getIsSelectedChild2().put(i, false);
 //            Toast.makeText(mContext, "SDFSD", Toast.LENGTH_SHORT).show();
         }
     }
@@ -92,13 +96,14 @@ public class Child2Adapter extends BaseAdapter{
             holder = new ViewHolder();
             holder.text = (TextView) convertView.findViewById(R.id.icon_text);
             holder.image = (ImageView) convertView.findViewById(R.id.icon_image);
+            holder.button = (Button) convertView.findViewById(R.id.pause_button);
             holder.cb = (CheckBox) convertView.findViewById(R.id.dir_list_Check);
-
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        Log.i("ADADADA",paths.get(position));
+
+        Log.i("ADADADA", paths.get(position));
         File f = new File(paths.get(position));
         if (names.get(position).equals("@1")) {
             holder.text.setText("/返回跟目录");
@@ -147,8 +152,8 @@ public class Child2Adapter extends BaseAdapter{
 //                            mapFamt.put(f.getAbsolutePath(), "/Audios/");
 //                            mapType.put(f.getAbsolutePath(), "2");
                         }
-                        holder.cb.setChecked(getIsSelected().get(position));
-                        Log.i("QWEQWE", getIsSelected().get(position) + "");
+                        holder.cb.setChecked(getIsSelectedChild2().get(position));
+                        Log.i("QWEQWE", getIsSelectedChild2().get(position) + "");
                     } else {
                         Toast.makeText(mContext, "famt GESHI  KONG", Toast.LENGTH_SHORT).show();
                     }
@@ -169,6 +174,7 @@ public class Child2Adapter extends BaseAdapter{
         private TextView text;
         private ImageView image;
         private CheckBox cb;
+        private Button button;
     }
 
     private Bitmap small(Bitmap map, float num) {
@@ -187,12 +193,12 @@ public class Child2Adapter extends BaseAdapter{
         return suffix;
     }
 
-    public static HashMap<Integer, Boolean> getIsSelected() {
+    public static HashMap<Integer, Boolean> getIsSelectedChild2() {
 //        isSelected.clear();
         return isSelectedchild2;
     }
 
-    public static void setIsSelected(HashMap<Integer, Boolean> isSelected) {
+    public static void setIsSelectedChild2(HashMap<Integer, Boolean> isSelected) {
         isSelectedchild2 = isSelected;
     }
 

@@ -342,6 +342,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         }
+        else    {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(50);
+                        Message message = new Message();
+                        message.arg1 = 7536;
+                        mHandler4.sendMessage(message);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+
+        }
         Toast.makeText(this, "++" + mode, Toast.LENGTH_SHORT).show();
     }
 

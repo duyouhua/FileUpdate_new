@@ -6,7 +6,7 @@
  * @date 2015-5-13 下午5:45:40 
  * @version V1.0   
  */
-package com.leng.fileupdate_new.uploadUtil;
+package com.leng.fileupdate_new.upload.uploadUtil;
 
 import android.content.Context;
 import android.content.SharedPreferences;

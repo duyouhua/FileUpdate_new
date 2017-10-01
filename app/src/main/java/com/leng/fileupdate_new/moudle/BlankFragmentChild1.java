@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.leng.fileupdate_new.APP;
 import com.leng.fileupdate_new.Adapter.Child1Adapter;
 import com.leng.fileupdate_new.Bean.FileUser;
 import com.leng.fileupdate_new.MainActivity;
@@ -27,6 +28,7 @@ import com.leng.fileupdate_new.contrl.CallbackChild2;
 import com.leng.fileupdate_new.contrl.ContinueFTP2;
 import com.leng.fileupdate_new.contrl.FileManger;
 import com.leng.fileupdate_new.contrl.ThreadPoolProxy;
+import com.leng.fileupdate_new.greendao.gen.DaoUtils;
 import com.leng.fileupdate_new.utils.Constanxs;
 import com.leng.fileupdate_new.utils.FileUtils;
 import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
@@ -37,7 +39,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.leng.fileupdate_new.APP.getDaoInstant;
 import static com.leng.fileupdate_new.utils.Constanxs.INFO4;
 import static com.leng.fileupdate_new.utils.Constanxs.isftpconnet;
 
@@ -69,6 +70,8 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                 String a = (String) SharedPreferencesUtils.getParam(mContext, "defultpage", "null");
                 Log.i(TAG, "==================" + a);
                 showDeaufltPageFile(a);
+            } else if (msg.arg1 == 7536) { //撤销更新文件列表
+                mHandler.sendEmptyMessage(4444);
             }
             switch (msg.what) {
                 case 4444:
@@ -107,6 +110,9 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
     private ArrayList<String> mFileName = null;
     //存储文件路径
     private ArrayList<String> mFilePath = null;
+    private ArrayList<String> mFileName2 = null;
+    //存储文件路径
+    private ArrayList<String> mFilePath2 = null;
     private RelativeLayout rr;
     private RelativeLayout mRLISTVIEW;
     private Child1Adapter mAdapter;
@@ -119,14 +125,13 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
      * 判断当前选中的条目数据  用来处理删除dialog
      */
     private int checktrueNums = 0;
-    ContinueFTP2 cf;
-    CallbackChild2 cc2;
+    private ContinueFTP2 cf;
+    private CallbackChild2 cc2;
     /**
      * 记录选中的那一条
      */
 
     private ArrayList<Integer> listSelect = new ArrayList<>();
-
 
 
     @Override
@@ -246,47 +251,91 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
             mFileName.clear();
             mFilePath.clear();
         }
+        if (mFilePath2 != null && mFileName2 != null) {
+            mFileName2.clear();
+            mFilePath2.clear();
+        }
         mFileName = new ArrayList<String>();
         mFilePath = new ArrayList<String>();
+        mFileName2 = new ArrayList<String>();
+        mFilePath2 = new ArrayList<String>();
         File file = new File(path);
 
         File[] files = file.listFiles();
+        Log.i(TAG, files.length + "@@@@@@@@");
         if (files != null && files.length > 0) {
             mRLISTVIEW.setVisibility(View.VISIBLE);
             rr.setVisibility(View.GONE);
             //添加所有文件
+//            for (File f : files) {
+//                if (FileManger.getSingleton().map.containsKey(getExtension(f))) {
+//                    if (mapShangchuan.size() > 0) {
+//                        if (f.getAbsolutePath().equals(mapShangchuan.get(f.getAbsolutePath()))) {
+//
+//                        } else {
+//                            mFileName.add(f.getName());
+//                            mFilePath.add(f.getAbsolutePath());
+//                        }
+//                    } else {
+//                        mFileName.add(f.getName());
+//                        mFilePath.add(f.getAbsolutePath());
+//                    }
+//                }
+//            }
+
             for (File f : files) {
                 if (FileManger.getSingleton().map.containsKey(getExtension(f))) {
-                    if (mapShangchuan.size() > 0) {
-                        if (f.getAbsolutePath().equals(mapShangchuan.get(f.getAbsolutePath()))) {
+                    mFileName.add(f.getName());
+                    mFilePath.add(f.getAbsolutePath());
 
-                        } else {
-                            mFileName.add(f.getName());
-                            mFilePath.add(f.getAbsolutePath());
-                        }
+                    if (mFilePath.size() >=DaoUtils.FileUserDaoQuery().size()) {
+                        //更新数据库   将新文件添加进去
+                        FileUser fileUser = new FileUser();
+                        fileUser.setId(FileUtils.longPressLong(f.getName()));
+                        fileUser.setMFileTypedao("1");
+                        fileUser.setMFileNamedao(f.getName());
+                        fileUser.setMFilePathdao(f.getAbsolutePath());
+                        APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
+                        Log.i(TAG, "插入数据库==child1");
                     } else {
-                        mFileName.add(f.getName());
-                        mFilePath.add(f.getAbsolutePath());
+                        Log.i(TAG, "没有插入数据库==child1");
                     }
+
+
                 }
             }
-            Toast.makeText(mContext, "MEIFANGING   " + files.length, Toast.LENGTH_SHORT).show();
-            mAdapter = new Child1Adapter(mContext, mFileName, mFilePath);
-            mList.setAdapter(mAdapter);
+
+            if (DaoUtils.FileUserDaoQuerywhere("1") != null && DaoUtils.FileUserDaoQuerywhere("1").size() > 0) {
+
+                for (int i = 0; i < DaoUtils.FileUserDaoQuerywhere("1").size(); i++) {
+                    mFileName2.add(DaoUtils.FileUserDaoQuerywhere("1").get(i).getMFileNamedao());
+                    mFilePath2.add(DaoUtils.FileUserDaoQuerywhere("1").get(i).getMFilePathdao());
+                }
+                Toast.makeText(mContext, "MEIFANGING   " + files.length, Toast.LENGTH_SHORT).show();
+                mAdapter = new Child1Adapter(mContext, mFileName2, mFilePath2);
+                mList.setAdapter(mAdapter);
+            } else {
+                Log.i(TAG, "没有查询到类型为1的数据==child1");
+                showEmpty();
+            }
+
 
         } else {
-            mRLISTVIEW.setVisibility(View.GONE);
-            rr.setVisibility(View.VISIBLE);
-            mFileName.clear();
-            mFilePath.clear();
-            mAdapter = new Child1Adapter(mContext, mFileName, mFilePath);
-            mList.setAdapter(mAdapter);
-            setBtnSelectAllYes();
-            Toast.makeText(mContext, "显示没有文件的布局", Toast.LENGTH_SHORT).show();
+            showEmpty();
         }
         setBtnSelectAllYes();
     }
 
+    private void showEmpty() {
+        mRLISTVIEW.setVisibility(View.GONE);
+        rr.setVisibility(View.VISIBLE);
+        mFileName.clear();
+        mFilePath.clear();
+        mAdapter = new Child1Adapter(mContext, mFileName, mFilePath);
+        mList.setAdapter(mAdapter);
+        setBtnSelectAllYes();
+        Toast.makeText(mContext, "显示没有文件的布局", Toast.LENGTH_SHORT).show();
+    }
 
     private static String getExtension(final File file) {
         String suffix = "";
@@ -326,12 +375,12 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
 
     private void selectAllfile(boolean is) {
         // 遍历list的长度，将MyAdapter中的map值全部设为true
-        for (int i = 0; i < mFileName.size(); i++) {
+        for (int i = 0; i < mFileName2.size(); i++) {
             Child1Adapter.getIsSelected().put(i, is);
         }
         if (is) {
             // 数量设为list的长度
-            checkNum = mFileName.size();
+            checkNum = mFileName2.size();
         } else {
             checkNum = 0;
         }
@@ -390,23 +439,24 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                                 Log.i(TAG, "选中的文件名是" + "i==" + i + mFilePath.get(i) + "文件格式是：" + type + "服务端路径是：" + remote);
 
                                 FileUser fileUser = new FileUser();
+                                fileUser.setId(FileUtils.longPressLong(mFileName.get(i)));
+                                fileUser.setMFileTypedao("2");
                                 fileUser.setMFileNamedao(mFileName.get(i));
                                 fileUser.setMFilePathdao(mFilePath.get(i));
-                                getDaoInstant().getFileUserDao().insert(fileUser);
+                                APP.getDaoInstant().getFileUserDao().update(fileUser);
 
-                                mapShangchuan.put(mFilePath.get(i), mFilePath.get(i));
-//                                mapShangchuanNUMpath.put(i, mFilePath.get(i));
-//                                mapShangchuanNUMname.put(i, mFileName.get(i));
                                 cc2.setMsg(9876);
                                 mHandler.sendEmptyMessage(4444);
                             } else {
                                 Log.i(TAG, "类型与格式错误");
                             }
+                        }else {
+                            Log.i(TAG, "视频格式异常");
                         }
 
                     } else {
 
-//                        Log.i(TAG, "没有选中的文件");
+                        Log.i(TAG, "没有选中的文件");
                     }
 
                 }
@@ -467,6 +517,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                         if (Child1Adapter.getIsSelected().get(i)) {
                             Log.i(TAG, "删除的文件是 ：" + mFilePath.get(i));
                             FileUtils.delete(mFilePath.get(i));
+                            DaoUtils.FilUserDaoDel(mFileName.get(i));
 
                         }
                     }
@@ -518,7 +569,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
         boolean checkIS = true;
         CheckBox cb = v.findViewById(R.id.dir_list_Check);
         chcnlSels(position);
-        if (checkNum == mFileName.size()) {
+        if (checkNum == mFileName2.size()) {
             setBtnSelectAllNo();
             isSelectdAll = false;
         } else {

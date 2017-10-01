@@ -184,4 +184,19 @@
         <!-- <item name="android:backgroundDimEnabled">false</item> -->
         <!--  <item name="android:windowBackground">@null</item> --><!--除去背景色-->
     </style>
+
+
+    <declare-styleable name="HProgressBar">
+        <attr name="progress_unreached_color" format="color" />
+        <attr name="progress_reached_color" format="color" />
+        <attr name="progress_reached_bar_height" format="dimension" />
+        <attr name="progress_unreached_bar_height" format="dimension" />
+        <attr name="progress_text_size" format="dimension" />
+        <attr name="progress_text_color" format="color" />
+        <attr name="progress_text_offset" format="dimension" />
+        <attr name="progress_text_visibility" format="enum">
+            <enum name="visible" value="0" />
+            <enum name="invisible" value="1" />
+        </attr>
+    </declare-styleable>
 </resources>

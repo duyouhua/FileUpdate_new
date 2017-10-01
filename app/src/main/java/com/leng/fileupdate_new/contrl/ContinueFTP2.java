@@ -7,7 +7,8 @@ package com.leng.fileupdate_new.contrl;
 import android.content.Context;
 import android.util.Log;
 
-import com.leng.fileupdate_new.uploadUtil.httpUtils2;
+
+import com.leng.fileupdate_new.upload.uploadUtil.httpUtils2;
 
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTP;

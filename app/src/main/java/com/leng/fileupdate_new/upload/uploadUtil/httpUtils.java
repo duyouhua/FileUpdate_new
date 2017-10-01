@@ -6,7 +6,7 @@
  * @date 2015-9-28 上午8:39:09 
  * @version V1.0   
  */
-package com.leng.fileupdate_new.uploadUtil;
+package com.leng.fileupdate_new.upload.uploadUtil;
 
 import android.content.Context;
 import android.telephony.TelephonyManager;
