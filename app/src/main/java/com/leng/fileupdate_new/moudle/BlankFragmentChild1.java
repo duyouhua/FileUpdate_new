@@ -24,11 +24,14 @@ import com.leng.fileupdate_new.Adapter.Child1Adapter;
 import com.leng.fileupdate_new.Bean.FileUser;
 import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
+import com.leng.fileupdate_new.contrl.CabackPv;
 import com.leng.fileupdate_new.contrl.CallbackChild2;
 import com.leng.fileupdate_new.contrl.ContinueFTP2;
 import com.leng.fileupdate_new.contrl.FileManger;
 import com.leng.fileupdate_new.contrl.ThreadPoolProxy;
 import com.leng.fileupdate_new.greendao.gen.DaoUtils;
+import com.leng.fileupdate_new.upload.TestBean;
+import com.leng.fileupdate_new.upload.UploadFileManager;
 import com.leng.fileupdate_new.utils.Constanxs;
 import com.leng.fileupdate_new.utils.FileUtils;
 import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
@@ -132,7 +135,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
      */
 
     private ArrayList<Integer> listSelect = new ArrayList<>();
-
+    private UploadFileManager uploadFileManager;
 
     @Override
     public void onAttach(Activity activity) {
@@ -170,6 +173,8 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
     }
 
     private void initView(View view) {
+
+        uploadFileManager = new UploadFileManager(mContext);
         rr = view.findViewById(R.id.shouKONG);
 //        rr = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.kongbaibuju, null);
         mList = view.findViewById(android.R.id.list);
@@ -288,7 +293,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                     mFileName.add(f.getName());
                     mFilePath.add(f.getAbsolutePath());
 
-                    if (mFilePath.size() >=DaoUtils.FileUserDaoQuery().size()) {
+                    if (mFilePath.size() >= DaoUtils.FileUserDaoQuery().size()) {
                         //更新数据库   将新文件添加进去
                         FileUser fileUser = new FileUser();
                         fileUser.setId(FileUtils.longPressLong(f.getName()));
@@ -434,7 +439,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                                 type = "3";
                             }
                             if (type != null) {
-                                String remote = famt + "2bgz12yp0_0" + mFileName.get(i);
+                                String remote = "2bgz12yp0_0" + mFileName.get(i);
 //                                startUpdataFile(mFilePath.get(i), remote, type);
                                 Log.i(TAG, "选中的文件名是" + "i==" + i + mFilePath.get(i) + "文件格式是：" + type + "服务端路径是：" + remote);
 
@@ -445,12 +450,19 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                                 fileUser.setMFilePathdao(mFilePath.get(i));
                                 APP.getDaoInstant().getFileUserDao().update(fileUser);
 
+
+                                TestBean testBean = new TestBean();
+                                testBean.setLocfilepath(mFilePath.get(i));
+                                testBean.setRemotefilepath(remote);
+                                testBean.setCrateFileType(famt);
+                                uploadFileManager.startUpLoad(testBean);
+                                Log.i(TAG, "开始上传");
                                 cc2.setMsg(9876);
                                 mHandler.sendEmptyMessage(4444);
                             } else {
                                 Log.i(TAG, "类型与格式错误");
                             }
-                        }else {
+                        } else {
                             Log.i(TAG, "视频格式异常");
                         }
 
@@ -587,6 +599,8 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
             return false;
         }
     };
+
+
 //http://blog.csdn.net/jdsjlzx/article/details/7318659
 
 }

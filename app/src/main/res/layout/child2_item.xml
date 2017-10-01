@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.leng.fileupdate_new.utils.HorizontalProgressBarWithNumber
+            <com.leng.fileupdate_new.upload.uploadUtil.HProgressBar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"

@@ -69,28 +69,14 @@ public class httpUtils {
 //
 				String baseURL= "http://kc.xun365.net/Manager/CommitFileInfo";
 //				//要是没有保存的话就使用软件默认的
-//				if (databaseAddress.equals("")) {
-//					 baseURL = "http://kc.xun365.net/Manager/CommitFileInfo";
-//				}else { //要是有保存的话就使用保存好的
-//					if (databaseAddress.contains(":")) {
-//						 baseURL="http://"+databaseAddress+"/Manager/CommitFileInfo";
-//					}else {
-//						 baseURL="http://"+databaseAddress+":"+databasePort+"/Manager/CommitFileInfo";
-//					}
-//
-//				}
-//				
-//				
-//				String baseURL = "http://220.178.173.140:8050/Manager/CommitFileInfo"; //示例   
-//				String baseURL = "http://kc.xun365.net/Manager/CommitFileInfo";  //服务器IP地址
-				
+
 				System.out.println("databaseIPandPort=="+baseURL);
 				String url = baseURL + "?imei=" + imei + "&regCode=" + regCode
-						+ "&fileType=" + "2" + "&localFileName="
+						+ "&fileType=" + type + "&localFileName="
 						+ fileName + "&fileName=" + localFileName;
 				url = url.replaceAll(" ", "%20");
 				
-				Log.d("xiaoming", "url is " + url);
+				Log.i("xiaoming", "url is " + url);
 				HttpGet httpGet = null;
 				HttpClient httpClient = null;
 /*				try {

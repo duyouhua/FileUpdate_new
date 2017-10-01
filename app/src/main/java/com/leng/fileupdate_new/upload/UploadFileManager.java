@@ -23,7 +23,7 @@ public class UploadFileManager {
     private static ExecutorService mUploadFixedThreadPool;
     public Map<String, Updater> MyUpdaters = new HashMap<String, Updater>();//上传文件路径和上传器的映射
 
-    public UploadFileManager(Context context, Handler mHandler) {
+    public UploadFileManager(Context context ) {
         this.mHandler = mHandler;
         this.context = context;
         if (null == mUploadFixedThreadPool) {
@@ -62,9 +62,7 @@ public class UploadFileManager {
             mUpdater = new Updater(context, bean,mHandler);
             MyUpdaters.put(bean.getLocfilepath(), mUpdater);
         }
-//        if (mUpdater.isupdating()) {
-//            return;
-//        }
+
 
         execute(mUpdater);
     }

@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.leng.fileupdate_new.contrl.CabackPv;
 import com.leng.fileupdate_new.contrl.CallbackChild;
 import com.leng.fileupdate_new.contrl.CallbackChild2;
 import com.leng.fileupdate_new.contrl.CallbackLocFiel;
@@ -29,7 +30,7 @@ import static com.leng.fileupdate_new.utils.Constanxs.INFO1;
 import static com.leng.fileupdate_new.utils.Constanxs.INFO2arg;
 import static com.leng.fileupdate_new.utils.Constanxs.INFO4;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ChangeModeFile, CallbackChild, CallbackLocFiel, CallbackChild2 {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ChangeModeFile, CallbackChild, CallbackLocFiel, CallbackChild2, CabackPv {
     private BlankFragment1 fragment1;
 
 
@@ -341,8 +342,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }).start();
 
 
-        }
-        else    {
+        } else {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -373,7 +373,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                mHandlerUpding.sendMessageDelayed(ms,100);
 //            }
 //        }).start();
-    Log.i(TAG,"ADADAD");
+        Log.i(TAG, "ADADAD");
 
+    }
+
+    @Override
+    public void setProgresValues(String pathname, String progress) {
+        Log.i(TAG, pathname + "的上传进度:" + progress);
+        Message message = new Message();
+        message.what = 4560;
+        Bundle bundle = new Bundle();
+        bundle.putString("pathname", pathname);
+        bundle.putString("progress", progress);
+        message.setData(bundle);
+        mHandlerUpding.sendMessage(message);
     }
 }

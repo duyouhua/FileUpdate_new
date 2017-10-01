@@ -23,5 +23,6 @@ public class Constanxs {
     public static final String FTPUSER = "FTPuser";
     public static final String FTPPASS = "Ftp1029384756";
 
-    public static boolean isftpconnet =false;
+    public static boolean isftpconnet = false;
+    public static HashMap<String, String> updingMap = new HashMap<String, String>();
 }

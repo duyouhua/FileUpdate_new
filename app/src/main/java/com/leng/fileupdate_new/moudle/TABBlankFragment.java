@@ -49,6 +49,9 @@ public class TABBlankFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initView(View view) {
+        mEmptyView = (TextView) view.findViewById(R.id.emptyView);
+        mTabMooveQuxaio = (TextView) view.findViewById(R.id.tab_moove_quxaio);
+        mTabMooveQuxaio.setOnClickListener(this);
         mListPath.clear();
         for (int i = 1; i < 6; i++) {
             String re = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath" + i, "null");
@@ -75,9 +78,7 @@ public class TABBlankFragment extends Fragment implements View.OnClickListener {
             mTabRelativeNo.setVisibility(View.VISIBLE);
         }
 
-        mEmptyView = (TextView) view.findViewById(R.id.emptyView);
-        mTabMooveQuxaio = (TextView) view.findViewById(R.id.tab_moove_quxaio);
-        mTabMooveQuxaio.setOnClickListener(this);
+
     }
 
     AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {

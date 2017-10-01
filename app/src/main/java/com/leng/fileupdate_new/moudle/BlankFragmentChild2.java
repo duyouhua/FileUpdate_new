@@ -53,6 +53,12 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                 case 4579:
                     showFile();
                     break;
+                case 4560:
+                    Bundle bundle = msg.getData();
+                    String pathname = bundle.getString("pathname");
+                    String progress = bundle.getString("progress");
+                    Log.i(TAG, pathname + "==" + progress);
+                    break;
             }
         }
 

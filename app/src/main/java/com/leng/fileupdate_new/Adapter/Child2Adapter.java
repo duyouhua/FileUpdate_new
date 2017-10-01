@@ -16,13 +16,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.leng.fileupdate_new.Bean.FileUpdateStatus;
 import com.leng.fileupdate_new.R;
 import com.leng.fileupdate_new.contrl.FileManger;
+import com.leng.fileupdate_new.upload.uploadUtil.HProgressBar;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.leng.fileupdate_new.utils.Constanxs.updingMap;
 
 /**
  * Created by Administrator on 2017/9/27.
@@ -36,6 +40,7 @@ public class Child2Adapter extends BaseAdapter {
     private ArrayList<String> names = null;
     //存储文件路径
     private ArrayList<String> paths = null;
+    private ArrayList<FileUpdateStatus> dates = null;
     private Context mContext;
     // 用来控制CheckBox的选中状况
     private static HashMap<Integer, Boolean> isSelectedchild2;
@@ -43,20 +48,14 @@ public class Child2Adapter extends BaseAdapter {
 
 
     //参数初始化
-    public Child2Adapter(Context context, ArrayList<String> na, ArrayList<String> pa ) {
+    public Child2Adapter(Context context, ArrayList<String> na, ArrayList<String> pa) {
         names = na;
         paths = pa;
         viewList = new ArrayList<>();
         mContext = context;
         directory = BitmapFactory.decodeResource(context.getResources(), R.mipmap.wenjianjia);
-//        file = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_weishibie);
-        //缩小图片
-//        directory = small(directory, 1.16f);
-//        file = small(file, 1.1f);
         inflater = LayoutInflater.from(context);
         isSelectedchild2 = new HashMap<Integer, Boolean>();
-//        mapType = new HashMap<>();
-
         initDate();
     }
 
@@ -98,6 +97,7 @@ public class Child2Adapter extends BaseAdapter {
             holder.image = (ImageView) convertView.findViewById(R.id.icon_image);
             holder.button = (Button) convertView.findViewById(R.id.pause_button);
             holder.cb = (CheckBox) convertView.findViewById(R.id.dir_list_Check);
+            holder.progressBar = (HProgressBar) convertView.findViewById(R.id.hpr);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -154,6 +154,10 @@ public class Child2Adapter extends BaseAdapter {
                         }
                         holder.cb.setChecked(getIsSelectedChild2().get(position));
                         Log.i("QWEQWE", getIsSelectedChild2().get(position) + "");
+                        int as = Integer.parseInt(updingMap.get(paths.get(position)));
+                        holder.progressBar.setProgress(as);
+
+
                     } else {
                         Toast.makeText(mContext, "famt GESHI  KONG", Toast.LENGTH_SHORT).show();
                     }
@@ -175,6 +179,7 @@ public class Child2Adapter extends BaseAdapter {
         private ImageView image;
         private CheckBox cb;
         private Button button;
+        private HProgressBar progressBar;
     }
 
     private Bitmap small(Bitmap map, float num) {

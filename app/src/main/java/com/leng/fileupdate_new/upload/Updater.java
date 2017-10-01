@@ -14,6 +14,8 @@ import android.os.Message;
 import android.util.Log;
 
 
+import com.leng.fileupdate_new.contrl.CabackPv;
+import com.leng.fileupdate_new.contrl.ContinueFTP2;
 import com.leng.fileupdate_new.upload.uploadUtil.PreferenceUtil;
 import com.leng.fileupdate_new.upload.uploadUtil.httpUtils;
 
@@ -51,12 +53,13 @@ public class Updater {
         Upload_From_Break_Failed, // 断点续传失败
         Delete_Remote_Faild; // 删除远程文件失败
     }
-//    public enum FtpState {
+
+    //    public enum FtpState {
 //        INIT, // 初始化 0
 //        PAUSE, // 暂停 1
 //        UPDATING, // 上传中 2
 //    }
-    private String TAG = "longli";
+    private String TAG = "qweqweqwe";
 
     private String FtpHostAdress = null;
 
@@ -73,26 +76,19 @@ public class Updater {
     private String FtpUserName = "FTPuser"; // FTP 用户名 密码
     private String FtpUserPwd = "Ftp1029384756";
     private int FtpHostPort = 21; // 端口
-    private String FtpRmtPath = "/web/KuaiChuan/web/Upload/"; // 服务器端路径
+    private CabackPv cp;
 
     public Updater(Context mContext, TestBean bean, Handler mHandler) {
         this.mHandler = mHandler;
         this.bean = bean;
         this.context = mContext;
+        cp = (CabackPv) mContext;
         FtpHostAdress = "218.246.35.197";
     }
 
     // 开始上传一个文件
     public void StartUpdate() {
-//		if (cFtp.getFtpState() == ContinueFtp.FtpState.UPDATING) {
-//			Log.d(TAG, "StartUpDate ftp state is updating");
-//			return;
-//		}
-//
-//		cFtp.setFtpState(ContinueFtp.FtpState.UPDATING);
-//		Log.d(TAG, "cft connect IP is " + FtpHostAdress);
-//		cFtp.SetConnectInfos(FtpHostAdress, FtpHostPort, FtpUserName,
-//				FtpUserPwd, FtpRmtPath);
+
         try {
 
             if (connect()) {
@@ -130,11 +126,6 @@ public class Updater {
 
     }
 
-//	//
-//	public boolean isupdating() {
-//		// return FtpState.UPDATING == mState;
-//		return ContinueFtp.FtpState.UPDATING == cFtp.getFtpState();
-//	}
 
     // 暂停上传
     public void pause() {
@@ -211,24 +202,14 @@ public class Updater {
         UploadStatus result;
         // 对远程目录的处理
         String localFilePath = bean.getLocfilepath();
-        String remoteFileName= bean.getRemotefilepath() ;
-        Log.i("QWEQWE",""+localFilePath+"====="+remoteFileName);
+        String remoteFileName = bean.getRemotefilepath();
+        String creatType = bean.getCrateFileType();
+
+        Log.i("QWEQWE", "" + localFilePath + "=====" + remoteFileName);
         //创建远程文件
-        String remoteFilePath = "/Audios/"+remoteFileName;
+
+        String remoteFilePath = creatType + remoteFileName;
         CreateDirecroty(remoteFilePath, ftpClient);
-//        if (remotePath.contains("/")) {
-//            remoteFileName = PubUtils.getRemoteFileName(remotePath, httpOldFileName, local);
-//			/*
-//			 * new String(mBxFile.getFileName().getBytes( LOCAL_CHARSET),
-//			 * SERVER_CHARSET);
-//			 */
-//            // remoteFileName = remote.substring(remote.lastIndexOf("/") + 1);
-//            // 创建服务器远程目录结构，创建失败直接返回
-//            if (CreateDirecroty(remotePath, ftpClient) == UploadStatus.Create_Directory_Fail) {
-//                // Log.d(TAG, "create direc failed");
-//                return UploadStatus.Create_Directory_Fail;
-//            }
-//        }
 
 
         FTPFile[] files = ftpClient.listFiles(remoteFileName);
@@ -249,24 +230,24 @@ public class Updater {
             }
 
             // 尝试移动文件内读取指针,实现断点续传
-            result = uploadFile(remoteFileName, f, ftpClient, remoteSize);
+            result = uploadFile2(remoteFileName, f, ftpClient, remoteSize);
 
             // 如果断点续传没有成功，则删除服务器上文件，重新上传
             if (result == UploadStatus.Upload_From_Break_Failed) {
                 if (!ftpClient.deleteFile(remoteFileName)) {
                     return UploadStatus.Delete_Remote_Faild;
                 }
-                result = uploadFile(remoteFileName, f, ftpClient, 0);
+                result = uploadFile2(remoteFileName, f, ftpClient, 0);
             }
         } else {
-            result = uploadFile(remoteFileName, new File(localFilePath), ftpClient, 0);
+            result = uploadFile2(remoteFileName, new File(localFilePath), ftpClient, 0);
         }
 
         if ((UploadStatus.Upload_New_File_Success == result) // 上传成功
                 || (UploadStatus.Upload_From_Break_Success == result)) {
             //
             int httpNums = 1;
-            httpUtils mHttpUtils = new httpUtils(context, type,
+            httpUtils mHttpUtils = new httpUtils(context, 1,
                     localFilePath, remoteFileName);
             while (httpNums <= 3) {
 
@@ -282,7 +263,7 @@ public class Updater {
                     } else {
                         Thread.sleep(3000);
                         if (mHttpUtils.getHttpResult() == 1) {
-                             removeFileName(localFilePath);
+                            removeFileName(localFilePath);
                             break;
                         }
                     }
@@ -365,7 +346,7 @@ public class Updater {
             bean.setUploadProgress(process);
             if (99 < process) {
                 bean.setUpLoadStatus("3");
-            }else{
+            } else {
                 bean.setUpLoadStatus("1");
             }
             Message message = new Message();
@@ -375,6 +356,56 @@ public class Updater {
 
         }
 
+    }
+
+    /** */
+    /**
+     * 上传文件到服务器,新上传和断点续传
+     *
+     * @param remoteFile  远程文件名，在上传之前已经将服务器工作目录做了改变
+     * @param localFile   本地文件 File句柄，绝对路径
+     * @param processStep 需要显示的处理进度步进值
+     * @param ftpClient   FTPClient 引用
+     * @return
+     * @throws IOException
+     */
+    public UploadStatus uploadFile2(String remoteFile, File localFile, FTPClient ftpClient, long remoteSize) throws IOException {
+        UploadStatus status;
+        //显示进度的上传
+        long step = localFile.length() / 100;
+        long process = 0;
+        long localreadbytes = 0L;
+        RandomAccessFile raf = new RandomAccessFile(localFile, "r");
+        OutputStream out = ftpClient.appendFileStream(new String(remoteFile.getBytes("GBK"), "iso-8859-1"));
+        //断点续传
+        if (remoteSize > 0) {
+            ftpClient.setRestartOffset(remoteSize);
+            process = remoteSize / step;
+            raf.seek(remoteSize);
+            localreadbytes = remoteSize;
+        }
+        byte[] bytes = new byte[1024];
+        int c;
+        while ((c = raf.read(bytes)) != -1) {
+            out.write(bytes, 0, c);
+            localreadbytes += c;
+            if (localreadbytes / step != process) {
+                process = localreadbytes / step;
+                Log.i(TAG, remoteFile + "的上传进度:" + process);
+                cp.setProgresValues(remoteFile, process + "");
+                //TODO 汇报上传状态
+            }
+        }
+        out.flush();
+        raf.close();
+        out.close();
+        boolean result = ftpClient.completePendingCommand();
+        if (remoteSize > 0) {
+            status = result ? UploadStatus.Upload_From_Break_Success : UploadStatus.Upload_From_Break_Failed;
+        } else {
+            status = result ? UploadStatus.Upload_New_File_Success : UploadStatus.Upload_New_File_Failed;
+        }
+        return status;
     }
 
     /**
@@ -409,13 +440,14 @@ public class Updater {
         while (((c = raf.read(bytes)) != -1)) {
             out.write(bytes, 0, c);
             localreadbytes += c;
-
+            Log.i("qweqweqwe", "" + step);
             if (step != 0) {
-                if ((localreadbytes / step) != process&&!bean.getUpLoadStatus().equals("2")) {
+                if ((localreadbytes / step) != process && !bean.getUpLoadStatus().equals("2")) {
                     process = localreadbytes / step;
                     // Log.d(TAG, "localFile " + localFile.getName()
                     // + " , update process :" + process);
                     sendMsg((int) process);
+                    Log.i("qweqweqwe", "" + process);
 //					// 更新数据库信息
 //					mDbFile.updataInfos(mBxFile.getFileProgress(),
 //							BXFile.FileStateSwitch(mBxFile.getFileState()),

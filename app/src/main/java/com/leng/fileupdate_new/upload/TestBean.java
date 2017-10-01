@@ -5,6 +5,15 @@ package com.leng.fileupdate_new.upload;
  */
 
 public class TestBean {
+    public String getCrateFileType() {
+        return crateFileType;
+    }
+
+    public void setCrateFileType(String crateFileType) {
+        this.crateFileType = crateFileType;
+    }
+
+    private String crateFileType;
     private String locfilepath;
 
     public int getUploadProgress() {

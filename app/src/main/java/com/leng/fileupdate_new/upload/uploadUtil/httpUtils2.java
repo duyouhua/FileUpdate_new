@@ -95,7 +95,7 @@ public class httpUtils2 {
                             result += line;
 
                         }
-                        Log.d("xiaoming", "result is " + result);
+                        Log.i("xiaoming", "result is " + result);
                         if ((result != null) && (result.contains("True"))) {
                             httpResult = 1;
                         }
