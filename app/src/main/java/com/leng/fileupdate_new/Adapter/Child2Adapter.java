@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -154,8 +155,14 @@ public class Child2Adapter extends BaseAdapter {
                         }
                         holder.cb.setChecked(getIsSelectedChild2().get(position));
                         Log.i("QWEQWE", getIsSelectedChild2().get(position) + "");
-                        int as = Integer.parseInt(updingMap.get(paths.get(position)));
-                        holder.progressBar.setProgress(as);
+//                        int as = Integer.parseInt(updingMap.get(paths.get(position))+0)+holder.progressBar.getProgress();
+
+//                        if(dates.get(position).isDownload()) {
+//                            holder.progressBar.setVisibility(View.VISIBLE);
+//                            holder.progressBar.setProgress(dates.get(position).getProgress());
+//                        }else {
+//                            holder.progressBar.setVisibility(View.INVISIBLE);
+//                        }
 
 
                     } else {
@@ -171,6 +178,7 @@ public class Child2Adapter extends BaseAdapter {
             }
         }
 
+//        holder.progressBar.setProgress();
         return convertView;
     }
 
@@ -207,13 +215,19 @@ public class Child2Adapter extends BaseAdapter {
         isSelectedchild2 = isSelected;
     }
 
-//    public static HashMap<String, String> getMapFamt() {
-//
-//        return mapFamt;
-//    }
-//
-//    public static void setMapFamt(HashMap<String, String> mapFamt2) {
-//        mapFamt = mapFamt2;
-//    }
+    public static void updataView(int posi, ListView listView, int values) {
+        int visibleFirstPosi = listView.getFirstVisiblePosition();
+        int visibleLastPosi = listView.getLastVisiblePosition();
+        if (posi >= visibleFirstPosi && posi <= visibleLastPosi) {
+            View view = listView.getChildAt(posi - visibleFirstPosi);
+            ViewHolder holder = (ViewHolder) view.getTag();
 
+            holder.progressBar.setProgress(values );
+            Log.i("ASDASD", "走岂不是很尴尬");
+        } else {
+            Log.i("ASDASD", "没走岂不是很尴尬");
+//            int  pros = holder.progressBar.getProgress() ;
+//            holder.progressBar.setProgress(values+pros);
+        }
+    }
 }

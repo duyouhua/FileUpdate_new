@@ -44,7 +44,7 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
      * 更改密码
      */
     private TextView mSettingChangepwdBtn;
-    private CheckBox mCheckbox1,mCheckbox2,mCheckbox3,mCheckbox4,mCheckbox5,mCheckbox6,mCheckbox7;
+    private CheckBox mCheckbox1, mCheckbox2, mCheckbox3, mCheckbox4, mCheckbox5, mCheckbox6, mCheckbox7;
 
     private Context mContext;
     private RelativeLayout mSettingRelativeMobnet;
@@ -58,35 +58,77 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-           String resultPath= msg.obj.toString();
+            String resultPath = msg.obj.toString();
             switch (msg.what) {
                 case 1:
-                    mSettingPath1.setText(resultPath+"");
-                    SharedPreferencesUtils.setParam(mContext,"mSettingPath1",resultPath);
+                    String r1 = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath1", "null");
+                    if (r1.equals("null")) {
+                    } else {
+                        if (!r1.equals(resultPath)) {
+                            SharedPreferencesUtils.setParam(mContext,"lujinggaibianl1","no");
+                        }
+                    }
+                    SharedPreferencesUtils.setParam(mContext, "mSettingPath1", resultPath);
+                    mSettingPath1.setText(resultPath + "");
                     break;
                 case 2:
-                    mSettingPath2.setText(resultPath+"");
-                    SharedPreferencesUtils.setParam(mContext,"mSettingPath2",resultPath);
+
+
+
+                    String r2 = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath2", "null");
+                    if (r2.equals("null")) {
+                    } else {
+                        if (!r2.equals(resultPath)) {
+                            SharedPreferencesUtils.setParam(mContext,"lujinggaibianl2","no");
+                        }
+                    }
+                    SharedPreferencesUtils.setParam(mContext, "mSettingPath2", resultPath);
+                    mSettingPath2.setText(resultPath + "");
+
+
+//                    mSettingPath2.setText(resultPath + "");
+//                    SharedPreferencesUtils.setParam(mContext, "mSettingPath2", resultPath);
                     break;
                 case 3:
-                    mSettingPath3.setText(resultPath+"");
-                    SharedPreferencesUtils.setParam(mContext,"mSettingPath3",resultPath);
+                    String r3 = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath3", "null");
+                    if (r3.equals("null")) {
+                    } else {
+                        if (!r3.equals(resultPath)) {
+                            SharedPreferencesUtils.setParam(mContext,"lujinggaibianl3","no");
+                        }
+                    }
+                    SharedPreferencesUtils.setParam(mContext, "mSettingPath3", resultPath);
+                    mSettingPath3.setText(resultPath + "");
                     break;
                 case 4:
-                    mSettingPath4.setText(resultPath+"");
-                    SharedPreferencesUtils.setParam(mContext,"mSettingPath4",resultPath);
+                    String r4 = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath4", "null");
+                    if (r4.equals("null")) {
+                    } else {
+                        if (!r4.equals(resultPath)) {
+                            SharedPreferencesUtils.setParam(mContext,"lujinggaibianl4","no");
+                        }
+                    }
+                    SharedPreferencesUtils.setParam(mContext, "mSettingPath4", resultPath);
+                    mSettingPath4.setText(resultPath + "");
                     break;
                 case 5:
-                    mSettingPath5.setText(resultPath+"");
-                    SharedPreferencesUtils.setParam(mContext,"mSettingPath5",resultPath);
-                    break;
+                    String r5 = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath5", "null");
+                    if (r5.equals("null")) {
+                    } else {
+                        if (!r5.equals(resultPath)) {
+                            SharedPreferencesUtils.setParam(mContext,"lujinggaibianl5","no");
+                        }
+                    }
+                    SharedPreferencesUtils.setParam(mContext, "mSettingPath5", resultPath);
+                    mSettingPath5.setText(resultPath + "");
+                   break;
                 default:
                     Log.i(TAG, "BlankFragment3 mHandler default");
                     break;
             }
         }
     };
-    private TextView mSettingPath1,mSettingPath2,mSettingPath3,mSettingPath4,mSettingPath5;
+    private TextView mSettingPath1, mSettingPath2, mSettingPath3, mSettingPath4, mSettingPath5;
 
     @Override
     public void onAttach(Activity activity) {
@@ -118,19 +160,20 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
         super.onPause();
         Log.i(TAG, "onPause");
     }
-    private void initSetPathTxt(){
-        mSettingPath1.setText((String) SharedPreferencesUtils.getParam(mContext,"mSettingPath1",""));
-        mSettingPath2.setText((String) SharedPreferencesUtils.getParam(mContext,"mSettingPath2",""));
-        mSettingPath3.setText((String) SharedPreferencesUtils.getParam(mContext,"mSettingPath3",""));
-        mSettingPath4.setText((String) SharedPreferencesUtils.getParam(mContext,"mSettingPath4",""));
-        mSettingPath5.setText((String) SharedPreferencesUtils.getParam(mContext,"mSettingPath5",""));
-        mCheckbox1.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext,"checkbox1",false));
-        mCheckbox2.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext,"checkbox2",false));
-        mCheckbox3.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext,"checkbox3",false));
-        mCheckbox4.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext,"checkbox4",false));
-        mCheckbox5.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext,"checkbox5",false));
-        mCheckbox6.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext,"checkbox6",false));
-        mCheckbox7.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext,"checkbox7",false));
+
+    private void initSetPathTxt() {
+        mSettingPath1.setText((String) SharedPreferencesUtils.getParam(mContext, "mSettingPath1", ""));
+        mSettingPath2.setText((String) SharedPreferencesUtils.getParam(mContext, "mSettingPath2", ""));
+        mSettingPath3.setText((String) SharedPreferencesUtils.getParam(mContext, "mSettingPath3", ""));
+        mSettingPath4.setText((String) SharedPreferencesUtils.getParam(mContext, "mSettingPath4", ""));
+        mSettingPath5.setText((String) SharedPreferencesUtils.getParam(mContext, "mSettingPath5", ""));
+        mCheckbox1.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox1", false));
+        mCheckbox2.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox2", false));
+        mCheckbox3.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox3", false));
+        mCheckbox4.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox4", false));
+        mCheckbox5.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox5", false));
+        mCheckbox6.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox6", false));
+        mCheckbox7.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox7", false));
     }
 
     private void initView(View view) {

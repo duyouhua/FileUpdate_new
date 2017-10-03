@@ -30,6 +30,7 @@ import com.leng.other.CommomDialog2;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class BlankFragmentLocFile extends Fragment implements View.OnClickListener {
@@ -302,6 +303,8 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
                 mEmptyView.setVisibility(View.VISIBLE);
                 setBtnSelectAllYes();
             }
+            Collections.sort(mFileName);
+            Collections.sort(mFilePath);
             Toast.makeText(mContext, "MEIFANGING   " + files.length + " mListBaoHanYSP.size()" + mListBaoHanYSP.size(), Toast.LENGTH_SHORT).show();
             mAdapter = new LocFileAdapter(mContext, mFileName, mFilePath);
             mListviewLocfile.setAdapter(mAdapter);

@@ -16,6 +16,7 @@ public class DaoUtils {
         return liss;
     }
 
+
     /**
      *
      *存入指定键  根据指定建删除文件
@@ -32,7 +33,7 @@ public class DaoUtils {
     public static List<FileUser> FileUserDaoQuerywhere(String as) {
         List<FileUser> joes = APP.getDaoInstant().getFileUserDao().queryBuilder()
                 .where(FileUserDao.Properties.MFileTypedao.eq(as))
-//                .orderAsc(FileUserDao.Properties.MFileTypedao)
+                .orderDesc(FileUserDao.Properties.MFileNamedao)
                 .list();
         if (joes.size() > 0) {
             return joes;

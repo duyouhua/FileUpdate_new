@@ -16,6 +16,16 @@ public class TestBean {
     private String crateFileType;
     private String locfilepath;
 
+    public String getLocfileName() {
+        return locfileName;
+    }
+
+    public void setLocfileName(String locfileName) {
+        this.locfileName = locfileName;
+    }
+
+    private String locfileName;
+
     public int getUploadProgress() {
         return UploadProgress;
     }

@@ -1,5 +1,7 @@
 package com.leng.fileupdate_new.utils;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -7,6 +9,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -604,6 +607,11 @@ public class FileUtils {
         return Long.parseLong(String.valueOf(path.hashCode()));
     }
 
+    public static Long longPressLongupding(String path) {
+        path = "1" + path;
+        return Long.parseLong(String.valueOf(path.hashCode()));
+    }
+
     /**
      * 判断照片是否被旋转
      *
@@ -660,5 +668,16 @@ public class FileUtils {
         canvas.drawBitmap(bm, m, paint);
 
         return bm1;
+    }
+
+    public static void delFilePhoto(Context context, String path) {
+        File file = new File(path);
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+
+        Uri uri = Uri.fromFile(file);
+
+        intent.setData(uri);
+
+        context.sendBroadcast(intent);
     }
 }

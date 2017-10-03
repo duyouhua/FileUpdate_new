@@ -24,7 +24,6 @@ import com.leng.fileupdate_new.Adapter.Child1Adapter;
 import com.leng.fileupdate_new.Bean.FileUser;
 import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
-import com.leng.fileupdate_new.contrl.CabackPv;
 import com.leng.fileupdate_new.contrl.CallbackChild2;
 import com.leng.fileupdate_new.contrl.ContinueFTP2;
 import com.leng.fileupdate_new.contrl.FileManger;
@@ -39,8 +38,15 @@ import com.leng.other.CommomDialog2;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.leng.fileupdate_new.utils.Constanxs.INFO4;
 import static com.leng.fileupdate_new.utils.Constanxs.isftpconnet;
@@ -55,7 +61,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
     int checkNum = 0;
 
     private boolean isSelectdAll = true;
-    private ThreadPoolProxy ty;
+    private ThreadPoolProxy ty = new ThreadPoolProxy(1, 3, 10000);
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -85,6 +91,13 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                 case 4578:
                     Toast.makeText(mContext, "连接成功了吗 " + isftpconnet, Toast.LENGTH_SHORT).show();
                     break;
+                case 4579:
+                    String path = msg.obj.toString();
+
+                    break;
+                case 3567:
+
+                    break;
                 default:
                     break;
             }
@@ -110,12 +123,14 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
     private Button mDeletButton;
     private ListView mListview1;
     //存储文件名称
-    private ArrayList<String> mFileName = null;
+    private ArrayList<String> mFileName = new ArrayList<String>();
     //存储文件路径
-    private ArrayList<String> mFilePath = null;
-    private ArrayList<String> mFileName2 = null;
+    private ArrayList<String> mFilePath = new ArrayList<String>();
+    private ArrayList<String> mFileName2 = new ArrayList<String>();
     //存储文件路径
-    private ArrayList<String> mFilePath2 = null;
+    private ArrayList<String> mFilePath2 = new ArrayList<String>();
+    private ArrayList<String> mUpdingbioashi = new ArrayList<String>();
+
     private RelativeLayout rr;
     private RelativeLayout mRLISTVIEW;
     private Child1Adapter mAdapter;
@@ -188,6 +203,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
         mDeletButton = (Button) view.findViewById(R.id.delet_button);
         mDeletButton.setOnClickListener(this);
         mRLISTVIEW = (RelativeLayout) view.findViewById(R.id.rLISTVIEW);
+//        SharedPreferencesUtils.setParam(mContext, "iffirstAdd", "1");
     }
 
 
@@ -228,7 +244,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
     private void showFile(String a) {
         String path = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath" + a, "null");
         if (!path.equals("null")) {
-            showFileDir(path);
+            showFileDir2(path, a);
         }
     }
 
@@ -247,88 +263,194 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
 
     }
 
-    private void showFileDir(String path) {
+    private void listClear() {
+        if (mFileName.size() > 0) {
+            mFileName.clear();
+
+        }
+        if (mFilePath.size() > 0) {
+            mFilePath.clear();
+
+        }
+        if (mFilePath2.size() > 0) {
+            mFilePath2.clear();
+
+        }
+        if (mFileName2.size() > 0) {
+            mFileName2.clear();
+
+        }
+    }
+
+    /**
+     * 去数据库作比对
+     */
+    private boolean isDaoFileExits(File f) {
+        if (mFileName.size() > 0) {
+            for (int i = 0; i < DaoUtils.FileUserDaoQuery().size(); i++) {
+                if (DaoUtils.FileUserDaoQuery().get(i).getId().equals(FileUtils.longPressLong(f.getName()))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 按时间排序
+     */
+
+    public static void orderByDate(File[] fs) {
+        Arrays.sort(fs, new Comparator<File>() {
+            public int compare(File f1, File f2) {
+                long diff = f1.lastModified() - f2.lastModified();
+                if (diff > 0)
+                    return 1;
+                else if (diff == 0)
+                    return 0;
+                else
+                    return -1;
+            }
+
+            public boolean equals(Object obj) {
+                return true;
+            }
+
+        });
+        for (int i = fs.length - 1; i > -1; i--) {
+            System.out.println(fs[i].getName());
+            System.out.println(new Date(fs[i].lastModified()));
+        }
+    }
+
+    private void showFileDir2(String path, String title) {
         checkNum = 0;
         checktrueNums = 0;
-
         isSelectdAll = true;//标记删除后不能在全选
-        if (mFilePath != null && mFileName != null) {
-            mFileName.clear();
-            mFilePath.clear();
-        }
-        if (mFilePath2 != null && mFileName2 != null) {
-            mFileName2.clear();
-            mFilePath2.clear();
-        }
-        mFileName = new ArrayList<String>();
-        mFilePath = new ArrayList<String>();
-        mFileName2 = new ArrayList<String>();
-        mFilePath2 = new ArrayList<String>();
-        File file = new File(path);
+        final File file = new File(path);
+        final File[] files = file.listFiles();
+        orderByDate(files);
 
-        File[] files = file.listFiles();
-        Log.i(TAG, files.length + "@@@@@@@@");
-        if (files != null && files.length > 0) {
-            mRLISTVIEW.setVisibility(View.VISIBLE);
-            rr.setVisibility(View.GONE);
-            //添加所有文件
-//            for (File f : files) {
-//                if (FileManger.getSingleton().map.containsKey(getExtension(f))) {
-//                    if (mapShangchuan.size() > 0) {
-//                        if (f.getAbsolutePath().equals(mapShangchuan.get(f.getAbsolutePath()))) {
-//
-//                        } else {
-//                            mFileName.add(f.getName());
-//                            mFilePath.add(f.getAbsolutePath());
-//                        }
-//                    } else {
-//                        mFileName.add(f.getName());
-//                        mFilePath.add(f.getAbsolutePath());
-//                    }
-//                }
+        if (title.equals("1")) {
+            //暂且先放着
+//            if (DaoUtils.FileUserDaoQuerywhere(title) == null) {
+//                SharedPreferencesUtils.setParam(mContext, "iffirstAdd", "1");
 //            }
 
-            for (File f : files) {
-                if (FileManger.getSingleton().map.containsKey(getExtension(f))) {
-                    mFileName.add(f.getName());
-                    mFilePath.add(f.getAbsolutePath());
-
-                    if (mFilePath.size() >= DaoUtils.FileUserDaoQuery().size()) {
-                        //更新数据库   将新文件添加进去
-                        FileUser fileUser = new FileUser();
-                        fileUser.setId(FileUtils.longPressLong(f.getName()));
-                        fileUser.setMFileTypedao("1");
-                        fileUser.setMFileNamedao(f.getName());
-                        fileUser.setMFilePathdao(f.getAbsolutePath());
-                        APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
-                        Log.i(TAG, "插入数据库==child1");
-                    } else {
-                        Log.i(TAG, "没有插入数据库==child1");
-                    }
-
-
+            if (SharedPreferencesUtils.getParam(mContext, "lujinggaibianl1", "null").equals("no")) {
+                Log.i(TAG, "路径改变删除原来路径下的数据库文件");
+                for (int i = 0; i < mFileName2.size(); i++) {
+                    DaoUtils.FilUserDaoDel(mFileName2.get(i));
                 }
+                SharedPreferencesUtils.setParam(mContext, "lujinggaibianl1", "yes");//处理之后复位
             }
+            listClear();//清空数据集合
+            if (files != null && files.length > 0) {
+                mRLISTVIEW.setVisibility(View.VISIBLE);
+                rr.setVisibility(View.GONE);
+                String isd = (String) SharedPreferencesUtils.getParam(mContext, "iffirstAdd", "null");
+                for (File f : files) {
+                    if (FileManger.getSingleton().map.containsKey(getExtension(f))) {
+                        mFileName.add(f.getName());
+                        mFilePath.add(f.getAbsolutePath());
+                        if (isd.equals("null")) {
+                            FileUser fileUser = new FileUser();
+                            fileUser.setId(FileUtils.longPressLong(f.getName()));
+                            fileUser.setMFileTypedao(title);
+                            fileUser.setMFileNamedao(f.getName());
+                            fileUser.setMFilePathdao(f.getAbsolutePath());
+                            APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
+                            Log.i(TAG, "第一次添加 " + FileUtils.longPressLong(f.getName()) + "名字是 ：" + f.getName());
+                        } else {
+                            if (!isDaoFileExits(f)) {
+                                FileUser fileUser = new FileUser();
+                                fileUser.setId(FileUtils.longPressLong(f.getName()));
+                                fileUser.setMFileTypedao(title);
+                                fileUser.setMFileNamedao(f.getName());
+                                fileUser.setMFilePathdao(f.getAbsolutePath());
+                                APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
+                            }
 
-            if (DaoUtils.FileUserDaoQuerywhere("1") != null && DaoUtils.FileUserDaoQuerywhere("1").size() > 0) {
-
-                for (int i = 0; i < DaoUtils.FileUserDaoQuerywhere("1").size(); i++) {
-                    mFileName2.add(DaoUtils.FileUserDaoQuerywhere("1").get(i).getMFileNamedao());
-                    mFilePath2.add(DaoUtils.FileUserDaoQuerywhere("1").get(i).getMFilePathdao());
+                        }
+                    }
                 }
-                Toast.makeText(mContext, "MEIFANGING   " + files.length, Toast.LENGTH_SHORT).show();
-                mAdapter = new Child1Adapter(mContext, mFileName2, mFilePath2);
-                mList.setAdapter(mAdapter);
+                SharedPreferencesUtils.setParam(mContext, "iffirstAdd", "2");
+                queryAllFile(title);
+
             } else {
-                Log.i(TAG, "没有查询到类型为1的数据==child1");
                 showEmpty();
             }
+        } else if (title.equals("2")) {
+            if (SharedPreferencesUtils.getParam(mContext, "lujinggaibianl2", "null").equals("no")) {
+                Log.i(TAG, "路径改变删除原来路径下的数据库文件");
+                for (int i = 0; i < mFileName2.size(); i++) {
+                    DaoUtils.FilUserDaoDel(mFileName2.get(i));
+                }
+                SharedPreferencesUtils.setParam(mContext, "lujinggaibianl2", "yes");//处理之后复位
+            }
+            listClear();//清空数据集合
+            if (files != null && files.length > 0) {
+                mRLISTVIEW.setVisibility(View.VISIBLE);
+                rr.setVisibility(View.GONE);
+                String isd = (String) SharedPreferencesUtils.getParam(mContext, "iffirstAdd", "null");
+                for (File f : files) {
+                    if (FileManger.getSingleton().map.containsKey(getExtension(f))) {
+                        mFileName.add(f.getName());
+                        mFilePath.add(f.getAbsolutePath());
+                        if (isd.equals("null")) {
+                            FileUser fileUser = new FileUser();
+                            fileUser.setId(FileUtils.longPressLong(f.getName()));
+                            fileUser.setMFileTypedao(title);
+                            fileUser.setMFileNamedao(f.getName());
+                            fileUser.setMFilePathdao(f.getAbsolutePath());
+                            APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
+                            Log.i(TAG, "第一次添加 " + FileUtils.longPressLong(f.getName()) + "名字是 ：" + f.getName());
+                        } else {
+                            if (!isDaoFileExits(f)) {
+                                FileUser fileUser = new FileUser();
+                                fileUser.setId(FileUtils.longPressLong(f.getName()));
+                                fileUser.setMFileTypedao(title);
+                                fileUser.setMFileNamedao(f.getName());
+                                fileUser.setMFilePathdao(f.getAbsolutePath());
+                                APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
+                            }
 
+                        }
+                    }
+                }
+                SharedPreferencesUtils.setParam(mContext, "iffirstAdd", "2");
+                queryAllFile(title);
 
-        } else {
-            showEmpty();
+            } else {
+                showEmpty();
+            }
+        } else if (title.equals("3")) {
+
+        } else if (title.equals("4")) {
+
+        } else if (title.equals("5")) {
         }
         setBtnSelectAllYes();
+    }
+
+
+    private void queryAllFile(String type) {
+        //查询所有类型为1的数据
+        if (DaoUtils.FileUserDaoQuerywhere(type) != null && DaoUtils.FileUserDaoQuerywhere(type).size() > 0) {
+            for (int i = 0; i < DaoUtils.FileUserDaoQuerywhere(type).size(); i++) {
+                mFileName2.add(DaoUtils.FileUserDaoQuerywhere(type).get(i).getMFileNamedao());
+                mFilePath2.add(DaoUtils.FileUserDaoQuerywhere(type).get(i).getMFilePathdao());
+            }
+//            Collections.sort(mFileName2);
+//            Collections.sort(mFilePath2);
+
+            Log.i(TAG, "查询出来类型为 的数据大小是" + DaoUtils.FileUserDaoQuerywhere(type).size());
+            mAdapter = new Child1Adapter(mContext, mFileName2, mFilePath2);
+            mList.setAdapter(mAdapter);
+        } else {
+            Log.i(TAG, "没有查询到类型为1的数据==child1");
+            showEmpty();
+        }
     }
 
     private void showEmpty() {
@@ -424,11 +546,13 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                     showDialog();
                     return;
                 }
+
+
                 for (int i = 0; i < Child1Adapter.getIsSelected().size(); i++) {
                     if (Child1Adapter.getIsSelected().get(i)) {
 
                         // 文件上传格式
-                        String famt = Child1Adapter.getMapFamt().get(mFilePath.get(i));
+                        String famt = Child1Adapter.getMapFamt().get(mFilePath2.get(i));
                         String type = "";
                         if (famt != null) {
                             if (famt.equals("/Images/")) {
@@ -439,26 +563,27 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                                 type = "3";
                             }
                             if (type != null) {
-                                String remote = "2bgz12yp0_0" + mFileName.get(i);
+                                String remote = "2bgz12yp0_0" + mFileName2.get(i);
 //                                startUpdataFile(mFilePath.get(i), remote, type);
-                                Log.i(TAG, "选中的文件名是" + "i==" + i + mFilePath.get(i) + "文件格式是：" + type + "服务端路径是：" + remote);
+                                Log.i(TAG, "选中的文件名是" + "i==" + i + mFilePath2.get(i) + "文件格式是：" + type + "服务端路径是：" + remote);
+
 
                                 FileUser fileUser = new FileUser();
-                                fileUser.setId(FileUtils.longPressLong(mFileName.get(i)));
-                                fileUser.setMFileTypedao("2");
-                                fileUser.setMFileNamedao(mFileName.get(i));
-                                fileUser.setMFilePathdao(mFilePath.get(i));
+                                fileUser.setId(FileUtils.longPressLong(mFileName2.get(i)));
+                                fileUser.setMFileTypedao("6");
+                                fileUser.setMFileNamedao(mFileName2.get(i));
+                                fileUser.setMFilePathdao(mFilePath2.get(i));
                                 APP.getDaoInstant().getFileUserDao().update(fileUser);
 
 
                                 TestBean testBean = new TestBean();
-                                testBean.setLocfilepath(mFilePath.get(i));
+                                testBean.setLocfilepath(mFilePath2.get(i));
                                 testBean.setRemotefilepath(remote);
+                                testBean.setLocfileName(mFileName2.get(i));
                                 testBean.setCrateFileType(famt);
                                 uploadFileManager.startUpLoad(testBean);
-                                Log.i(TAG, "开始上传");
-                                cc2.setMsg(9876);
-                                mHandler.sendEmptyMessage(4444);
+                                Log.i(TAG, "开始上传" + "   名字是：" + mFileName2.get(i) + "id :" + FileUtils.longPressLong(mFileName2.get(i)));
+
                             } else {
                                 Log.i(TAG, "类型与格式错误");
                             }
@@ -468,11 +593,12 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
 
                     } else {
 
-                        Log.i(TAG, "没有选中的文件");
+//                        Log.i(TAG, "没有选中的文件");
                     }
 
                 }
-
+                cc2.setMsg(9876);
+                mHandler.sendEmptyMessage(4444);
                 break;
 
             case R.id.delet_button:
@@ -527,9 +653,9 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                 if (confirm) {
                     for (int i = 0; i < Child1Adapter.getIsSelected().size(); i++) {
                         if (Child1Adapter.getIsSelected().get(i)) {
-                            Log.i(TAG, "删除的文件是 ：" + mFilePath.get(i));
-                            FileUtils.delete(mFilePath.get(i));
-                            DaoUtils.FilUserDaoDel(mFileName.get(i));
+                            Log.i(TAG, "删除的文件是 ：" + mFilePath2.get(i));
+                            FileUtils.delete(mFilePath2.get(i));
+                            DaoUtils.FilUserDaoDel(mFileName2.get(i));
 
                         }
                     }

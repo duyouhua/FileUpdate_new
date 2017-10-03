@@ -230,6 +230,7 @@ public class LiuLanActivity extends ListActivity implements View.OnClickListener
         } else {
 
             if (!curPath.equals(a)&&!curPath.equals(b)&&!curPath.equals(c)&&!curPath.equals(d)&&!curPath.equals(e)){
+
                  return true;
             }else {
                 Toast.makeText(this, "已经添加过了", Toast.LENGTH_SHORT).show();

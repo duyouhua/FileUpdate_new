@@ -14,10 +14,14 @@ import android.os.Message;
 import android.util.Log;
 
 
+import com.leng.fileupdate_new.APP;
+import com.leng.fileupdate_new.Bean.FileUpdateStatus;
+import com.leng.fileupdate_new.Bean.FileUser;
 import com.leng.fileupdate_new.contrl.CabackPv;
 import com.leng.fileupdate_new.contrl.ContinueFTP2;
 import com.leng.fileupdate_new.upload.uploadUtil.PreferenceUtil;
 import com.leng.fileupdate_new.upload.uploadUtil.httpUtils;
+import com.leng.fileupdate_new.utils.FileUtils;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -203,9 +207,10 @@ public class Updater {
         // 对远程目录的处理
         String localFilePath = bean.getLocfilepath();
         String remoteFileName = bean.getRemotefilepath();
+
         String creatType = bean.getCrateFileType();
 
-        Log.i("QWEQWE", "" + localFilePath + "=====" + remoteFileName);
+        Log.i(TAG, "" + localFilePath + "=====" + remoteFileName);
         //创建远程文件
 
         String remoteFilePath = creatType + remoteFileName;
@@ -364,12 +369,13 @@ public class Updater {
      *
      * @param remoteFile  远程文件名，在上传之前已经将服务器工作目录做了改变
      * @param localFile   本地文件 File句柄，绝对路径
-     * @param processStep 需要显示的处理进度步进值
+     * @param process 需要显示的处理进度步进值
      * @param ftpClient   FTPClient 引用
      * @return
      * @throws IOException
      */
     public UploadStatus uploadFile2(String remoteFile, File localFile, FTPClient ftpClient, long remoteSize) throws IOException {
+        Log.i(TAG, "本地名字是："+bean.getLocfileName());
         UploadStatus status;
         //显示进度的上传
         long step = localFile.length() / 100;
@@ -386,6 +392,9 @@ public class Updater {
         }
         byte[] bytes = new byte[1024];
         int c;
+
+
+
         while ((c = raf.read(bytes)) != -1) {
             out.write(bytes, 0, c);
             localreadbytes += c;
@@ -393,9 +402,15 @@ public class Updater {
                 process = localreadbytes / step;
                 Log.i(TAG, remoteFile + "的上传进度:" + process);
                 cp.setProgresValues(remoteFile, process + "");
+//
+//                FileUser uu=new FileUser();
+//                uu.setId(FileUtils.longPressLong(bean.getLocfileName()));
+//                uu.setMFileProgresdao(process);
+//                APP.getDaoInstant().getFileUserDao().update(uu);
                 //TODO 汇报上传状态
             }
         }
+
         out.flush();
         raf.close();
         out.close();
@@ -408,81 +423,81 @@ public class Updater {
         return status;
     }
 
-    /**
-     * 上传文件到服务器,新上传和断点续传
-     *
-     * @param remoteFile 远程文件名，在上传之前已经将服务器工作目录做了改变
-     * @param localFile  本地文件 File句柄，绝对路径
-     *                   需要显示的处理进度步进值
-     * @param ftpClient  FTPClient 引用
-     * @return
-     * @throws IOException
-     */
-    public UploadStatus uploadFile(String remoteFile, File localFile,
-                                   FTPClient ftpClient, long remoteSize) throws IOException {
-        UploadStatus status;
-        boolean result = false;
-        // 显示进度的上传
-        long step = localFile.length() / 100;
-        long process = 0;
-        long localreadbytes = 0L;
-        RandomAccessFile raf = new RandomAccessFile(localFile, "r");
-        OutputStream out = ftpClient.appendFileStream(remoteFile);
-        // 断点续传
-        if (remoteSize > 0) {
-            ftpClient.setRestartOffset(remoteSize);
-            process = remoteSize / step;
-            raf.seek(remoteSize);
-            localreadbytes = remoteSize;
-        }
-        byte[] bytes = new byte[1024];
-        int c;
-        while (((c = raf.read(bytes)) != -1)) {
-            out.write(bytes, 0, c);
-            localreadbytes += c;
-            Log.i("qweqweqwe", "" + step);
-            if (step != 0) {
-                if ((localreadbytes / step) != process && !bean.getUpLoadStatus().equals("2")) {
-                    process = localreadbytes / step;
-                    // Log.d(TAG, "localFile " + localFile.getName()
-                    // + " , update process :" + process);
-                    sendMsg((int) process);
-                    Log.i("qweqweqwe", "" + process);
-//					// 更新数据库信息
-//					mDbFile.updataInfos(mBxFile.getFileProgress(),
-//							BXFile.FileStateSwitch(mBxFile.getFileState()),
-//							mBxFile.getFileName(), mBxFile.getFilePath());
-                }
-            } else {
-//				sendMsg(100);
-//				// 更新数据库信息
-//				mDbFile.updataInfos(mBxFile.getFileProgress(),
-//						BXFile.FileStateSwitch(mBxFile.getFileState()),
-//						mBxFile.getFileName(), mBxFile.getFilePath());
-            }
-        }
-
-        out.flush();
-        raf.close();
-        out.close();
-
-        if ((ftpClient != null) && (result == false)) {
-            result = ftpClient.completePendingCommand();
-        }
-//        if (mState == FtpState.PAUSE) {
-//            result = false;
+//    /**
+//     * 上传文件到服务器,新上传和断点续传
+//     *
+//     * @param remoteFile 远程文件名，在上传之前已经将服务器工作目录做了改变
+//     * @param localFile  本地文件 File句柄，绝对路径
+//     *                   需要显示的处理进度步进值
+//     * @param ftpClient  FTPClient 引用
+//     * @return
+//     * @throws IOException
+//     */
+//    public UploadStatus uploadFile(String remoteFile, File localFile,
+//                                   FTPClient ftpClient, long remoteSize) throws IOException {
+//        UploadStatus status;
+//        boolean result = false;
+//        // 显示进度的上传
+//        long step = localFile.length() / 100;
+//        long process = 0;
+//        long localreadbytes = 0L;
+//        RandomAccessFile raf = new RandomAccessFile(localFile, "r");
+//        OutputStream out = ftpClient.appendFileStream(remoteFile);
+//        // 断点续传
+//        if (remoteSize > 0) {
+//            ftpClient.setRestartOffset(remoteSize);
+//            process = remoteSize / step;
+//            raf.seek(remoteSize);
+//            localreadbytes = remoteSize;
 //        }
-
-        if (remoteSize > 0) {
-            status = result ? UploadStatus.Upload_From_Break_Success
-                    : UploadStatus.Upload_From_Break_Failed;
-        } else {
-            status = result ? UploadStatus.Upload_New_File_Success
-                    : UploadStatus.Upload_New_File_Failed;
-        }
-
-        // Log.d(TAG, "process is " + process + "|exit name is " +
-        // mBxFile.getFileName() + "| status is " + status);
-        return status;
-    }
+//        byte[] bytes = new byte[1024];
+//        int c;
+//        while (((c = raf.read(bytes)) != -1)) {
+//            out.write(bytes, 0, c);
+//            localreadbytes += c;
+//            Log.i("qweqweqwe", "" + step);
+//            if (step != 0) {
+//                if ((localreadbytes / step) != process && !bean.getUpLoadStatus().equals("2")) {
+//                    process = localreadbytes / step;
+//                    // Log.d(TAG, "localFile " + localFile.getName()
+//                    // + " , update process :" + process);
+//                    sendMsg((int) process);
+//                    Log.i("qweqweqwe", "" + process);
+////					// 更新数据库信息
+////					mDbFile.updataInfos(mBxFile.getFileProgress(),
+////							BXFile.FileStateSwitch(mBxFile.getFileState()),
+////							mBxFile.getFileName(), mBxFile.getFilePath());
+//                }
+//            } else {
+////				sendMsg(100);
+////				// 更新数据库信息
+////				mDbFile.updataInfos(mBxFile.getFileProgress(),
+////						BXFile.FileStateSwitch(mBxFile.getFileState()),
+////						mBxFile.getFileName(), mBxFile.getFilePath());
+//            }
+//        }
+//
+//        out.flush();
+//        raf.close();
+//        out.close();
+//
+//        if ((ftpClient != null) && (result == false)) {
+//            result = ftpClient.completePendingCommand();
+//        }
+////        if (mState == FtpState.PAUSE) {
+////            result = false;
+////        }
+//
+//        if (remoteSize > 0) {
+//            status = result ? UploadStatus.Upload_From_Break_Success
+//                    : UploadStatus.Upload_From_Break_Failed;
+//        } else {
+//            status = result ? UploadStatus.Upload_New_File_Success
+//                    : UploadStatus.Upload_New_File_Failed;
+//        }
+//
+//        // Log.d(TAG, "process is " + process + "|exit name is " +
+//        // mBxFile.getFileName() + "| status is " + status);
+//        return status;
+//    }
 }

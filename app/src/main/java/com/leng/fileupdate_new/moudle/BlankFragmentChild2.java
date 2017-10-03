@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.leng.fileupdate_new.APP;
 import com.leng.fileupdate_new.Adapter.Child2Adapter;
+import com.leng.fileupdate_new.Bean.FileUpdateStatus;
 import com.leng.fileupdate_new.Bean.FileUser;
 import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
@@ -30,6 +31,8 @@ import com.leng.other.CommomDialog2;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import static com.leng.fileupdate_new.utils.Constanxs.updingMap;
 
 public class BlankFragmentChild2 extends Fragment implements View.OnClickListener {
     private View view;
@@ -57,7 +60,26 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                     Bundle bundle = msg.getData();
                     String pathname = bundle.getString("pathname");
                     String progress = bundle.getString("progress");
-                    Log.i(TAG, pathname + "==" + progress);
+                    int progressv = Integer.parseInt(progress);
+
+                    if (isDaoFileExits(pathname)) {
+                        if (mListname.size() == 1) {
+                            Child2Adapter.updataView(0, mChild2Listview, progressv);//动态修改
+                        } else if (mListname.size() == 2) {
+                            Child2Adapter.updataView(0, mChild2Listview, progressv);//动态修改
+                            Child2Adapter.updataView(1, mChild2Listview, progressv);//动态修改
+                        } else if (mListname.size() == 3) {
+                            Child2Adapter.updataView(0, mChild2Listview, progressv);//动态修改
+                            Child2Adapter.updataView(1, mChild2Listview, progressv);//动态修改
+                            Child2Adapter.updataView(2, mChild2Listview, progressv);//动态修改
+
+                        } else {
+
+                        }
+                    } else {
+                        Log.i(TAG, "列表中没有这个文件");
+                    }
+                    Log.i(TAG, pathname + "==" + progress + "int值 ：" + progressv);
                     break;
             }
         }
@@ -121,6 +143,20 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
 
     }
 
+    /**
+     * 去数据库作比对
+     */
+    private boolean isDaoFileExits(String filename) {
+        if (mListname.size() > 0) {
+            for (int i = 0; i < DaoUtils.FileUserDaoQuerywhere("6").size(); i++) {
+                if (DaoUtils.FileUserDaoQuerywhere("6").get(i).getId().equals(FileUtils.longPressLong(filename))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -136,21 +172,22 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
         checkNum = 0;
         checktrueNums = 0;
         isSelectdAll = true;//标记删除后不能在全选
-        if (DaoUtils.FileUserDaoQuerywhere("2") != null && DaoUtils.FileUserDaoQuerywhere("2").size() > 0) {
-            for (int i1 = 0; i1 < DaoUtils.FileUserDaoQuerywhere("2").size(); i1++) {
-                mListname.add(DaoUtils.FileUserDaoQuerywhere("2").get(i1).getMFileNamedao());
-                mListpath.add(DaoUtils.FileUserDaoQuerywhere("2").get(i1).getMFilePathdao());
+        if (DaoUtils.FileUserDaoQuerywhere("6") != null && DaoUtils.FileUserDaoQuerywhere("6").size() > 0) {
+            for (int i1 = 0; i1 < DaoUtils.FileUserDaoQuerywhere("6").size(); i1++) {
+                mListname.add(DaoUtils.FileUserDaoQuerywhere("6").get(i1).getMFileNamedao());
+                mListpath.add(DaoUtils.FileUserDaoQuerywhere("6").get(i1).getMFilePathdao());
                 mChild2RelativeEmpty.setVisibility(View.GONE);
                 mChild2RelativeList.setVisibility(View.VISIBLE);
                 mAdapter = new Child2Adapter(mContext, mListname, mListpath);
                 mChild2Listview.setAdapter(mAdapter);
-                Log.i(TAG, "查询到的数据是 ：" + DaoUtils.FileUserDaoQuerywhere("2").get(i1).getMFileNamedao() + "");
+                Log.i(TAG, "查询到的数据是 ：" + DaoUtils.FileUserDaoQuerywhere("6").get(i1).getMFileNamedao() + "");
             }
         } else {
             Log.i(TAG, "没有查询到数据");
             mChild2RelativeEmpty.setVisibility(View.VISIBLE);
             mChild2RelativeList.setVisibility(View.GONE);
         }
+
         setBtnSelectAllYes();
     }
 
@@ -224,11 +261,9 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                     for (int i = 0; i < Child2Adapter.getIsSelectedChild2().size(); i++) {
                         if (Child2Adapter.getIsSelectedChild2().get(i)) {
                             Log.i(TAG, "撤销的文件是 ：" + mListpath.get(i));
-//                            FileUtils.delete(mListpath.get(i));
-//                            DaoUtils.FilUserDaoDel(mListname.get(i));
                             FileUser fileUser = new FileUser();
-                            fileUser.setId(FileUtils.longPressLong(mListname.get(i)));
-                            fileUser.setMFileTypedao("1");
+                            fileUser.setId(null);
+                            fileUser.setMFileTypedao(null);
                             fileUser.setMFileNamedao(mListname.get(i));
                             fileUser.setMFilePathdao(mListpath.get(i));
                             APP.getDaoInstant().getFileUserDao().update(fileUser);
@@ -291,6 +326,8 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             boolean checkIS = true;
             CheckBox cb = view.findViewById(R.id.dir_list_Check);
+
+
             chcnlSels(i);
             if (checkNum == mListname.size()) {
                 setBtnSelectAllNo();

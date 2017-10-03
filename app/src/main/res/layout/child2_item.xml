@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:progress="10"
+                android:progress="1"
                 android:id="@+id/hpr"
                 app:progress_text_color="#ff2903FC"
                 app:progress_unreached_color="#ffBCB4E8" />

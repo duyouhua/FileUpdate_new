@@ -91,7 +91,7 @@ public class TAB2_Adapter extends BaseAdapter {
             } else if (f.isFile()) {
                 holder.image.setImageBitmap(file);
             } else {
-                System.out.println(f.getName());
+                holder.image.setImageBitmap(file);
             }
         }
         return convertView;

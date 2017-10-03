@@ -26,6 +26,7 @@ import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class TAB2BlankFragment extends ListFragment implements View.OnClickListener {
     private static final String ROOT_PATH = "/mnt/";
@@ -91,6 +92,8 @@ public class TAB2BlankFragment extends ListFragment implements View.OnClickListe
             mFileName.add(f.getName());
             mFilePath.add(f.getPath());
         }
+//        Collections.sort(mFileName);
+        Collections.sort(mFilePath);
         this.setListAdapter(new TAB2_Adapter(mContext, mFileName, mFilePath));
     }
 
