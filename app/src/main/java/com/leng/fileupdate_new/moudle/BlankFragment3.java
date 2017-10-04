@@ -2,12 +2,15 @@ package com.leng.fileupdate_new.moudle;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +55,7 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
     private RelativeLayout mSettingRelativeWifinet;
     private boolean check6boolean = true;
     private boolean check7boolean = true;
+    private boolean check8boolean = true;
     private int startType1, startType2, startType3, startType4, startType5;
     private MainActivity mActivity;
 
@@ -65,7 +70,7 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
                     if (r1.equals("null")) {
                     } else {
                         if (!r1.equals(resultPath)) {
-                            SharedPreferencesUtils.setParam(mContext,"lujinggaibianl1","no");
+                            SharedPreferencesUtils.setParam(mContext, "lujinggaibianl1", "no");
                         }
                     }
                     SharedPreferencesUtils.setParam(mContext, "mSettingPath1", resultPath);
@@ -74,12 +79,11 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
                 case 2:
 
 
-
                     String r2 = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath2", "null");
                     if (r2.equals("null")) {
                     } else {
                         if (!r2.equals(resultPath)) {
-                            SharedPreferencesUtils.setParam(mContext,"lujinggaibianl2","no");
+                            SharedPreferencesUtils.setParam(mContext, "lujinggaibianl2", "no");
                         }
                     }
                     SharedPreferencesUtils.setParam(mContext, "mSettingPath2", resultPath);
@@ -94,7 +98,7 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
                     if (r3.equals("null")) {
                     } else {
                         if (!r3.equals(resultPath)) {
-                            SharedPreferencesUtils.setParam(mContext,"lujinggaibianl3","no");
+                            SharedPreferencesUtils.setParam(mContext, "lujinggaibianl3", "no");
                         }
                     }
                     SharedPreferencesUtils.setParam(mContext, "mSettingPath3", resultPath);
@@ -105,7 +109,7 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
                     if (r4.equals("null")) {
                     } else {
                         if (!r4.equals(resultPath)) {
-                            SharedPreferencesUtils.setParam(mContext,"lujinggaibianl4","no");
+                            SharedPreferencesUtils.setParam(mContext, "lujinggaibianl4", "no");
                         }
                     }
                     SharedPreferencesUtils.setParam(mContext, "mSettingPath4", resultPath);
@@ -116,12 +120,12 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
                     if (r5.equals("null")) {
                     } else {
                         if (!r5.equals(resultPath)) {
-                            SharedPreferencesUtils.setParam(mContext,"lujinggaibianl5","no");
+                            SharedPreferencesUtils.setParam(mContext, "lujinggaibianl5", "no");
                         }
                     }
                     SharedPreferencesUtils.setParam(mContext, "mSettingPath5", resultPath);
                     mSettingPath5.setText(resultPath + "");
-                   break;
+                    break;
                 default:
                     Log.i(TAG, "BlankFragment3 mHandler default");
                     break;
@@ -129,6 +133,8 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
         }
     };
     private TextView mSettingPath1, mSettingPath2, mSettingPath3, mSettingPath4, mSettingPath5;
+    private RelativeLayout mSettingRelativeYesno;
+    private CheckBox mCheckbox8;
 
     @Override
     public void onAttach(Activity activity) {
@@ -174,6 +180,7 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
         mCheckbox5.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox5", false));
         mCheckbox6.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox6", false));
         mCheckbox7.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox7", false));
+        mCheckbox8.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox8", false));
     }
 
     private void initView(View view) {
@@ -218,6 +225,9 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
         mSettingPath3 = (TextView) view.findViewById(R.id.setting_path_3);
         mSettingPath4 = (TextView) view.findViewById(R.id.setting_path_4);
         mSettingPath5 = (TextView) view.findViewById(R.id.setting_path_5);
+        mSettingRelativeYesno = (RelativeLayout) view.findViewById(R.id.setting_relative_yesno);
+        mSettingRelativeYesno.setOnClickListener(this);
+        mCheckbox8 = (CheckBox) view.findViewById(R.id.checkbox8);
     }
 
 
@@ -259,10 +269,14 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
                 Toast.makeText(mContext, "1", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.setting_serverip_btn:
+                new HideClick().start();
+                if (HideClick.sIsAlive >= 5) {
+                    Intent intent = new Intent(getActivity(), SettingServerIP.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.setting_changepwd_btn:
-                break;
-            case R.id.checkbox2:
+                showPasswordSetDialog();
                 break;
             case R.id.setting_relative_mobnet:
                 relativeCheckStatus(mCheckbox6, check6boolean);
@@ -270,9 +284,96 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
             case R.id.setting_relative_wifinet:
                 relativeCheckStatus(mCheckbox7, check7boolean);
                 break;
+            case R.id.setting_relative_yesno:
+                relativeCheckStatus(mCheckbox8, check8boolean);
+
+                break;
         }
     }
 
+    static class HideClick extends Thread {
+        public static volatile int sIsAlive = 0;
+
+        @Override
+        public void run() {
+            sIsAlive++;
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (sIsAlive > 0) {
+                sIsAlive--;
+            }
+            super.run();
+
+        }
+    }
+
+
+    /**
+     * 设置密码的弹窗
+     */
+    private void showPasswordSetDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        final AlertDialog dialog = builder.create();
+        View view = View.inflate(mContext, R.layout.change_pwd, null);
+        dialog.setView(view, 0, 0, 0, 0);// 设置边距为0,保证在2.x的版本上运行没问题
+
+        final EditText edPassWord = (EditText) view
+                .findViewById(R.id.pwd_et1);
+        final EditText edPassWordConfirm = (EditText) view
+                .findViewById(R.id.pwd_et2);
+
+        TextView OK = (TextView) view.findViewById(R.id.pwd_tv1);
+        TextView Cancle = (TextView) view.findViewById(R.id.pwd_tv2);
+
+        OK.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                String password = edPassWord.getText().toString().trim();
+                String passwordConfirm = edPassWordConfirm.getText().toString()
+                        .trim();
+                if (!TextUtils.isEmpty(password) && !passwordConfirm.isEmpty()) {
+                    // 当输入的2个内容相同
+                    if (password.equals(passwordConfirm)) {
+                        Toast.makeText(mContext, "设置成功",
+                                Toast.LENGTH_SHORT).show();
+
+                        SharedPreferences savedPasswordPref = mContext.getSharedPreferences(
+                                "savedPassword", 0);
+
+                        SharedPreferences.Editor editor = savedPasswordPref
+                                .edit();
+                        editor.putString("savedPassword", password);
+                        editor.commit();
+                        // editor.putString("password",
+                        // MD5Utils.encode(password)).commit();
+                        dialog.dismiss();
+
+                    } else {
+                        Toast.makeText(mContext, "两次输入密码不一致",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(mContext, "输入内容不能为空",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        Cancle.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
 
     private void relativeCheckStatus(View v, boolean b) {
         switch (v.getId()) {
@@ -296,6 +397,17 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
                     mCheckbox7.setChecked(b);
                     check7boolean = true;
                     SharedPreferencesUtils.setParam(mContext, "checkbox7", false);
+                }
+                break;
+            case R.id.checkbox8:
+                if (b) {
+                    mCheckbox8.setChecked(b);
+                    check8boolean = false;
+                    SharedPreferencesUtils.setParam(mContext, "checkbox8", true);
+                } else {
+                    mCheckbox8.setChecked(b);
+                    check8boolean = true;
+                    SharedPreferencesUtils.setParam(mContext, "checkbox8", false);
                 }
                 break;
         }

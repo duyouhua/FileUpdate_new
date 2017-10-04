@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.leng.fileupdate_new.APP;
 import com.leng.fileupdate_new.Adapter.Child1Adapter;
 import com.leng.fileupdate_new.Bean.FileUser;
+import com.leng.fileupdate_new.Bean.FileUser2;
 import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
 import com.leng.fileupdate_new.contrl.CallbackChild2;
@@ -49,6 +50,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.leng.fileupdate_new.utils.Constanxs.INFO4;
+import static com.leng.fileupdate_new.utils.Constanxs.isUplodFirstone;
 import static com.leng.fileupdate_new.utils.Constanxs.isftpconnet;
 
 public class BlankFragmentChild1 extends ListFragment implements View.OnClickListener {
@@ -357,6 +359,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                             FileUser fileUser = new FileUser();
                             fileUser.setId(FileUtils.longPressLong(f.getName()));
                             fileUser.setMFileTypedao(title);
+                            fileUser.setMFileProgresdao(0);
                             fileUser.setMFileNamedao(f.getName());
                             fileUser.setMFilePathdao(f.getAbsolutePath());
                             APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
@@ -366,6 +369,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                                 FileUser fileUser = new FileUser();
                                 fileUser.setId(FileUtils.longPressLong(f.getName()));
                                 fileUser.setMFileTypedao(title);
+                                fileUser.setMFileProgresdao(0);
                                 fileUser.setMFileNamedao(f.getName());
                                 fileUser.setMFilePathdao(f.getAbsolutePath());
                                 APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
@@ -401,6 +405,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                             FileUser fileUser = new FileUser();
                             fileUser.setId(FileUtils.longPressLong(f.getName()));
                             fileUser.setMFileTypedao(title);
+                            fileUser.setMFileProgresdao(0);
                             fileUser.setMFileNamedao(f.getName());
                             fileUser.setMFilePathdao(f.getAbsolutePath());
                             APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
@@ -410,6 +415,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                                 FileUser fileUser = new FileUser();
                                 fileUser.setId(FileUtils.longPressLong(f.getName()));
                                 fileUser.setMFileTypedao(title);
+                                fileUser.setMFileProgresdao(0);
                                 fileUser.setMFileNamedao(f.getName());
                                 fileUser.setMFilePathdao(f.getAbsolutePath());
                                 APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
@@ -547,7 +553,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                     return;
                 }
 
-
+                isUplodFirstone=true;
                 for (int i = 0; i < Child1Adapter.getIsSelected().size(); i++) {
                     if (Child1Adapter.getIsSelected().get(i)) {
 
@@ -563,7 +569,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                                 type = "3";
                             }
                             if (type != null) {
-                                String remote = "2bgz12yp0_0" + mFileName2.get(i);
+                                String remote = "2bgz12yp0_0&" + mFileName2.get(i);
 //                                startUpdataFile(mFilePath.get(i), remote, type);
                                 Log.i(TAG, "选中的文件名是" + "i==" + i + mFilePath2.get(i) + "文件格式是：" + type + "服务端路径是：" + remote);
 
@@ -571,9 +577,15 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                                 FileUser fileUser = new FileUser();
                                 fileUser.setId(FileUtils.longPressLong(mFileName2.get(i)));
                                 fileUser.setMFileTypedao("6");
+                                fileUser.setMFileProgresdao(0);
                                 fileUser.setMFileNamedao(mFileName2.get(i));
                                 fileUser.setMFilePathdao(mFilePath2.get(i));
                                 APP.getDaoInstant().getFileUserDao().update(fileUser);
+
+                                FileUser2 ff = new FileUser2();
+                                ff.setId(FileUtils.longPressLong(mFileName2.get(i)));
+                                ff.setMFileProgresdao(0);
+                                APP.getDaoInstant().getFileUser2Dao().insertOrReplace(ff);//更新数据库
 
 
                                 TestBean testBean = new TestBean();

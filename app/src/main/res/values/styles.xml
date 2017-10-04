@@ -172,6 +172,12 @@
            <item name="android:button">@drawable/checkbox_style</item>
          </style>
 
+ <!-- CustomCheckBox theme -->
+      <style name="CustomCheckBoxThemesetting" parent="@android:style/Widget.CompoundButton.CheckBox">
+           <item name="android:button">@drawable/checkbox_stylesetting</item>
+         </style>
+
+
 
 
     <style name="AlertNoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">

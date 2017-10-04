@@ -115,6 +115,7 @@ public class TAB2BlankFragment extends ListFragment implements View.OnClickListe
                 //显示子目录及文件
                 showFileDir(path);
                 SharedPreferencesUtils.setParam(mContext, "TAB2savepath", path);
+//                SharedPreferencesUtils.setParam(mContext, "tabkeypath", path);
                 Log.i(TAG, path);
             } else {
                 //处理文件

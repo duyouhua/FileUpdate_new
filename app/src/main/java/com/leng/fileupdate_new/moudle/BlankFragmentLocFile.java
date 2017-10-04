@@ -59,7 +59,7 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
                     showFileDir2(ROOT_PATH);
                     break;
                 case 1231234:
-                    String paht = (String) SharedPreferencesUtils.getParam(mContext, "tabkeypath", "null");
+                    String paht = (String) SharedPreferencesUtils.getParam(mContext, "TAB2savepath", "null");
                     if (!paht.equals("null")) {
                         for (int i = 0; i < LocFileAdapter.getIsSelectedLocFile().size(); i++) {
                             if (LocFileAdapter.getIsSelectedLocFile().get(i)) {

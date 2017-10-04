@@ -40,10 +40,14 @@
         </receiver>
 
         <service
-            android:name=".services.MyService"
+            android:name=".services.connectServvice"
             android:enabled="true"
             android:exported="true"></service>
-
+        <activity
+            android:name="com.leng.fileupdate_new.moudle.SettingServerIP"
+            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar"
+            >
+        </activity>
         <receiver android:name=".contrl.connetBROADCAST">
         <intent-filter>
             <action android:name="a123asd" />

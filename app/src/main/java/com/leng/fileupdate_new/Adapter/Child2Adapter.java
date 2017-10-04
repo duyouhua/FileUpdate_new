@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.leng.fileupdate_new.Bean.FileUpdateStatus;
 import com.leng.fileupdate_new.R;
 import com.leng.fileupdate_new.contrl.FileManger;
+import com.leng.fileupdate_new.greendao.gen.DaoUtils;
 import com.leng.fileupdate_new.upload.uploadUtil.HProgressBar;
 
 import java.io.File;
@@ -104,7 +105,7 @@ public class Child2Adapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Log.i("ADADADA", paths.get(position));
+//        Log.i("ADADADA", paths.get(position));
         File f = new File(paths.get(position));
         if (names.get(position).equals("@1")) {
             holder.text.setText("/返回跟目录");
@@ -127,7 +128,7 @@ public class Child2Adapter extends BaseAdapter {
                                     .placeholder(R.drawable.ic_zhanweitu)
                                     .error(R.drawable.ic_tupian_shibai)
 //                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                    .override(50, 50)
+//                                    .override(50, 50)
                                     .into(holder.image);
 //                            mapFamt.put(f.getAbsolutePath(), "/Images/");
 //                            mapType.put(f.getAbsolutePath(), "1");
@@ -138,7 +139,7 @@ public class Child2Adapter extends BaseAdapter {
                                     .placeholder(R.drawable.ic_video_weijiazai_svg)
                                     .error(R.drawable.ic_video_svg)
 //                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                    .override(50, 50)
+//                                    .override(50, 50)
                                     .into(holder.image);
 //                            mapFamt.put(f.getAbsolutePath(), "/Videos/");
 //                            mapType.put(f.getAbsolutePath(), "3");
@@ -148,12 +149,13 @@ public class Child2Adapter extends BaseAdapter {
                                     .placeholder(R.drawable.ic_music_weijiazai_svg)
                                     .error(R.drawable.ic_music_svg)
 //                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                    .override(50, 50)
+//                                    .override(50, 50)
                                     .into(holder.image);
 //                            mapFamt.put(f.getAbsolutePath(), "/Audios/");
 //                            mapType.put(f.getAbsolutePath(), "2");
                         }
                         holder.cb.setChecked(getIsSelectedChild2().get(position));
+                        holder.progressBar.setProgress(DaoUtils.FileUserDaoQueryPrgresswhere(names.get(position)));
                         Log.i("QWEQWE", getIsSelectedChild2().get(position) + "");
 //                        int as = Integer.parseInt(updingMap.get(paths.get(position))+0)+holder.progressBar.getProgress();
 
@@ -178,7 +180,6 @@ public class Child2Adapter extends BaseAdapter {
             }
         }
 
-//        holder.progressBar.setProgress();
         return convertView;
     }
 
@@ -222,7 +223,7 @@ public class Child2Adapter extends BaseAdapter {
             View view = listView.getChildAt(posi - visibleFirstPosi);
             ViewHolder holder = (ViewHolder) view.getTag();
 
-            holder.progressBar.setProgress(values );
+            holder.progressBar.setProgress(values);
             Log.i("ASDASD", "走岂不是很尴尬");
         } else {
             Log.i("ASDASD", "没走岂不是很尴尬");

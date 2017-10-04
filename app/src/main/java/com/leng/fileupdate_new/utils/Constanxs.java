@@ -25,4 +25,6 @@ public class Constanxs {
 
     public static boolean isftpconnet = false;
     public static HashMap<String, String> updingMap = new HashMap<String, String>();
+
+    public static boolean  isUplodFirstone;
 }

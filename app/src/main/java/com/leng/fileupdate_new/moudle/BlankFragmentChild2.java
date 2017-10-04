@@ -23,6 +23,7 @@ import com.leng.fileupdate_new.APP;
 import com.leng.fileupdate_new.Adapter.Child2Adapter;
 import com.leng.fileupdate_new.Bean.FileUpdateStatus;
 import com.leng.fileupdate_new.Bean.FileUser;
+import com.leng.fileupdate_new.Bean.FileUser2;
 import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
 import com.leng.fileupdate_new.greendao.gen.DaoUtils;
@@ -31,7 +32,10 @@ import com.leng.other.CommomDialog2;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import static com.leng.fileupdate_new.greendao.gen.DaoUtils.FileUserDaoQueryPrgresswhere;
+import static com.leng.fileupdate_new.utils.Constanxs.isUplodFirstone;
 import static com.leng.fileupdate_new.utils.Constanxs.updingMap;
 
 public class BlankFragmentChild2 extends Fragment implements View.OnClickListener {
@@ -44,6 +48,8 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
     private boolean isSelectdAll = true;
     private Child2Adapter mAdapter;
     private int checktrueNums = 0;
+
+    private HashMap<String, Integer> mapIndex = new HashMap<>();
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -57,29 +63,45 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                     showFile();
                     break;
                 case 4560:
+                    if (isUplodFirstone){
+                        showFile();
+                        isUplodFirstone=false;
+                        Log.i(TAG,"只允许走一遍");
+                    }
+
                     Bundle bundle = msg.getData();
                     String pathname = bundle.getString("pathname");
                     String progress = bundle.getString("progress");
-                    int progressv = Integer.parseInt(progress);
+                    int progressv = Integer.parseInt(progress);//upload发送过来的值
+                    String uploadfilename = spitContDBfilename(pathname);//正在上传中的文件的名字
+                    FileUser2 ff = new FileUser2();
+                    ff.setId(FileUtils.longPressLong(uploadfilename));
+                    ff.setMFileProgresdao(progressv);
+                    APP.getDaoInstant().getFileUser2Dao().update(ff);//更新数据库
 
-                    if (isDaoFileExits(pathname)) {
-                        if (mListname.size() == 1) {
-                            Child2Adapter.updataView(0, mChild2Listview, progressv);//动态修改
-                        } else if (mListname.size() == 2) {
-                            Child2Adapter.updataView(0, mChild2Listview, progressv);//动态修改
-                            Child2Adapter.updataView(1, mChild2Listview, progressv);//动态修改
-                        } else if (mListname.size() == 3) {
-                            Child2Adapter.updataView(0, mChild2Listview, progressv);//动态修改
-                            Child2Adapter.updataView(1, mChild2Listview, progressv);//动态修改
-                            Child2Adapter.updataView(2, mChild2Listview, progressv);//动态修改
+                    int prgressValue = FileUserDaoQueryPrgresswhere(uploadfilename);
 
-                        } else {
-
-                        }
+                    if (mapIndex.size() > 0) {
+                        int dexwen = mapIndex.get(uploadfilename);
+                        Child2Adapter.updataView(dexwen, mChild2Listview, prgressValue);
+                        Log.i(TAG, "mapIndex不为空 "+"要更新的下标是 ："+dexwen+"  更新的值是 ："+prgressValue);
                     } else {
-                        Log.i(TAG, "列表中没有这个文件");
+                        Log.i(TAG, "mapIndex ==null");
                     }
-                    Log.i(TAG, pathname + "==" + progress + "int值 ：" + progressv);
+
+//                    int title6 = DaoUtils.FileUserDaoQuerywhere("6").size();
+//                    if (title6 == 1) {
+//                        Child2Adapter.updataView(0, mChild2Listview, progressv);
+//                    } else if (title6 == 2) {
+//                        Child2Adapter.updataView(0, mChild2Listview, progressv);
+//                        Child2Adapter.updataView(1, mChild2Listview, progressv);
+//                    } else if (title6 == 3) {
+//
+//                    } else {
+//
+//                    }
+//
+                    Log.i(TAG, pathname + "==" + progress + "int值 ：" + progressv + "名字是 ：" + spitContDBfilename(pathname) + "读取到的值是" + FileUserDaoQueryPrgresswhere(uploadfilename));
                     break;
             }
         }
@@ -113,6 +135,7 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
         ma = (MainActivity) activity;
         ma.setmHandlerUpding(mHandler);
     }
+
 
     //线程管理对象
     @Override
@@ -157,6 +180,16 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
         return false;
     }
 
+    /**
+     * 截取远程服务端的名字
+     */
+
+
+    private String spitContDBfilename(String name) {
+        String[] ass = name.split("&");
+        return ass[ass.length - 1];
+    }
+
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -166,6 +199,17 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
         }
     }
 
+    private int ifIndexWhen(String name) {
+        if (mListname.size() > 0) {
+            for (int i = 0; i < mListname.size(); i++) {
+                if (mListname.get(i).equals(name)) {
+                    return i;
+                }
+            }
+        }
+        return 11111;
+    }
+
     private void showFile() {
         mListname.clear();
         mListpath.clear();
@@ -173,14 +217,18 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
         checktrueNums = 0;
         isSelectdAll = true;//标记删除后不能在全选
         if (DaoUtils.FileUserDaoQuerywhere("6") != null && DaoUtils.FileUserDaoQuerywhere("6").size() > 0) {
+            mapIndex.clear();
             for (int i1 = 0; i1 < DaoUtils.FileUserDaoQuerywhere("6").size(); i1++) {
-                mListname.add(DaoUtils.FileUserDaoQuerywhere("6").get(i1).getMFileNamedao());
-                mListpath.add(DaoUtils.FileUserDaoQuerywhere("6").get(i1).getMFilePathdao());
+                String name = DaoUtils.FileUserDaoQuerywhere("6").get(i1).getMFileNamedao();
+                String path = DaoUtils.FileUserDaoQuerywhere("6").get(i1).getMFilePathdao();
+                mListname.add(name);
+                mListpath.add(path);
+                mapIndex.put(name, mapIndex.size() );
                 mChild2RelativeEmpty.setVisibility(View.GONE);
                 mChild2RelativeList.setVisibility(View.VISIBLE);
                 mAdapter = new Child2Adapter(mContext, mListname, mListpath);
                 mChild2Listview.setAdapter(mAdapter);
-                Log.i(TAG, "查询到的数据是 ：" + DaoUtils.FileUserDaoQuerywhere("6").get(i1).getMFileNamedao() + "");
+                Log.i(TAG, "查询到的数据是 ：" + DaoUtils.FileUserDaoQuerywhere("6").get(i1).getMFileNamedao() + "  map的size是： " + mapIndex.size());
             }
         } else {
             Log.i(TAG, "没有查询到数据");

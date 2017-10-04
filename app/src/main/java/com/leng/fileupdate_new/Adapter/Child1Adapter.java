@@ -121,7 +121,7 @@ public class Child1Adapter extends BaseAdapter {
                                     .placeholder(R.drawable.ic_zhanweitu)
                                     .error(R.drawable.ic_tupian_shibai)
 //                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                    .override(50, 50)
+//                                    .override(50, 50)
                                     .into(holder.image);
                             mapFamt.put(f.getAbsolutePath(), "/Images/");
 //                            mapType.put(f.getAbsolutePath(), "1");
@@ -132,7 +132,7 @@ public class Child1Adapter extends BaseAdapter {
                                     .placeholder(R.drawable.ic_video_weijiazai_svg)
                                     .error(R.drawable.ic_video_svg)
 //                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                    .override(50, 50)
+//                                    .override(50, 50)
                                     .into(holder.image);
                             mapFamt.put(f.getAbsolutePath(), "/Videos/");
 //                            mapType.put(f.getAbsolutePath(), "3");
@@ -142,7 +142,7 @@ public class Child1Adapter extends BaseAdapter {
                                     .placeholder(R.drawable.ic_music_weijiazai_svg)
                                     .error(R.drawable.ic_music_svg)
 //                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                    .override(50, 50)
+//                                    .override(50, 50)
                                     .into(holder.image);
                             mapFamt.put(f.getAbsolutePath(), "/Audios/");
 //                            mapType.put(f.getAbsolutePath(), "2");

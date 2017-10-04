@@ -114,7 +114,7 @@ public class LocFileAdapter extends BaseAdapter {
                                     .placeholder(R.drawable.ic_zhanweitu)
                                     .error(R.drawable.ic_tupian_shibai)
 //                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                    .override(50, 50)
+//                                    .override(50, 50)
                                     .into(holder.image);
 
                         } else if (famt.equals("3gp") || famt.equals("mp4") || famt.equals("rmvb") || famt.equals("mpeg") || famt.equals("mpg") || famt.equals("asf") || famt.equals("avi") || famt.equals("wmv")) {
@@ -124,7 +124,7 @@ public class LocFileAdapter extends BaseAdapter {
                                     .placeholder(R.drawable.ic_video_weijiazai_svg)
                                     .error(R.drawable.ic_video_svg)
 //                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                    .override(50, 50)
+//                                    .override(50, 50)
                                     .into(holder.image);
                         } else if (famt.equals("amr") || famt.equals("mp3") || famt.equals("m4a") || famt.equals("aac") || famt.equals("ogg") || famt.equals("wav") || famt.equals("mkv") || famt.equals("flac")) {
                             Glide.with(mContext)
@@ -132,7 +132,7 @@ public class LocFileAdapter extends BaseAdapter {
                                     .placeholder(R.drawable.ic_music_weijiazai_svg)
                                     .error(R.drawable.ic_music_svg)
 //                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                    .override(50, 50)
+//                                    .override(50, 50)
                                     .into(holder.image);
                         }
                         holder.cb.setChecked(getIsSelectedLocFile().get(position));
