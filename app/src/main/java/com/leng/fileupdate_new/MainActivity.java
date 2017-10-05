@@ -11,12 +11,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.leng.fileupdate_new.contrl.CabackInfoNums;
 import com.leng.fileupdate_new.contrl.CabackPv;
 import com.leng.fileupdate_new.contrl.CallbackChild;
 import com.leng.fileupdate_new.contrl.CallbackChild2;
@@ -25,12 +27,13 @@ import com.leng.fileupdate_new.contrl.ChangeModeFile;
 import com.leng.fileupdate_new.moudle.BlankFragment1;
 import com.leng.fileupdate_new.moudle.BlankFragment2;
 import com.leng.fileupdate_new.moudle.BlankFragment3;
+import com.leng.fileupdate_new.utils.RegUtil;
 
 import static com.leng.fileupdate_new.utils.Constanxs.INFO1;
 import static com.leng.fileupdate_new.utils.Constanxs.INFO2arg;
 import static com.leng.fileupdate_new.utils.Constanxs.INFO4;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ChangeModeFile, CallbackChild, CallbackLocFiel, CallbackChild2, CabackPv {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ChangeModeFile, CallbackChild, CallbackLocFiel, CallbackChild2, CabackPv, CabackInfoNums {
     private BlankFragment1 fragment1;
 
 
@@ -49,17 +52,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String TAG = "MainActivity";
 
     public Handler mHandler3, mHandler2, mHandler4, mHandlerChid1, mHandlerLocFile, mHandlerLocFileFragment, mHandlerUpding;
-
+    public Handler  mHandlerActive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        initRegUtil();
         initView();
         startLoding();
     }
+    private void initRegUtil() {
+        RegUtil regUtil = new RegUtil(this);
+        regUtil.SetDialogCancelCallBack(new RegUtil.DialogCancelInterface() {
+            @Override
+            public void ToFinishActivity() {
+                finish();
+            }
 
+            @Override
+            public void ToFinishActivity_pwd() {
+                finish();
+            }
+        });
+    }
     private void initView() {
         fragmentManager = getSupportFragmentManager();
         mTabBt1 = (Button) findViewById(R.id.tab_bt_1);
@@ -278,6 +295,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mHandler4 = handler4;
 
     }
+    /**
+     * fragment2
+     */
+    public void setmHandlerActivex(Handler mHandlerActivex) {
+        mHandlerActive = mHandlerActivex;
+
+    }
 
     @Override
     public void showFile(final int size, int mode) {
@@ -312,13 +336,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }).start();
 
         }
-//           if (mode==INFO2) {
-//
-//
-//
-//
-//
-//           }
 
 
     }
@@ -393,7 +410,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void setProgresValues(String pathname, String progress,String pathoth) {
+    public void setProgresValues(String pathname, String progress, String pathoth) {
         Log.i(TAG, pathname + "的上传进度:" + progress);
         Message message = new Message();
         message.what = 4560;
@@ -403,5 +420,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bundle.putString("pathpath", pathoth);
         message.setData(bundle);
         mHandlerUpding.sendMessage(message);
+    }
+
+    /**
+     * 三个界面的数量回调 发送消息到fragment2
+     */
+    @Override
+    public void setInfoNums( ) {
+//
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Thread.sleep(100);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                Message message = new Message();
+//                message.arg2 = 5690;
+//                mHandler2.sendMessage(message);
+//
+//                //更新上传完成页面数量变化
+//                Message message1 = new Message();
+//                message1.what = 4571;
+//
+//                mHandlerActive.sendMessage(message1);
+//            }
+//        }).start();
+//
     }
 }

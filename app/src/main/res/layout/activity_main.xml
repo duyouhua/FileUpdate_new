@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="@drawable/normal_bg"
     tools:context="com.leng.fileupdate_new.MainActivity">
-
+   <include layout="@layout/title_action"/>
 
 
     <RelativeLayout

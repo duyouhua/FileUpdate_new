@@ -1,5 +1,6 @@
 package com.leng.fileupdate_new.moudle;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -20,10 +21,14 @@ import android.widget.Toast;
 
 import com.leng.fileupdate_new.Adapter.Child3Adapter;
 import com.leng.fileupdate_new.Adapter.Child3Adapter;
+import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
+import com.leng.fileupdate_new.contrl.CabackInfoNums;
 import com.leng.fileupdate_new.contrl.ThreadPoolProxy;
 import com.leng.fileupdate_new.greendao.gen.DaoUtils;
+import com.leng.fileupdate_new.utils.Constanxs;
 import com.leng.fileupdate_new.utils.FileUtils;
+import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
 import com.leng.other.CommomDialog2;
 
 import java.util.ArrayList;
@@ -56,6 +61,8 @@ public class BlankFragmentChild3 extends Fragment implements View.OnClickListene
     private int checktrueNums = 0;
     private boolean isSelectdAll = true;
     private Child3Adapter mAdapter;
+    private CabackInfoNums cabackInfoNums;
+    private MainActivity ma;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -65,9 +72,22 @@ public class BlankFragmentChild3 extends Fragment implements View.OnClickListene
                 case 4579:
                     showFile();
                     break;
+                case 4571:
+//                    showFile2();
+                    Toast.makeText(mContext, "GUOLAI MA ", Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
     };
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        ma = (MainActivity) activity;
+        ma.setmHandlerActivex(mHandler);
+        cabackInfoNums = ma;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -109,7 +129,7 @@ public class BlankFragmentChild3 extends Fragment implements View.OnClickListene
         checktrueNums = 0;
         isSelectdAll = true;//标记删除后不能在全选
         if (FileUserDaoQueryPrgressAchieve() != null && FileUserDaoQueryPrgressAchieve().size() > 0) {
-            for (int i1 = 0; i1 < DaoUtils.FileUserDaoQueryPrgressAchieve( ).size(); i1++) {
+            for (int i1 = 0; i1 < DaoUtils.FileUserDaoQueryPrgressAchieve().size(); i1++) {
                 String name = DaoUtils.FileUserDaoQueryPrgressAchieve().get(i1).getMFileNamedao();
                 String path = DaoUtils.FileUserDaoQueryPrgressAchieve().get(i1).getMFilePathdao();
                 mListname.add(name);
@@ -118,14 +138,17 @@ public class BlankFragmentChild3 extends Fragment implements View.OnClickListene
                 mChild3RelativeList.setVisibility(View.VISIBLE);
                 mAdapter = new Child3Adapter(mContext, mListname, mListpath);
                 mChild3Listview.setAdapter(mAdapter);
-                Log.i(TAG, "查询到的数据是 ："+  FileUserDaoQueryPrgressAchieve().size()+name+path);
+                //保存正在上传的数量
+                SharedPreferencesUtils.setParam(mContext, Constanxs.FOTERNUMSTHREE, mListname.size() + "");
+                Log.i(TAG, "查询到的数据是 ：" + FileUserDaoQueryPrgressAchieve().size() + name + path);
             }
         } else {
             Log.i(TAG, "没有查询到数据");
             mChild3RelativeEmpty.setVisibility(View.VISIBLE);
             mChild3RelativeList.setVisibility(View.GONE);
         }
-
+        setBtnSelectAllYes();
+//        cabackInfoNums.setInfoNums();
     }
 
     @Override

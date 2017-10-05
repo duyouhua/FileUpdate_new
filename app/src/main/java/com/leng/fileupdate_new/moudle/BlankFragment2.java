@@ -22,11 +22,11 @@ import com.leng.fileupdate_new.R;
 import com.leng.fileupdate_new.contrl.CallbackChild;
 import com.leng.fileupdate_new.contrl.CallbackLocFiel;
 import com.leng.fileupdate_new.contrl.ChangeModeFile;
+import com.leng.fileupdate_new.utils.Constanxs;
 import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
 
 import static com.leng.fileupdate_new.MainActivity.fragmentManager;
 import static com.leng.fileupdate_new.utils.Constanxs.INFO2arg;
-import static com.leng.fileupdate_new.utils.Constanxs.WEISHANGCHUAN_P;
 
 
 public class BlankFragment2 extends Fragment implements View.OnClickListener {
@@ -51,7 +51,7 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener {
 
     private CallbackLocFiel clf;
 
-    CallbackChild cd;
+    private CallbackChild cd;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -90,6 +90,20 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener {
                 }
                 startLoding2();
             }
+            if (msg.arg2 == 5690) { //更新三个界面的数量
+                Toast.makeText(mContext, "更新数量", Toast.LENGTH_SHORT).show();
+                showBtnTxtNum();
+            }
+        }
+
+        private void showBtnTxtNum() {
+            String as1 = (String) SharedPreferencesUtils.getParam(mContext, Constanxs.FOTERNUMSONE, "0");
+            String as2 = (String) SharedPreferencesUtils.getParam(mContext, Constanxs.FOTERNUMSTWO, "0");
+            String as3 = (String) SharedPreferencesUtils.getParam(mContext, Constanxs.FOTERNUMSTHREE, "0");
+
+            mBtnWei.setText("(未上传" + as1 + ")");
+            mBtnShang.setText("(上传中" + as2 + ")");
+            mBtnYi.setText("(已完成" + as3 + ")");
         }
     };
 
@@ -272,24 +286,28 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener {
     }
 
     private void changeButton(int p) {
+
         switch (p) {
             case TITLE1:
+                String as1 = (String) SharedPreferencesUtils.getParam(mContext, Constanxs.FOTERNUMSONE, "0");
                 mBtnWei.setBackgroundColor(Color.parseColor("#009CFF"));
-                mBtnWei.setText("(未上传" + WEISHANGCHUAN_P + ")");
+//                mBtnWei.setText("(未上传" + as1 + ")");
                 mBtnShang.setBackgroundColor(Color.WHITE);
                 mBtnYi.setBackgroundColor(Color.WHITE);
 
 
                 break;
             case TITLE2:
+                String as2 = (String) SharedPreferencesUtils.getParam(mContext, Constanxs.FOTERNUMSTWO, "0");
                 mBtnShang.setBackgroundColor(Color.parseColor("#009CFF"));
-                mBtnShang.setText("(上传中" + WEISHANGCHUAN_P + ")");
+//                mBtnShang.setText("(上传中" + as2 + ")");
                 mBtnWei.setBackgroundColor(Color.WHITE);
                 mBtnYi.setBackgroundColor(Color.WHITE);
                 break;
             case TITLE3:
+                String as3 = (String) SharedPreferencesUtils.getParam(mContext, Constanxs.FOTERNUMSTHREE, "0");
                 mBtnYi.setBackgroundColor(Color.parseColor("#009CFF"));
-                mBtnYi.setText("(已完成" + WEISHANGCHUAN_P + ")");
+//                mBtnYi.setText("(已完成" + as3 + ")");
                 mBtnWei.setBackgroundColor(Color.WHITE);
                 mBtnShang.setBackgroundColor(Color.WHITE);
                 break;

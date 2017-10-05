@@ -375,7 +375,6 @@ public class Updater {
      * @throws IOException
      */
     public UploadStatus uploadFile2(String remoteFile, File localFile, FTPClient ftpClient, long remoteSize) throws IOException {
-        Log.i(TAG, "本地名字是："+bean.getLocfileName());
         UploadStatus status;
         //显示进度的上传
         long step = localFile.length() / 100;
@@ -401,7 +400,7 @@ public class Updater {
             if (localreadbytes / step != process) {
                 process = localreadbytes / step;
                 Log.i(TAG, remoteFile + "的上传进度:" + process+bean.getLocfilepath());
-                cp.setProgresValues(remoteFile, process + "",bean.getLocfilepath());
+                cp.setProgresValues(bean.getLocfileName(), process + "",bean.getLocfilepath());
 //
 //                FileUser uu=new FileUser();
 //                uu.setId(FileUtils.longPressLong(bean.getLocfileName()));

@@ -26,8 +26,11 @@ import com.leng.fileupdate_new.Bean.FileUser;
 import com.leng.fileupdate_new.Bean.FileUser2;
 import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
+import com.leng.fileupdate_new.contrl.CabackInfoNums;
 import com.leng.fileupdate_new.greendao.gen.DaoUtils;
+import com.leng.fileupdate_new.utils.Constanxs;
 import com.leng.fileupdate_new.utils.FileUtils;
+import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
 import com.leng.other.CommomDialog2;
 
 import java.io.File;
@@ -48,6 +51,25 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
     private boolean isSelectdAll = true;
     private Child2Adapter mAdapter;
     private int checktrueNums = 0;
+    private RelativeLayout mChild2RelativeList;
+    private RelativeLayout mChild2RelativeEmpty;
+    private static final String TAG = "BlankFragmentChild2";
+    /**
+     * 全选
+     */
+    private Button mSelectAllUpding;
+    /**
+     * 撤销
+     */
+    private Button mUpdateButtonUpding;
+    /**
+     * 删除
+     */
+    private Button mDeletButtonUpding;
+
+    int checkNum = 0;
+    //初始化回调接口
+    private CabackInfoNums cabackInfoNums;
 
     private HashMap<String, Integer> mapIndex = new HashMap<>();
     private Handler mHandler = new Handler() {
@@ -74,19 +96,19 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                     String progress = bundle.getString("progress");
                     String path = bundle.getString("pathpath");
                     int progressv = Integer.parseInt(progress);//upload发送过来的值
-                    String uploadfilename = spitContDBfilename(pathname);//正在上传中的文件的名字
+//                    String uploadfilename = spitContDBfilename(pathname);//正在上传中的文件的名字
                     FileUser2 ff = new FileUser2();
-                    ff.setId(FileUtils.longPressLong(uploadfilename));
+                    ff.setId(FileUtils.longPressLong(pathname));
                     ff.setMFileProgresdao(progressv);
-                    ff.setMFileNamedao(uploadfilename);
+                    ff.setMFileNamedao(pathname);
                     ff.setMFilePathdao(path);
 
                     APP.getDaoInstant().getFileUser2Dao().update(ff);//更新数据库
 
-                    int prgressValue = FileUserDaoQueryPrgresswhere(uploadfilename);
+                    int prgressValue = FileUserDaoQueryPrgresswhere(pathname);
 
                     if (mapIndex.size() > 0) {
-                        int dexwen = mapIndex.get(uploadfilename);
+                        int dexwen = mapIndex.get(pathname);
                         Child2Adapter.updataView(dexwen, mChild2Listview, prgressValue);
                         if (prgressValue == 100) {
                             String activefileName = mListname.get(dexwen);
@@ -104,7 +126,7 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                     }
 
 
-                    Log.i(TAG, pathname + "==" + progress + "int值 ：" + progressv + "名字是 ：" + spitContDBfilename(pathname) + "读取到的值是" + FileUserDaoQueryPrgresswhere(uploadfilename));
+                    Log.i(TAG, pathname + "==" + progress + "int值 ：" + progressv + "名字是 ：" + spitContDBfilename(pathname) + "读取到的值是"  );
                     break;
             }
         }
@@ -113,30 +135,12 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
     };
 
 
-    private RelativeLayout mChild2RelativeList;
-    private RelativeLayout mChild2RelativeEmpty;
-    private static final String TAG = "BlankFragmentChild2";
-    /**
-     * 全选
-     */
-    private Button mSelectAllUpding;
-    /**
-     * 撤销
-     */
-    private Button mUpdateButtonUpding;
-    /**
-     * 删除
-     */
-    private Button mDeletButtonUpding;
-
-    int checkNum = 0;
-
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         ma = (MainActivity) activity;
         ma.setmHandlerUpding(mHandler);
+        cabackInfoNums=   ma;
     }
 
 
@@ -231,6 +235,8 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                 mChild2RelativeList.setVisibility(View.VISIBLE);
                 mAdapter = new Child2Adapter(mContext, mListname, mListpath);
                 mChild2Listview.setAdapter(mAdapter);
+                //保存正在上传的数量
+                SharedPreferencesUtils.setParam(mContext, Constanxs.FOTERNUMSTWO, mListname.size() + "");
                 Log.i(TAG, "查询到的数据是 ：" + DaoUtils.FileUserDaoQuerywhere("6").get(i1).getMFileNamedao() + "  map的size是： " + mapIndex.size());
             }
         } else {
@@ -240,6 +246,9 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
         }
 
         setBtnSelectAllYes();
+
+        //回调发送消息
+//        cabackInfoNums.setInfoNums();
     }
 
 
