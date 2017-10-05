@@ -585,6 +585,8 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                                 FileUser2 ff = new FileUser2();
                                 ff.setId(FileUtils.longPressLong(mFileName2.get(i)));
                                 ff.setMFileProgresdao(0);
+                                ff.setMFileNamedao(mFileName2.get(i));
+                                ff.setMFilePathdao(mFilePath2.get(i));
                                 APP.getDaoInstant().getFileUser2Dao().insertOrReplace(ff);//更新数据库
 
 

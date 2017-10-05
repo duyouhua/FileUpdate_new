@@ -93,7 +93,7 @@ public class TABBlankFragment extends Fragment implements View.OnClickListener {
                 return;
             }
             Intent intent = new Intent();
-            getActivity().setResult(99, intent);
+            getActivity().setResult(98, intent);
             getActivity().finish();
             Log.i(TAG, mListPath.get(i) + "   adasasaasa");
         }

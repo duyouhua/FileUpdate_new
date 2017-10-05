@@ -63,20 +63,24 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                     showFile();
                     break;
                 case 4560:
-                    if (isUplodFirstone){
+                    if (isUplodFirstone) {
                         showFile();
-                        isUplodFirstone=false;
-                        Log.i(TAG,"只允许走一遍");
+                        isUplodFirstone = false;
+                        Log.i(TAG, "只允许走一遍");
                     }
 
                     Bundle bundle = msg.getData();
                     String pathname = bundle.getString("pathname");
                     String progress = bundle.getString("progress");
+                    String path = bundle.getString("pathpath");
                     int progressv = Integer.parseInt(progress);//upload发送过来的值
                     String uploadfilename = spitContDBfilename(pathname);//正在上传中的文件的名字
                     FileUser2 ff = new FileUser2();
                     ff.setId(FileUtils.longPressLong(uploadfilename));
                     ff.setMFileProgresdao(progressv);
+                    ff.setMFileNamedao(uploadfilename);
+                    ff.setMFilePathdao(path);
+
                     APP.getDaoInstant().getFileUser2Dao().update(ff);//更新数据库
 
                     int prgressValue = FileUserDaoQueryPrgresswhere(uploadfilename);
@@ -84,23 +88,22 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                     if (mapIndex.size() > 0) {
                         int dexwen = mapIndex.get(uploadfilename);
                         Child2Adapter.updataView(dexwen, mChild2Listview, prgressValue);
-                        Log.i(TAG, "mapIndex不为空 "+"要更新的下标是 ："+dexwen+"  更新的值是 ："+prgressValue);
+                        if (prgressValue == 100) {
+                            String activefileName = mListname.get(dexwen);
+                            Log.i(TAG, " 谁 ：" + activefileName + " 移除列表");
+
+                            FileUser fileUser = new FileUser();
+                            fileUser.setId(FileUtils.longPressLong(activefileName));
+                            fileUser.setMFileTypedao("7");
+                            APP.getDaoInstant().getFileUserDao().update(fileUser);
+                            mHandler.sendEmptyMessage(4579);
+                        }
+                        Log.i(TAG, "mapIndex不为空 " + "要更新的下标是 ：" + dexwen + "  更新的值是 ：" + prgressValue);
                     } else {
                         Log.i(TAG, "mapIndex ==null");
                     }
 
-//                    int title6 = DaoUtils.FileUserDaoQuerywhere("6").size();
-//                    if (title6 == 1) {
-//                        Child2Adapter.updataView(0, mChild2Listview, progressv);
-//                    } else if (title6 == 2) {
-//                        Child2Adapter.updataView(0, mChild2Listview, progressv);
-//                        Child2Adapter.updataView(1, mChild2Listview, progressv);
-//                    } else if (title6 == 3) {
-//
-//                    } else {
-//
-//                    }
-//
+
                     Log.i(TAG, pathname + "==" + progress + "int值 ：" + progressv + "名字是 ：" + spitContDBfilename(pathname) + "读取到的值是" + FileUserDaoQueryPrgresswhere(uploadfilename));
                     break;
             }
@@ -223,7 +226,7 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                 String path = DaoUtils.FileUserDaoQuerywhere("6").get(i1).getMFilePathdao();
                 mListname.add(name);
                 mListpath.add(path);
-                mapIndex.put(name, mapIndex.size() );
+                mapIndex.put(name, mapIndex.size());
                 mChild2RelativeEmpty.setVisibility(View.GONE);
                 mChild2RelativeList.setVisibility(View.VISIBLE);
                 mAdapter = new Child2Adapter(mContext, mListname, mListpath);
@@ -325,6 +328,9 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
         }).show();
     }
 
+    /**
+     * 撤销
+     */
     private void revocationFile(int num) {
         if (num != 0) {
 

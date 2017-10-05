@@ -78,6 +78,26 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
                         Toast.makeText(mContext, "获取剪切路径失败", Toast.LENGTH_SHORT).show();
                     }
                     break;
+                case 12312345://本地路劲
+                    String pahtloc = (String) SharedPreferencesUtils.getParam(mContext, "tabkeypath", "null");
+                    if (!pahtloc.equals("null")) {
+                        for (int i = 0; i < LocFileAdapter.getIsSelectedLocFile().size(); i++) {
+                            if (LocFileAdapter.getIsSelectedLocFile().get(i)) {
+                                listSelect.clear();
+                                listSelect.add(i);
+                                for (int i1 = 0; i1 < listSelect.size(); i1++) {
+                                    Log.i(TAG, listSelect.get(i1) + "选中的文件名是" + mFilePath.get(i));
+
+                                    FileUtils.moveFile(mFilePath.get(i), pahtloc);}
+
+                            }
+                        }
+                        mHandler.sendEmptyMessage(4444);
+                        Toast.makeText(mContext, "文件剪切成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, "获取剪切路径失败", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
                 case 4444:
                     String reslut = (String) SharedPreferencesUtils.getParam(mContext, "jiluFilePath", "null");
                     if (reslut.equals("null"))

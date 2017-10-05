@@ -1,14 +1,38 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bind_bg"
     tools:context="com.leng.fileupdate_new.moudle.BlankFragmentChild3">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
+        android:layout_above="@+id/default_bottom_upding_xxxx"
+        android:id="@+id/child3Relative_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="12312312312312312312123123" />
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <ListView
+
+            android:id="@+id/child3_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:layout_above="@+id/default_bottom_upding_xxxx"
+        android:id="@+id/child3Relative_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/kongbaibuju" />
+
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/default_bottom_upding_xxxx"
+        layout="@layout/default_bottom_upding"/>
+</RelativeLayout>

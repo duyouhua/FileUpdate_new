@@ -204,6 +204,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     }).start();
                     break;
+                case 98:
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(50);
+                                Message message = new Message();
+                                message.what = 12312345;
+                                mHandlerLocFileFragment.sendMessage(message);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+                    break;
                 default:
                     Log.i(TAG, "onActivityResult default");
                     break;
@@ -378,13 +393,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void setProgresValues(String pathname, String progress) {
+    public void setProgresValues(String pathname, String progress,String pathoth) {
         Log.i(TAG, pathname + "的上传进度:" + progress);
         Message message = new Message();
         message.what = 4560;
         Bundle bundle = new Bundle();
         bundle.putString("pathname", pathname);
         bundle.putString("progress", progress);
+        bundle.putString("pathpath", pathoth);
         message.setData(bundle);
         mHandlerUpding.sendMessage(message);
     }

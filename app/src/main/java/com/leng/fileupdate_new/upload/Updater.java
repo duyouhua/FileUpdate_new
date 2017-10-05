@@ -400,8 +400,8 @@ public class Updater {
             localreadbytes += c;
             if (localreadbytes / step != process) {
                 process = localreadbytes / step;
-                Log.i(TAG, remoteFile + "的上传进度:" + process);
-                cp.setProgresValues(remoteFile, process + "");
+                Log.i(TAG, remoteFile + "的上传进度:" + process+bean.getLocfilepath());
+                cp.setProgresValues(remoteFile, process + "",bean.getLocfilepath());
 //
 //                FileUser uu=new FileUser();
 //                uu.setId(FileUtils.longPressLong(bean.getLocfileName()));
@@ -410,7 +410,7 @@ public class Updater {
                 //TODO 汇报上传状态
             }
         }
-
+        Log.i(TAG, "本地名字是："+bean.getLocfileName());
         out.flush();
         raf.close();
         out.close();

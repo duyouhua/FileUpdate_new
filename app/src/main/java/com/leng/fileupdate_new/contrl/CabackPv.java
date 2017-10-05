@@ -5,5 +5,5 @@ package com.leng.fileupdate_new.contrl;
  */
 
 public interface CabackPv {
-    void  setProgresValues(String pathname,String progress);
+    void  setProgresValues(String pathname,String progress,String pathoath);
 }
