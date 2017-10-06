@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
+import com.leng.fileupdate_new.services.connectServvice;
 import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
 
 
@@ -195,8 +196,8 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
         mSettingBtn4.setOnClickListener(this);
         mSettingBtn5 = (Button) view.findViewById(R.id.setting_btn5);
         mSettingBtn5.setOnClickListener(this);
-        mShezhimorenYesorno = (TextView) view.findViewById(R.id.shezhimoren_yesorno);
-        mShezhimorenYesorno.setOnClickListener(this);
+//        mShezhimorenYesorno = (TextView) view.findViewById(R.id.shezhimoren_yesorno);
+//        mShezhimorenYesorno.setOnClickListener(this);
         mSettingServeripBtn = (TextView) view.findViewById(R.id.setting_serverip_btn);
         mSettingServeripBtn.setOnClickListener(this);
         mSettingChangepwdBtn = (TextView) view.findViewById(R.id.setting_changepwd_btn);
@@ -265,9 +266,7 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
                 i5.putExtra("startType", startType5);
                 startActivityForResult(i5, 5);
                 break;
-            case R.id.shezhimoren_yesorno:
-                Toast.makeText(mContext, "1", Toast.LENGTH_SHORT).show();
-                break;
+
             case R.id.setting_serverip_btn:
                 new HideClick().start();
                 if (HideClick.sIsAlive >= 5) {
@@ -286,7 +285,6 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
                 break;
             case R.id.setting_relative_yesno:
                 relativeCheckStatus(mCheckbox8, check8boolean);
-
                 break;
         }
     }
@@ -418,21 +416,33 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
         switch (compoundButton.getId()) {
             case R.id.checkbox1:
                 saveCheckStatus(mCheckbox1, b);
+                startServicesx("1", b);
                 break;
             case R.id.checkbox2:
                 saveCheckStatus(mCheckbox2, b);
+                startServicesx("2", b);
                 break;
             case R.id.checkbox3:
                 saveCheckStatus(mCheckbox3, b);
+                startServicesx("3", b);
                 break;
             case R.id.checkbox4:
                 saveCheckStatus(mCheckbox4, b);
+                startServicesx("4", b);
                 break;
             case R.id.checkbox5:
                 saveCheckStatus(mCheckbox5, b);
+                startServicesx("5", b);
                 break;
 
         }
+    }
+
+    private void startServicesx(String mode, boolean onoff) {
+        Intent intentxx = new Intent(mContext, connectServvice.class);
+        intentxx.putExtra("setmode", mode);
+        intentxx.putExtra("setstartORstop", onoff);
+        mContext.startService(intentxx);
     }
 
     private void saveCheckStatus(View v, boolean b) {

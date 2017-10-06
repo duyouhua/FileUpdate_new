@@ -304,7 +304,10 @@
                     android:gravity="center_vertical"
                     android:paddingLeft="30dp"
                     android:text="WIFI"
-                    android:textColor="#000" />
+                    android:textColor="#000"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
 
                 <CheckBox
                     android:id="@+id/checkbox7"
@@ -338,37 +341,65 @@
                 android:background="#ccc" />
 
 
+            <!--<RelativeLayout-->
+                <!--android:layout_marginTop="15dp"-->
+                <!--android:clickable="true"-->
+                <!--android:id="@+id/setting_relative_yesno"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/view4">-->
+
+                <!--<TextView-->
+
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:id="@+id/shezhimoren_yesorno"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="50dp"-->
+                    <!--android:layout_marginLeft="30dp"-->
+                    <!--android:text="上传完成后是否删除源文件"-->
+                    <!--android:textColor="#000"-->
+                    <!--android:textSize="16sp" />-->
+
+                <!--<CheckBox-->
+                    <!--android:layout_marginRight="35dp"-->
+                    <!--android:clickable="false"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:id="@+id/checkbox8"-->
+                    <!--style="@style/CustomCheckBoxThemesetting"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginLeft="25dp" />-->
+
+            <!--</RelativeLayout>-->
             <RelativeLayout
-                android:layout_marginTop="@dimen/view_20dp"
+                android:layout_marginTop="15dp"
                 android:id="@+id/setting_relative_yesno"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/view4">
 
                 <TextView
-
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:gravity="center_vertical"
-                    android:id="@+id/shezhimoren_yesorno"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
+                    android:paddingLeft="30dp"
                     android:text="上传完成后是否删除源文件"
                     android:textColor="#000"
-                    android:textSize="16sp" />
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
 
                 <CheckBox
-                    android:layout_marginRight="35dp"
-                    android:clickable="false"
-                    android:layout_alignParentRight="true"
                     android:id="@+id/checkbox8"
                     style="@style/CustomCheckBoxThemesetting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="25dp" />
-
+                    android:layout_marginRight="35dp"
+                    android:clickable="false" />
             </RelativeLayout>
-
             <TextView
                 android:id="@+id/shezhimoren5"
                 android:layout_width="match_parent"

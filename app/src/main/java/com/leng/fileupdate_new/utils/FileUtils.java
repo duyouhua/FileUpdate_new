@@ -36,6 +36,32 @@ import java.util.List;
 public class FileUtils {
     static String tag = "FileUtils";
 
+    public static String getExtension(final String name) {
+        String suffix = "";
+        final int idx = name.lastIndexOf(".");
+        if (idx > 0) {
+            suffix = name.substring(idx + 1);
+        }
+        return suffix;
+    }
+
+    //返回文件的服务器所穿件相对路径
+    public static String getFmat(String famt) {
+        String as = "";
+        if (famt != null) {
+            if (famt.equals("jpg") || famt.equals("png") || famt.equals("bmp") || famt.equals("jpeg") || famt.equals("gif")) {
+                as = "/Images/";
+            } else if (famt.equals("3gp") || famt.equals("mp4") || famt.equals("rmvb") || famt.equals("mpeg") || famt.equals("mpg") || famt.equals("asf") || famt.equals("avi") || famt.equals("wmv")) {
+                as = "/Videos/";
+            } else if (famt.equals("amr") || famt.equals("mp3") || famt.equals("m4a") || famt.equals("aac") || famt.equals("ogg") || famt.equals("wav") || famt.equals("mkv") || famt.equals("flac")) {
+                as = "/Audios/";
+            }
+
+        }
+        return as;
+    }
+
+
     public static File createFile(String folderPath, String fileName) {
         File destDir = new File(folderPath);
         if (!destDir.exists()) {

@@ -20,14 +20,20 @@ import android.widget.Toast;
 
 import com.leng.fileupdate_new.contrl.CabackInfoNums;
 import com.leng.fileupdate_new.contrl.CabackPv;
+import com.leng.fileupdate_new.contrl.CallBacklistview;
 import com.leng.fileupdate_new.contrl.CallbackChild;
 import com.leng.fileupdate_new.contrl.CallbackChild2;
 import com.leng.fileupdate_new.contrl.CallbackLocFiel;
 import com.leng.fileupdate_new.contrl.ChangeModeFile;
+import com.leng.fileupdate_new.contrl.ContinueFTP2;
+import com.leng.fileupdate_new.contrl.ContinueFtp;
 import com.leng.fileupdate_new.moudle.BlankFragment1;
 import com.leng.fileupdate_new.moudle.BlankFragment2;
 import com.leng.fileupdate_new.moudle.BlankFragment3;
+import com.leng.fileupdate_new.utils.Constanxs;
 import com.leng.fileupdate_new.utils.RegUtil;
+
+import java.io.IOException;
 
 import static com.leng.fileupdate_new.utils.Constanxs.INFO1;
 import static com.leng.fileupdate_new.utils.Constanxs.INFO2arg;
@@ -36,7 +42,7 @@ import static com.leng.fileupdate_new.utils.Constanxs.INFO4;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, ChangeModeFile, CallbackChild, CallbackLocFiel, CallbackChild2, CabackPv, CabackInfoNums {
     private BlankFragment1 fragment1;
 
-
+    public static MainActivity mActivityContext;
     private BlankFragment2 fragment2;
     private BlankFragment3 fragment3;
     public static FragmentManager fragmentManager;
@@ -52,17 +58,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String TAG = "MainActivity";
 
     public Handler mHandler3, mHandler2, mHandler4, mHandlerChid1, mHandlerLocFile, mHandlerLocFileFragment, mHandlerUpding;
-    public Handler  mHandlerActive;
+    public Handler mHandlerActive;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 111) {
+                Toast.makeText(MainActivity.this, "" + msg.obj.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mActivityContext = this;
 //        initRegUtil();
         initView();
         startLoding();
+//        threadconnec();
     }
+
+    private void threadconnec() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean isx = false;
+                try {
+                    ContinueFTP2 continueFtp = new ContinueFTP2(mActivityContext);
+                    isx = continueFtp.connect(Constanxs.FTPIP, Constanxs.FTPPORT, Constanxs.FTPUSER, Constanxs.FTPPASS);
+                    Thread.sleep(2000);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Message me = new Message();
+                me.obj = isx;
+                me.what = 111;
+                mHandler.sendMessage(me);
+            }
+        }).start();
+
+
+    }
+
     private void initRegUtil() {
         RegUtil regUtil = new RegUtil(this);
         regUtil.SetDialogCancelCallBack(new RegUtil.DialogCancelInterface() {
@@ -77,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
     private void initView() {
         fragmentManager = getSupportFragmentManager();
         mTabBt1 = (Button) findViewById(R.id.tab_bt_1);
@@ -295,6 +337,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mHandler4 = handler4;
 
     }
+
     /**
      * fragment2
      */
@@ -426,7 +469,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 三个界面的数量回调 发送消息到fragment2
      */
     @Override
-    public void setInfoNums( ) {
+    public void setInfoNums() {
 //
 //        new Thread(new Runnable() {
 //            @Override
@@ -449,4 +492,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        }).start();
 //
     }
+
+
 }

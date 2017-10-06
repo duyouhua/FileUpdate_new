@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bind_bg"
+    android:descendantFocusability="blocksDescendants"
     tools:context="com.leng.fileupdate_new.moudle.BlankFragmentChild2">
 
     <RelativeLayout

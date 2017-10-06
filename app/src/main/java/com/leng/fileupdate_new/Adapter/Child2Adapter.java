@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.leng.fileupdate_new.Bean.FileUpdateStatus;
 import com.leng.fileupdate_new.R;
+import com.leng.fileupdate_new.contrl.CallBacklistview;
 import com.leng.fileupdate_new.contrl.FileManger;
 import com.leng.fileupdate_new.greendao.gen.DaoUtils;
 import com.leng.fileupdate_new.upload.uploadUtil.HProgressBar;
@@ -34,7 +35,7 @@ import static com.leng.fileupdate_new.utils.Constanxs.updingMap;
  * Created by Administrator on 2017/9/27.
  */
 
-public class Child2Adapter extends BaseAdapter {
+public class Child2Adapter extends BaseAdapter implements View.OnClickListener {
     private LayoutInflater inflater;
     private Bitmap directory, file;
     int pvaluas;
@@ -47,14 +48,15 @@ public class Child2Adapter extends BaseAdapter {
     // 用来控制CheckBox的选中状况
     private static HashMap<Integer, Boolean> isSelectedchild2;
     private List<View> viewList;
-
+    private CallBacklistview mCallBack;
 
     //参数初始化
-    public Child2Adapter(Context context, ArrayList<String> na, ArrayList<String> pa) {
+    public Child2Adapter(Context context, ArrayList<String> na, ArrayList<String> pa,CallBacklistview callBack) {
         names = na;
         paths = pa;
         viewList = new ArrayList<>();
         mContext = context;
+        mCallBack=callBack;
         directory = BitmapFactory.decodeResource(context.getResources(), R.mipmap.wenjianjia);
         inflater = LayoutInflater.from(context);
         isSelectedchild2 = new HashMap<Integer, Boolean>();
@@ -88,8 +90,9 @@ public class Child2Adapter extends BaseAdapter {
         return position;
     }
 
+
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
         ViewHolder holder;
         if (null == convertView) {
@@ -97,15 +100,19 @@ public class Child2Adapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.text = (TextView) convertView.findViewById(R.id.icon_text);
             holder.image = (ImageView) convertView.findViewById(R.id.icon_image);
-            holder.button = (Button) convertView.findViewById(R.id.pause_button);
             holder.cb = (CheckBox) convertView.findViewById(R.id.dir_list_Check);
             holder.progressBar = (HProgressBar) convertView.findViewById(R.id.hpr);
+            holder.pbutton = (Button) convertView.findViewById(R.id.pause_button);
+            holder.sbutton = (Button) convertView.findViewById(R.id.start_button);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
-//        Log.i("ADADADA", paths.get(position));
+        holder.pbutton.setOnClickListener(this);
+        holder.pbutton.setTag(position );
+        holder.sbutton.setOnClickListener(this);
+        holder.sbutton.setTag(position );
         File f = new File(paths.get(position));
         if (names.get(position).equals("@1")) {
             holder.text.setText("/返回跟目录");
@@ -183,11 +190,17 @@ public class Child2Adapter extends BaseAdapter {
         return convertView;
     }
 
+    @Override
+    public void onClick(View v) {
+        mCallBack.click(v);
+    }
+
     private class ViewHolder {
         private TextView text;
         private ImageView image;
         private CheckBox cb;
-        private Button button;
+        private Button pbutton;
+        private Button sbutton;
         private HProgressBar progressBar;
     }
 
@@ -231,4 +244,6 @@ public class Child2Adapter extends BaseAdapter {
 //            holder.progressBar.setProgress(values+pros);
         }
     }
+
+
 }

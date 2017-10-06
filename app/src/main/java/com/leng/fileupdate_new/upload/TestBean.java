@@ -14,6 +14,16 @@ public class TestBean {
     }
 
     private String crateFileType;
+
+    public int getCrateFileTypenums() {
+        return crateFileTypenums;
+    }
+
+    public void setCrateFileTypenums(int crateFileTypenums) {
+        this.crateFileTypenums = crateFileTypenums;
+    }
+
+    private int crateFileTypenums;
     private String locfilepath;
 
     public String getLocfileName() {

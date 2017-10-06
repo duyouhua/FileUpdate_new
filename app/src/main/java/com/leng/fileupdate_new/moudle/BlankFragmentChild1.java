@@ -153,7 +153,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
      */
 
     private ArrayList<Integer> listSelect = new ArrayList<>();
-    private UploadFileManager uploadFileManager;
+    public static UploadFileManager uploadFileManager;
     private CabackInfoNums cabackInfoNums;
 
     @Override
@@ -177,21 +177,23 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
         mContext = getActivity();
         view = inflater.inflate(R.layout.fragment_blank_fragment_child1, container, false);
         initView(view);
-        cf = new ContinueFTP2(mContext);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Constanxs.isftpconnet = cf.connect(Constanxs.FTPIP, Constanxs.FTPPORT, Constanxs.FTPUSER, Constanxs.FTPPASS);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }).start();
+        xxxxx();
         return view;
     }
+private void  xxxxx(){
+    cf = new ContinueFTP2(mContext);
+    new Thread(new Runnable() {
+        @Override
+        public void run() {
+            try {
+                Constanxs.isftpconnet = cf.connect(Constanxs.FTPIP, Constanxs.FTPPORT, Constanxs.FTPUSER, Constanxs.FTPPASS);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
+        }
+    }).start();
+}
     private void initView(View view) {
 
         uploadFileManager = new UploadFileManager(mContext);
@@ -579,16 +581,16 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
 
                         // 文件上传格式
                         String famt = Child1Adapter.getMapFamt().get(mFilePath2.get(i));
-                        String type = "";
+                        int type = 0;
                         if (famt != null) {
                             if (famt.equals("/Images/")) {
-                                type = "1";
+                                type =  1  ;
                             } else if (famt.equals("/Audios/")) {
-                                type = "2";
+                                type = 2;
                             } else if (famt.equals("/Videos/")) {
-                                type = "3";
+                                type = 3 ;
                             }
-                            if (type != null) {
+                            if (type != 0) {
                                 String remote = "2bgz12yp0_0" + mFileName2.get(i);
 //                                startUpdataFile(mFilePath.get(i), remote, type);
                                 Log.i(TAG, "选中的文件名是" + "i==" + i + mFilePath2.get(i) + "文件格式是：" + type + "服务端路径是：" + remote);
@@ -610,12 +612,17 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                                 APP.getDaoInstant().getFileUser2Dao().insertOrReplace(ff);//更新数据库
 
 
-                                TestBean testBean = new TestBean();
+                                final TestBean testBean = new TestBean();
                                 testBean.setLocfilepath(mFilePath2.get(i));
                                 testBean.setRemotefilepath(remote);
                                 testBean.setLocfileName(mFileName2.get(i));
                                 testBean.setCrateFileType(famt);
+                                testBean.setCrateFileTypenums(type);
                                 uploadFileManager.startUpLoad(testBean);
+
+//                                xxxxx();
+//                                startUpdataFile(mFilePath2.get(i),remote,"1");
+
                                 Log.i(TAG, "开始上传" + "   名字是：" + mFileName2.get(i) + "id :" + FileUtils.longPressLong(mFileName2.get(i)));
 
                             } else {

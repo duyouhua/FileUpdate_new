@@ -143,7 +143,7 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume==fragment2");
-//        startLoding();
+        changeButton(TITLE1);
     }
 
     @Override

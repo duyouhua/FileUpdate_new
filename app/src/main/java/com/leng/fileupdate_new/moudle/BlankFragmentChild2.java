@@ -27,21 +27,27 @@ import com.leng.fileupdate_new.Bean.FileUser2;
 import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
 import com.leng.fileupdate_new.contrl.CabackInfoNums;
+import com.leng.fileupdate_new.contrl.CallBacklistview;
+import com.leng.fileupdate_new.contrl.ContinueFtp;
 import com.leng.fileupdate_new.greendao.gen.DaoUtils;
+import com.leng.fileupdate_new.upload.TestBean;
+import com.leng.fileupdate_new.upload.UploadFileManager;
 import com.leng.fileupdate_new.utils.Constanxs;
 import com.leng.fileupdate_new.utils.FileUtils;
 import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
 import com.leng.other.CommomDialog2;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import static com.leng.fileupdate_new.greendao.gen.DaoUtils.FileUserDaoQueryPrgresswhere;
+import static com.leng.fileupdate_new.moudle.BlankFragmentChild1.uploadFileManager;
 import static com.leng.fileupdate_new.utils.Constanxs.isUplodFirstone;
 import static com.leng.fileupdate_new.utils.Constanxs.updingMap;
 
-public class BlankFragmentChild2 extends Fragment implements View.OnClickListener {
+public class BlankFragmentChild2 extends Fragment implements View.OnClickListener, CallBacklistview {
     private View view;
     private ListView mChild2Listview;
     private ArrayList<String> mListname = new ArrayList<>();
@@ -54,6 +60,7 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
     private RelativeLayout mChild2RelativeList;
     private RelativeLayout mChild2RelativeEmpty;
     private static final String TAG = "BlankFragmentChild2";
+    private boolean isbtnchick = true;
     /**
      * 全选
      */
@@ -126,7 +133,7 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                     }
 
 
-                    Log.i(TAG, pathname + "==" + progress + "int值 ：" + progressv + "名字是 ：" + spitContDBfilename(pathname) + "读取到的值是"  );
+                    Log.i(TAG, pathname + "==" + progress + "int值 ：" + progressv + "名字是 ：" + spitContDBfilename(pathname) + "读取到的值是");
                     break;
             }
         }
@@ -140,7 +147,7 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
         super.onAttach(activity);
         ma = (MainActivity) activity;
         ma.setmHandlerUpding(mHandler);
-        cabackInfoNums=   ma;
+        cabackInfoNums = ma;
     }
 
 
@@ -148,7 +155,7 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mContext = getContext();
+        mContext = getActivity();
         view = inflater.inflate(R.layout.fragment_blank_fragment_child2, container, false);
         initView(view);
         return view;
@@ -233,7 +240,7 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                 mapIndex.put(name, mapIndex.size());
                 mChild2RelativeEmpty.setVisibility(View.GONE);
                 mChild2RelativeList.setVisibility(View.VISIBLE);
-                mAdapter = new Child2Adapter(mContext, mListname, mListpath);
+                mAdapter = new Child2Adapter(mContext, mListname, mListpath, this);
                 mChild2Listview.setAdapter(mAdapter);
                 //保存正在上传的数量
                 SharedPreferencesUtils.setParam(mContext, Constanxs.FOTERNUMSTWO, mListname.size() + "");
@@ -384,11 +391,30 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                 null, null);
     }
 
+
     AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
         @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        public void onItemClick(AdapterView<?> adapterView, final View view, int i, long l) {
             boolean checkIS = true;
-            CheckBox cb = view.findViewById(R.id.dir_list_Check);
+//            CheckBox cb = view.findViewById(R.id.dir_list_Check);
+//            final  Button pause = view.findViewById(R.id.pause_button);
+//            final Button start = view.findViewById(R.id.start_button);
+//            pause.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Toast.makeText(mContext, "点击暂停按钮", Toast.LENGTH_SHORT).show();
+//                    pause.setVisibility(View.GONE);
+//                    start.setVisibility(View.VISIBLE);
+//                }
+//            });
+//            start.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Toast.makeText(mContext, "点击开始按钮", Toast.LENGTH_SHORT).show();
+//                    pause.setVisibility(View.VISIBLE);
+//                    start.setVisibility(View.GONE);
+//                }
+//            });
 
 
             chcnlSels(i);
@@ -453,5 +479,31 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
         }
         // 刷新listview和TextView的显示
         dataChanged();
+    }
+
+    @Override
+    public void click(View view) {
+        int postion= (int) view.getTag();
+        Button pbutton = view.findViewById(R.id.pause_button);
+//        Button pbutton = LayoutInflater.from(mContext).inflate(R.layout.child2_item,null).findViewById(R.id.pause_button);
+//        Button sbutton = LayoutInflater.from(mContext).inflate(R.layout.child2_item,null).findViewById(R.id.start_button);
+        Button sbutton = view.findViewById(R.id.start_button);
+
+        if (uploadFileManager == null) {
+            uploadFileManager = new UploadFileManager(mContext);
+        }
+        if (isbtnchick) {
+
+            pbutton.setText("开始");
+            isbtnchick = false;
+//            TestBean testBean=new TestBean();
+//            testBean.setRemotefilepath("2bgz12yp0_0"+mListname.get(postion));
+//            testBean.setLocfilepath(mListpath.get(postion));
+//            testBean.setLocfileName(mListname.get(postion));
+//            uploadFileManager.pause(testBean);
+        } else {
+            pbutton.setText("暂停");
+            isbtnchick = true;
+        }
     }
 }

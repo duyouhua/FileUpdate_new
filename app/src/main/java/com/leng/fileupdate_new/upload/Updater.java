@@ -252,7 +252,7 @@ public class Updater {
                 || (UploadStatus.Upload_From_Break_Success == result)) {
             //
             int httpNums = 1;
-            httpUtils mHttpUtils = new httpUtils(context, 1,
+            httpUtils mHttpUtils = new httpUtils(context, bean.getCrateFileTypenums(),
                     localFilePath, remoteFileName);
             while (httpNums <= 3) {
 

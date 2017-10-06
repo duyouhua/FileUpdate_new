@@ -177,7 +177,7 @@ public class Child1Adapter extends BaseAdapter {
         return Bitmap.createBitmap(map, 0, 0, map.getWidth(), map.getHeight(), matrix, true);
     }
 
-    private static String getExtension(final File file) {
+    private   static String getExtension(final File file) {
         String suffix = "";
         String name = file.getName();
         final int idx = name.lastIndexOf(".");
@@ -186,6 +186,8 @@ public class Child1Adapter extends BaseAdapter {
         }
         return suffix;
     }
+
+
 
     public static HashMap<Integer, Boolean> getIsSelected() {
 //        isSelected.clear();

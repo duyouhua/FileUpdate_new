@@ -73,11 +73,11 @@ public class UploadFileManager {
      */
     public void BatchUpdate(List<TestBean> infos) {
 //        if (checkNetwork()) {
-            if (null != infos) {
-                for (TestBean mFile : infos) {
-                    startUpLoad(mFile); // 批量上传
-                }
+        if (null != infos) {
+            for (TestBean mFile : infos) {
+                startUpLoad(mFile); // 批量上传
             }
+        }
 //        }
     }
 
