@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -76,6 +77,11 @@ public class BlankFragment1 extends Fragment implements View.OnClickListener {
      * 文件个数
      */
     private TextView mNumFive;
+    private CheckBox mFileCheckBoxOne;
+    private CheckBox mFileCheckBoxTwo;
+    private CheckBox mFileCheckBoxThree;
+    private CheckBox mFileCheckBoxFour;
+    private CheckBox mFileCheckBoxFive;
 
     @Override
     public void onAttach(Activity activity) {
@@ -90,7 +96,7 @@ public class BlankFragment1 extends Fragment implements View.OnClickListener {
         mContext = getActivity();
         view = inflater.inflate(R.layout.fragment_blank_fragment1, container, false);
         initView(view);
-        Log.i(TAG,"DASDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+        Log.i(TAG, "DASDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
         return view;
     }
 
@@ -116,6 +122,11 @@ public class BlankFragment1 extends Fragment implements View.OnClickListener {
         mNumThree = (TextView) view.findViewById(R.id.num_three);
         mNumFour = (TextView) view.findViewById(R.id.num_four);
         mNumFive = (TextView) view.findViewById(R.id.num_five);
+        mFileCheckBoxOne = (CheckBox) view.findViewById(R.id.fileCheckBox_one);
+        mFileCheckBoxTwo = (CheckBox) view.findViewById(R.id.fileCheckBox_two);
+        mFileCheckBoxThree = (CheckBox) view.findViewById(R.id.fileCheckBox_three);
+        mFileCheckBoxFour = (CheckBox) view.findViewById(R.id.fileCheckBox_four);
+        mFileCheckBoxFive = (CheckBox) view.findViewById(R.id.fileCheckBox_five);
     }
 
 
@@ -145,6 +156,16 @@ public class BlankFragment1 extends Fragment implements View.OnClickListener {
      * 获取默认设置的路径
      */
     private void getDeaufutPath() {
+        boolean cbx1 = (Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox1", false);
+        boolean cbx2 = (Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox2", false);
+        boolean cbx3 = (Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox3", false);
+        boolean cbx4 = (Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox4", false);
+        boolean cbx5 = (Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox5", false);
+        mFileCheckBoxOne.setChecked(cbx1);
+        mFileCheckBoxTwo.setChecked(cbx2);
+        mFileCheckBoxThree.setChecked(cbx3);
+        mFileCheckBoxFour.setChecked(cbx4);
+        mFileCheckBoxFive.setChecked(cbx5);
         String a = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath1", "null");
         String b = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath2", "null");
         String c = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath3", "null");

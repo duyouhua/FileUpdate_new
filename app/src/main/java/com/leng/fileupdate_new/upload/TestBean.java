@@ -1,10 +1,12 @@
 package com.leng.fileupdate_new.upload;
 
+import java.io.Serializable;
+
 /**
  * Created by liuguodong on 2017/10/1.
  */
 
-public class TestBean {
+public class TestBean implements Serializable{
     public String getCrateFileType() {
         return crateFileType;
     }

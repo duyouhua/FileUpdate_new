@@ -1,8 +1,10 @@
 package com.leng.fileupdate_new.moudle;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -11,6 +13,7 @@ import android.widget.Toast;
 
 
 import com.leng.fileupdate_new.R;
+import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,14 +23,14 @@ public class SettingServerIP extends Activity {
     private EditText ftpIP, ftpPort, dataBaseAddress;
     private Button settingOK, settingCancle;
     private String ftpIPString, ftpPortString, dataBaseAddressString;
-
+   private Context mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setting_server_ip);
         this.setFinishOnTouchOutside(false);
-
+         mContext=this;
         init();
         fillEditTextWithSavedData();
     }
@@ -71,23 +74,25 @@ public class SettingServerIP extends Activity {
                     return;
                 }
                 // 判断都不能为空
-                if (ftpIPString.equals("") || ftpPortString.equals("")
-
-                        || dataBaseAddressString.equals("")) {
+                if (ftpIPString.equals("") || ftpPortString.equals("") || dataBaseAddressString.equals("")) {
                     Toast.makeText(getApplicationContext(),
                             R.string.inputError, Toast.LENGTH_SHORT).show();
 
                 } else {
-                    // 都不为空的情况下 保存一下
-                    SharedPreferences ServerSetting = getSharedPreferences(
-                            "ServerSetting", 0);
-                    SharedPreferences.Editor editor = ServerSetting.edit();
-                    editor.putString("ftpIp", ftpIPString);
-                    editor.putString("ftpPort", ftpPortString);
-                    editor.putString("databaseIp", dataBaseAddressString);
-                    editor.putString("databasePort", "80");
-                    editor.commit();
+                    SharedPreferencesUtils.setParam(mContext,"ftpIpX",ftpIPString);
+                    SharedPreferencesUtils.setParam(mContext,"ftpPortX",ftpPortString);
+                    SharedPreferencesUtils.setParam(mContext,"databaseIpX",dataBaseAddressString);
+                    SharedPreferencesUtils.setParam(mContext,"databasePortX","80");
+                    Log.i("QWEQWEASD",ftpIPString+"=="+ftpPortString+"=="+dataBaseAddressString+"==");
 
+//                    SharedPreferences ServerSetting = getSharedPreferences(
+//                            "ServerSetting", 0);
+//                    SharedPreferences.Editor editor = ServerSetting.edit();
+//                    editor.putString("ftpIp", ftpIPString);
+//                    editor.putString("ftpPort", ftpPortString);
+//                    editor.putString("databaseIp", dataBaseAddressString);
+//                    editor.putString("databasePort", "80");
+//                    editor.commit();
                     SharedPreferences ServerSetting2 = getSharedPreferences(
                             "ServerSetting2", 0);
                     SharedPreferences.Editor editor2 = ServerSetting2.edit();

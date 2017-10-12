@@ -24,7 +24,9 @@ import com.leng.fileupdate_new.Adapter.LocFileAdapter;
 import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
 import com.leng.fileupdate_new.contrl.FileManger;
+import com.leng.fileupdate_new.utils.DialogUTILS;
 import com.leng.fileupdate_new.utils.FileUtils;
+import com.leng.fileupdate_new.utils.HiddnFileter;
 import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
 import com.leng.other.CommomDialog2;
 
@@ -68,7 +70,8 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
                                 for (int i1 = 0; i1 < listSelect.size(); i1++) {
                                     Log.i(TAG, listSelect.get(i1) + "选中的文件名是" + mFilePath.get(i));
 
-                                    FileUtils.moveFile(mFilePath.get(i), paht);}
+                                    FileUtils.moveFile(mFilePath.get(i), paht);
+                                }
 
                             }
                         }
@@ -79,24 +82,40 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
                     }
                     break;
                 case 12312345://本地路劲
-                    String pahtloc = (String) SharedPreferencesUtils.getParam(mContext, "tabkeypath", "null");
-                    if (!pahtloc.equals("null")) {
-                        for (int i = 0; i < LocFileAdapter.getIsSelectedLocFile().size(); i++) {
-                            if (LocFileAdapter.getIsSelectedLocFile().get(i)) {
-                                listSelect.clear();
-                                listSelect.add(i);
-                                for (int i1 = 0; i1 < listSelect.size(); i1++) {
-                                    Log.i(TAG, listSelect.get(i1) + "选中的文件名是" + mFilePath.get(i));
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
 
-                                    FileUtils.moveFile(mFilePath.get(i), pahtloc);}
-
-                            }
+                            dialogUTILS.dialogshow();
                         }
-                        mHandler.sendEmptyMessage(4444);
-                        Toast.makeText(mContext, "文件剪切成功", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(mContext, "获取剪切路径失败", Toast.LENGTH_SHORT).show();
-                    }
+                    });
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String pahtloc = (String) SharedPreferencesUtils.getParam(mContext, "tabkeypath", "null");
+                            if (!pahtloc.equals("null")) {
+                                for (int i = 0; i < LocFileAdapter.getIsSelectedLocFile().size(); i++) {
+                                    if (LocFileAdapter.getIsSelectedLocFile().get(i)) {
+                                        listSelect.clear();
+                                        listSelect.add(i);
+                                        for (int i1 = 0; i1 < listSelect.size(); i1++) {
+                                            Log.i(TAG, listSelect.get(i1) + "选中的文件名是" + mFilePath.get(i));
+
+                                            FileUtils.moveFile(mFilePath.get(i), pahtloc);
+                                        }
+
+                                    }
+                                }
+                                mHandler.sendEmptyMessage(4444);
+                                Toast.makeText(mContext, "文件剪切成功", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(mContext, "获取剪切路径失败", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    }).start();
+
+
                     break;
                 case 4444:
                     String reslut = (String) SharedPreferencesUtils.getParam(mContext, "jiluFilePath", "null");
@@ -104,6 +123,7 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
                         showFileDir2(ROOT_PATH);
                     else
                         showFileDir2(reslut);
+                    dialogUTILS.dialogdismis();
                     break;
                 default:
                     break;
@@ -153,6 +173,7 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
      * 解决在文件夹中包含音视频文件
      */
     private ArrayList<Integer> mListBaoHanYSP = new ArrayList<>();
+    private DialogUTILS dialogUTILS;
 
     @Override
     public void onAttach(Activity activity) {
@@ -174,11 +195,12 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
 
         mListviewLocfile = (ListView) view.findViewById(R.id.listview_locfile);
         mListviewLocfile.setOnItemClickListener(itemchick);
+        mListviewLocfile.setOnItemLongClickListener(itemchivklong);
 
         mSelectAllLoc = (Button) view.findViewById(R.id.select_all_loc);
         mSelectAllLoc.setOnClickListener(this);
-        mUpdateButtonLoc = (Button) view.findViewById(R.id.update_button_loc);
-        mUpdateButtonLoc.setOnClickListener(this);
+//        mUpdateButtonLoc = (Button) view.findViewById(R.id.update_button_loc);
+//        mUpdateButtonLoc.setOnClickListener(this);
         mCutButtonLoc = (Button) view.findViewById(R.id.cut_button_loc);
         mCutButtonLoc.setOnClickListener(this);
         mDeletButtonLoc = (Button) view.findViewById(R.id.delet_button_loc);
@@ -186,9 +208,17 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
         mLl = (RelativeLayout) view.findViewById(R.id.ll);
         mEmptyView = (TextView) view.findViewById(R.id.emptyView);
         showFileDir2(ROOT_PATH);
+
+        dialogUTILS = new DialogUTILS(mContext);
     }
 
-
+    AdapterView.OnItemLongClickListener itemchivklong = new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            FileUtils.openFiles(mContext, mFilePath.get(position));
+            return false;
+        }
+    };
     AdapterView.OnItemClickListener itemchick = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -212,6 +242,8 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
                     }
                     Log.i(TAG, mListBaoHanYSP.size() + "---------");
                 }
+            } else {
+                Toast.makeText(mContext, "文件夹不可操作", Toast.LENGTH_SHORT).show();
             }
             //没有权限
 
@@ -242,8 +274,8 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
                     Toast.makeText(mContext, "当前文件下没有文件", Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.update_button_loc:
-                break;
+//            case R.id.update_button_loc:
+//                break;
             case R.id.cut_button_loc:
 //                for (int i = 0; i < LocFileAdapter.getIsSelectedLocFile().size(); i++) {
 //                    if (LocFileAdapter.getIsSelectedLocFile().get(i)) {
@@ -288,7 +320,7 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
         mFilePath = new ArrayList<String>();
         File file = new File(path);
 
-        File[] files = file.listFiles();
+        File[] files = file.listFiles(new HiddnFileter());
         //如果当前目录不是根目录
 //        if (!ROOT_PATH.equals(path)) {
 //            mFileName.add("@1");
@@ -297,12 +329,14 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
 //            mFilePath.add(file.getParent());
 //        }
         //添加所有文件
-            mListBaoHanYSP.clear();
+        mListBaoHanYSP.clear();
         if (files != null && files.length > 0) {
             mLl.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
             for (File f : files) {
                 if (f.isDirectory()) {
+
+                    Log.i(TAG, "  是隐藏文件吗 ？？？" + f.isHidden());
                     mFileName.add(f.getName());
                     mFilePath.add(f.getPath());
                 } else {
@@ -409,16 +443,28 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
             @Override
             public void onClick(Dialog dialog, boolean confirm) {
                 if (confirm) {
-                    for (int i = 0; i < LocFileAdapter.getIsSelectedLocFile().size(); i++) {
-                        if (LocFileAdapter.getIsSelectedLocFile().get(i)) {
-                            listSelect.clear();
-                            listSelect.add(i);
-                            for (int i1 = 0; i1 < listSelect.size(); i1++) {
-                                Log.i(TAG, listSelect.get(i1) + "选中的文件名是" + mFileName.get(i));
-                                FileUtils.delete(mFilePath.get(i));
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            dialogUTILS.dialogshow();
+                        }
+                    });
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (int i = 0; i < LocFileAdapter.getIsSelectedLocFile().size(); i++) {
+                                if (LocFileAdapter.getIsSelectedLocFile().get(i)) {
+                                    listSelect.clear();
+                                    listSelect.add(i);
+                                    for (int i1 = 0; i1 < listSelect.size(); i1++) {
+                                        Log.i(TAG, listSelect.get(i1) + "选中的文件名是" + mFileName.get(i));
+                                        FileUtils.delete(mFilePath.get(i));
+                                    }
+                                }
                             }
                         }
-                    }
+                    }).start();
                     mHandler.sendEmptyMessage(4444);
                 }
                 dialog.dismiss();

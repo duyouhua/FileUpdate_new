@@ -1,7 +1,10 @@
 package com.leng.fileupdate_new;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,25 +14,24 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.leng.fileupdate_new.contrl.CabackAutoUpInit;
 import com.leng.fileupdate_new.contrl.CabackInfoNums;
 import com.leng.fileupdate_new.contrl.CabackPv;
-import com.leng.fileupdate_new.contrl.CallBacklistview;
 import com.leng.fileupdate_new.contrl.CallbackChild;
 import com.leng.fileupdate_new.contrl.CallbackChild2;
 import com.leng.fileupdate_new.contrl.CallbackLocFiel;
 import com.leng.fileupdate_new.contrl.ChangeModeFile;
 import com.leng.fileupdate_new.contrl.ContinueFTP2;
-import com.leng.fileupdate_new.contrl.ContinueFtp;
 import com.leng.fileupdate_new.moudle.BlankFragment1;
 import com.leng.fileupdate_new.moudle.BlankFragment2;
 import com.leng.fileupdate_new.moudle.BlankFragment3;
+import com.leng.fileupdate_new.moudle.BlankFragmentChild2;
 import com.leng.fileupdate_new.utils.Constanxs;
 import com.leng.fileupdate_new.utils.RegUtil;
 
@@ -39,15 +41,15 @@ import static com.leng.fileupdate_new.utils.Constanxs.INFO1;
 import static com.leng.fileupdate_new.utils.Constanxs.INFO2arg;
 import static com.leng.fileupdate_new.utils.Constanxs.INFO4;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ChangeModeFile, CallbackChild, CallbackLocFiel, CallbackChild2, CabackPv, CabackInfoNums {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ChangeModeFile, CallbackChild, CallbackLocFiel, CallbackChild2, CabackPv, CabackInfoNums, CabackAutoUpInit {
     private BlankFragment1 fragment1;
-
     public static MainActivity mActivityContext;
     private BlankFragment2 fragment2;
     private BlankFragment3 fragment3;
+    private BlankFragmentChild2 blankFragmentChild2;
     public static FragmentManager fragmentManager;
     public static FragmentTransaction fragmentTransaction;
-
+    private boolean isONaCTIVITYr = true;
     private Button mTabBt1;
     private Button mTabBt2;
     private Button mTabBt3;
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int mSelectIndex = 0;
     private View last, now;
     private String TAG = "MainActivity";
-
+    RegUtil regUtil;
     public Handler mHandler3, mHandler2, mHandler4, mHandlerChid1, mHandlerLocFile, mHandlerLocFileFragment, mHandlerUpding;
     public Handler mHandlerActive;
     private Handler mHandler = new Handler() {
@@ -74,11 +76,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mActivityContext = this;
-//        initRegUtil();
         initView();
         startLoding();
+        initRegUtil();
+        isONaCTIVITYr = false;
 //        threadconnec();
     }
+
+    public Context initContext() {
+        return this;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isONaCTIVITYr) {
+//            initRegUtil();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
+
 
     private void threadconnec() {
         new Thread(new Runnable() {
@@ -117,9 +139,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 finish();
             }
         });
+
     }
 
     private void initView() {
+
+        MyReceiver receiver = new MyReceiver();
+        IntentFilter homeFilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+
+        registerReceiver(receiver, homeFilter);
+
         fragmentManager = getSupportFragmentManager();
         mTabBt1 = (Button) findViewById(R.id.tab_bt_1);
         mTabBt1.setOnClickListener(this);
@@ -202,10 +231,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void startLoding() {
         fragmentTransaction = fragmentManager.beginTransaction();
+        //>>>>>>>>>>>>>>>>>>>>>
+        if (fragment2 == null) {
+            fragment2 = new BlankFragment2();
+            fragmentTransaction.add(R.id.content_container, fragment2);
+        } else {
+            fragmentTransaction.hide(fragment2);
+        }
+        //>>>>>>>>>>>>>>>>>>>>>
+
         HideFrament();
         fragment1 = new BlankFragment1();
         fragmentTransaction.add(R.id.content_container, fragment1);
         fragmentTransaction.commit();
+
+
     }
 
     private void startAnimation(View last, View now) {
@@ -229,8 +269,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+
+    private class MyReceiver extends BroadcastReceiver {
+
+        private final String SYSTEM_DIALOG_REASON_KEY = "reason";
+        private final String SYSTEM_DIALOG_REASON_HOME_KEY = "homekey";
+        private final String SYSTEM_DIALOG_REASON_RECENT_APPS = "recentapps";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
+                String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
+
+                if (reason == null)
+                    return;
+
+                // Home键
+                if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
+                    isONaCTIVITYr = true;
+                    Log.i(TAG, "按了Home键");
+                }
+
+                // 最近任务列表键
+                if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
+                    Log.i(TAG, "按了最近任务列表");
+                }
+            }
+        }
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        isONaCTIVITYr = false;
         if (data != null) {
             switch (resultCode) {
                 case 1:
@@ -290,6 +362,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void confimPath(Intent data, int resultCode) {
+
         Message msg = new Message();
         msg.obj = data.getStringExtra("strPATH");// 传输的内容
         msg.what = resultCode;
@@ -454,6 +527,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void setProgresValues(String pathname, String progress, String pathoth) {
+//        if (blankFragmentChild2==null){
+//            blankFragmentChild2=new BlankFragmentChild2();
+//
+//        }else {
         Log.i(TAG, pathname + "的上传进度:" + progress);
         Message message = new Message();
         message.what = 4560;
@@ -464,6 +541,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         message.setData(bundle);
         mHandlerUpding.sendMessage(message);
     }
+//    }
 
     /**
      * 三个界面的数量回调 发送消息到fragment2
@@ -493,5 +571,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //
     }
 
+    /**
+     * 自动上传初始化接口
+     */
+    @Override
+    public void setinit(int off) {
+
+    }
 
 }

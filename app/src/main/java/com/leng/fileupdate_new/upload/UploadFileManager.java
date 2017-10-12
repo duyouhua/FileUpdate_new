@@ -2,6 +2,7 @@ package com.leng.fileupdate_new.upload;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 
 
 import com.leng.fileupdate_new.upload.uploadUtil.TaskThread;
@@ -23,7 +24,7 @@ public class UploadFileManager {
     private static ExecutorService mUploadFixedThreadPool;
     public Map<String, Updater> MyUpdaters = new HashMap<String, Updater>();//上传文件路径和上传器的映射
 
-    public UploadFileManager(Context context ) {
+    public UploadFileManager(Context context) {
         this.mHandler = mHandler;
         this.context = context;
         if (null == mUploadFixedThreadPool) {
@@ -40,9 +41,12 @@ public class UploadFileManager {
      */
     private void execute(Updater mUpdater) {
 
-        TaskThread taskThread = new TaskThread(mUpdater);
+//        TaskThread taskThread = new TaskThread(mUpdater);
+//        // 把线程追加到线程池中
+//        mUploadFixedThreadPool.execute(taskThread);
+        TaskThread taskThread2 = new TaskThread(mUpdater);
         // 把线程追加到线程池中
-        mUploadFixedThreadPool.execute(taskThread);
+        mUploadFixedThreadPool.execute(taskThread2);
 
     }
 
@@ -57,19 +61,20 @@ public class UploadFileManager {
 
 //		if (checkNetwork()) {
         // 添加线程管理
-        Updater mUpdater = MyUpdaters.get(bean.getLocfilepath ());
+        Updater mUpdater = MyUpdaters.get(bean.getLocfilepath());
         if (mUpdater == null) {
-            mUpdater = new Updater(context, bean,mHandler);
+            mUpdater = new Updater(context, bean, mHandler);
             MyUpdaters.put(bean.getLocfilepath(), mUpdater);
         }
 
-
+        Log.i("QWEQWEA", MyUpdaters.size() + "==========================");
         execute(mUpdater);
+
+
     }
 
     /**
-     * @param infos
-     *            批量上传
+     * @param infos 批量上传
      */
     public void BatchUpdate(List<TestBean> infos) {
 //        if (checkNetwork()) {
@@ -83,24 +88,25 @@ public class UploadFileManager {
 
     /**
      * 暂停上传文件
+     *
      * @param file
      */
-    public  void pause(TestBean file) {
+    public void pause(TestBean file) {
         Updater mUpdater = MyUpdaters.get(file.getLocfilepath());
 
 
         //加一个判断防止出现空指针
-        if (mUpdater!=null) {
+        if (mUpdater != null) {
             mUpdater.pause();
             MyUpdaters.remove(file.getLocfilepath());
         }
-
 
 
     }
 
     /**
      * 删除上传文件
+     *
      * @param file
      */
     public void delet(TestBean file) {

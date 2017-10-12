@@ -23,6 +23,7 @@ import com.leng.fileupdate_new.APP;
 import com.leng.fileupdate_new.Adapter.Child1Adapter;
 import com.leng.fileupdate_new.Bean.FileUser;
 import com.leng.fileupdate_new.Bean.FileUser2;
+import com.leng.fileupdate_new.Bean.FileUserRevocation;
 import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
 import com.leng.fileupdate_new.contrl.CabackInfoNums;
@@ -35,20 +36,17 @@ import com.leng.fileupdate_new.upload.TestBean;
 import com.leng.fileupdate_new.upload.UploadFileManager;
 import com.leng.fileupdate_new.utils.Constanxs;
 import com.leng.fileupdate_new.utils.FileUtils;
+import com.leng.fileupdate_new.utils.NetUtils;
 import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
 import com.leng.other.CommomDialog2;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import static com.leng.fileupdate_new.utils.Constanxs.INFO4;
 import static com.leng.fileupdate_new.utils.Constanxs.isUplodFirstone;
@@ -98,8 +96,8 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                     String path = msg.obj.toString();
 
                     break;
-                case 3567:
-
+                case 14561:
+//                    uploadFileManager.pause(testBean);
                     break;
                 default:
                     break;
@@ -124,6 +122,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
      * 删除
      */
     private Button mDeletButton;
+    private String regCodex;
     private ListView mListview1;
     //存储文件名称
     private ArrayList<String> mFileName = new ArrayList<String>();
@@ -142,6 +141,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
     public static HashMap<Integer, String> mapShangchuanNUMname = new HashMap<>();
     public static HashMap<Integer, String> mapShangchuanNUMpath = new HashMap<>();
 
+    private  boolean isconnet;
     /**
      * 判断当前选中的条目数据  用来处理删除dialog
      */
@@ -177,29 +177,31 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
         mContext = getActivity();
         view = inflater.inflate(R.layout.fragment_blank_fragment_child1, container, false);
         initView(view);
-        xxxxx();
+//        xxxxx();
         return view;
     }
-private void  xxxxx(){
-    cf = new ContinueFTP2(mContext);
-    new Thread(new Runnable() {
-        @Override
-        public void run() {
-            try {
-                Constanxs.isftpconnet = cf.connect(Constanxs.FTPIP, Constanxs.FTPPORT, Constanxs.FTPUSER, Constanxs.FTPPASS);
-            } catch (IOException e) {
-                e.printStackTrace();
+
+    private void xxxxx() {
+        cf = new ContinueFTP2(mContext);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Constanxs.isftpconnet = cf.connect(Constanxs.FTPIP, Constanxs.FTPPORT, Constanxs.FTPUSER, Constanxs.FTPPASS);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
+        }).start();
+    }
 
-        }
-    }).start();
-}
     private void initView(View view) {
-
+        regCodex = (String) SharedPreferencesUtils.getParam(mContext, "regcode", "null");
         uploadFileManager = new UploadFileManager(mContext);
-        rr = view.findViewById(R.id.shouKONG);
+        rr = (RelativeLayout) view.findViewById(R.id.shouKONG);
 //        rr = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.kongbaibuju, null);
-        mList = view.findViewById(android.R.id.list);
+        mList = (ListView) view.findViewById(android.R.id.list);
         mList.setOnItemLongClickListener(longchick);
         mSelectAll = (Button) view.findViewById(R.id.select_all);
         mSelectAll.setOnClickListener(this);
@@ -219,7 +221,7 @@ private void  xxxxx(){
         super.onHiddenChanged(hidden);
         if (!hidden) {
             Log.i(TAG, "onResume===子view显示");
-
+//            isconnet=NetUtils.properDetection(mContext);
         } else {
             Log.i(TAG, "onPause====子view隐藏");
         }
@@ -294,7 +296,7 @@ private void  xxxxx(){
      */
     private boolean isDaoFileExits(File f) {
         if (mFileName.size() > 0) {
-          int sizee=  DaoUtils.FileUserDaoQuery().size();
+            int sizee = DaoUtils.FileUserDaoQuery().size();
             for (int i = 0; i < sizee; i++) {
                 if (DaoUtils.FileUserDaoQuery().get(i).getId().equals(FileUtils.longPressLong(f.getName()))) {
                     return true;
@@ -349,7 +351,7 @@ private void  xxxxx(){
 
             if (SharedPreferencesUtils.getParam(mContext, "lujinggaibianl1", "null").equals("no")) {
                 Log.i(TAG, "路径改变删除原来路径下的数据库文件");
-                for (int i = 0; i < DaoUtils.FileUserDaoQuerywhere(title).size(); i++) {
+                for (int i = 0; i < mFileName2.size(); i++) {
                     DaoUtils.FilUserDaoDel(mFileName2.get(i));
                 }
                 SharedPreferencesUtils.setParam(mContext, "lujinggaibianl1", "yes");//处理之后复位
@@ -367,6 +369,8 @@ private void  xxxxx(){
                             FileUser fileUser = new FileUser();
                             fileUser.setId(FileUtils.longPressLong(f.getName()));
                             fileUser.setMFileTypedao(title);
+                            //匹配撤销数据库
+                            updateRevocation(f.getName(), title);
                             fileUser.setMFileProgresdao(0);
                             fileUser.setMFileNamedao(f.getName());
                             fileUser.setMFilePathdao(f.getAbsolutePath());
@@ -374,14 +378,16 @@ private void  xxxxx(){
                             Log.i(TAG, "第一次添加 " + FileUtils.longPressLong(f.getName()) + "名字是 ：" + f.getName());
                         } else {
                             if (!isDaoFileExits(f)) {
-                            FileUser fileUser = new FileUser();
-                            fileUser.setId(FileUtils.longPressLong(f.getName()));
-                            fileUser.setMFileTypedao(title);
-                            fileUser.setMFileProgresdao(0);
-                            fileUser.setMFileNamedao(f.getName());
-                            fileUser.setMFilePathdao(f.getAbsolutePath());
-                            APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
-                        }
+                                FileUser fileUser = new FileUser();
+                                fileUser.setId(FileUtils.longPressLong(f.getName()));
+                                fileUser.setMFileTypedao(title);
+                                //匹配撤销数据库
+                                updateRevocation(f.getName(), title);
+                                fileUser.setMFileProgresdao(0);
+                                fileUser.setMFileNamedao(f.getName());
+                                fileUser.setMFilePathdao(f.getAbsolutePath());
+                                APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
+                            }
 
                         }
                     }
@@ -399,7 +405,7 @@ private void  xxxxx(){
         } else if (title.equals("2")) {
             if (SharedPreferencesUtils.getParam(mContext, "lujinggaibianl2", "null").equals("no")) {
                 Log.i(TAG, "路径改变删除原来路径下的数据库文件");
-                for (int i = 0; i < DaoUtils.FileUserDaoQuerywhere(title).size(); i++) {
+                for (int i = 0; i < mFileName2.size(); i++) {
                     DaoUtils.FilUserDaoDel(mFileName2.get(i));
                 }
                 SharedPreferencesUtils.setParam(mContext, "lujinggaibianl2", "yes");//处理之后复位
@@ -417,21 +423,25 @@ private void  xxxxx(){
                             FileUser fileUser = new FileUser();
                             fileUser.setId(FileUtils.longPressLong(f.getName()));
                             fileUser.setMFileTypedao(title);
+                            //匹配撤销数据库
+                            updateRevocation(f.getName(), title);
                             fileUser.setMFileProgresdao(0);
                             fileUser.setMFileNamedao(f.getName());
                             fileUser.setMFilePathdao(f.getAbsolutePath());
                             APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
-                            Log.i(TAG, "第一次添加 " + FileUtils.longPressLong(f.getName()) + "名字是 ：" + f.getName());
+                            Log.i(TAG, "第2次添加 " + FileUtils.longPressLong(f.getName()) + "名字是 ：" + f.getName());
                         } else {
                             if (!isDaoFileExits(f)) {//大量对比消耗cpu资源
-                            FileUser fileUser = new FileUser();
-                            fileUser.setId(FileUtils.longPressLong(f.getName()));
-                            fileUser.setMFileTypedao(title);
-                            fileUser.setMFileProgresdao(0);
-                            fileUser.setMFileNamedao(f.getName());
-                            fileUser.setMFilePathdao(f.getAbsolutePath());
-                            APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
-                        }
+                                FileUser fileUser = new FileUser();
+                                fileUser.setId(FileUtils.longPressLong(f.getName()));
+                                fileUser.setMFileTypedao(title);
+                                //匹配撤销数据库
+                                updateRevocation(f.getName(), title);
+                                fileUser.setMFileProgresdao(0);
+                                fileUser.setMFileNamedao(f.getName());
+                                fileUser.setMFilePathdao(f.getAbsolutePath());
+                                APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
+                            }
 
                         }
                     }
@@ -447,10 +457,171 @@ private void  xxxxx(){
                 showEmpty();
             }
         } else if (title.equals("3")) {
+            if (SharedPreferencesUtils.getParam(mContext, "lujinggaibianl3", "null").equals("no")) {
+                Log.i(TAG, "路径改变删除原来路径下的数据库文件");
+                for (int i = 0; i < mFileName2.size(); i++) {
+                    DaoUtils.FilUserDaoDel(mFileName2.get(i));
+                }
+                SharedPreferencesUtils.setParam(mContext, "lujinggaibianl3", "yes");//处理之后复位
+            }
+            listClear();//清空数据集合
+            if (files != null && files.length > 0) {
+                mRLISTVIEW.setVisibility(View.VISIBLE);
+                rr.setVisibility(View.GONE);
+                String isd = (String) SharedPreferencesUtils.getParam(mContext, "iffirstAdd", "null");
+                for (File f : files) {
+                    if (FileManger.getSingleton().map.containsKey(getExtension(f))) {
+                        mFileName.add(f.getName());
+                        mFilePath.add(f.getAbsolutePath());
+                        if (isd.equals("null")) {
+                            FileUser fileUser = new FileUser();
+                            fileUser.setId(FileUtils.longPressLong(f.getName()));
+                            fileUser.setMFileTypedao(title);
+                            //匹配撤销数据库
+                            updateRevocation(f.getName(), title);
+                            fileUser.setMFileProgresdao(0);
+                            fileUser.setMFileNamedao(f.getName());
+                            fileUser.setMFilePathdao(f.getAbsolutePath());
+                            APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
+                            Log.i(TAG, "第3次添加 " + FileUtils.longPressLong(f.getName()) + "名字是 ：" + f.getName());
+                        } else {
+                            if (!isDaoFileExits(f)) {
+                                FileUser fileUser = new FileUser();
+                                fileUser.setId(FileUtils.longPressLong(f.getName()));
+                                fileUser.setMFileTypedao(title);
+                                //匹配撤销数据库
+                                updateRevocation(f.getName(), title);
+                                fileUser.setMFileProgresdao(0);
+                                fileUser.setMFileNamedao(f.getName());
+                                fileUser.setMFilePathdao(f.getAbsolutePath());
+                                APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
+                            }
+
+                        }
+                    }
+                }
+                SharedPreferencesUtils.setParam(mContext, "iffirstAdd", "2");
+                if (DaoUtils.FileUserDaoQuerywhere(title) != null) {
+                    queryAllFile(title);
+                } else {
+                    showEmpty();
+                }
+
+            } else {
+                showEmpty();
+            }
 
         } else if (title.equals("4")) {
+            if (SharedPreferencesUtils.getParam(mContext, "lujinggaibianl4", "null").equals("no")) {
+                Log.i(TAG, "路径改变删除原来路径下的数据库文件");
+                for (int i = 0; i < mFileName2.size(); i++) {
+                    DaoUtils.FilUserDaoDel(mFileName2.get(i));
+                }
+                SharedPreferencesUtils.setParam(mContext, "lujinggaibianl4", "yes");//处理之后复位
+            }
+            listClear();//清空数据集合
+            if (files != null && files.length > 0) {
+                mRLISTVIEW.setVisibility(View.VISIBLE);
+                rr.setVisibility(View.GONE);
+                String isd = (String) SharedPreferencesUtils.getParam(mContext, "iffirstAdd", "null");
+                for (File f : files) {
+                    if (FileManger.getSingleton().map.containsKey(getExtension(f))) {
+                        mFileName.add(f.getName());
+                        mFilePath.add(f.getAbsolutePath());
+                        if (isd.equals("null")) {
+                            FileUser fileUser = new FileUser();
+                            fileUser.setId(FileUtils.longPressLong(f.getName()));
+                            fileUser.setMFileTypedao(title);
+                            //匹配撤销数据库
+                            updateRevocation(f.getName(), title);
+                            fileUser.setMFileProgresdao(0);
+                            fileUser.setMFileNamedao(f.getName());
+                            fileUser.setMFilePathdao(f.getAbsolutePath());
+                            APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
+                            Log.i(TAG, "第4次添加 " + FileUtils.longPressLong(f.getName()) + "名字是 ：" + f.getName());
+                        } else {
+                            if (!isDaoFileExits(f)) {
+                                FileUser fileUser = new FileUser();
+                                fileUser.setId(FileUtils.longPressLong(f.getName()));
+                                fileUser.setMFileTypedao(title);
+                                //匹配撤销数据库
+                                updateRevocation(f.getName(), title);
+                                fileUser.setMFileProgresdao(0);
+                                fileUser.setMFileNamedao(f.getName());
+                                fileUser.setMFilePathdao(f.getAbsolutePath());
+                                APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
+                            }
+
+                        }
+                    }
+                }
+                SharedPreferencesUtils.setParam(mContext, "iffirstAdd", "2");
+                if (DaoUtils.FileUserDaoQuerywhere(title) != null) {
+                    queryAllFile(title);
+                } else {
+                    showEmpty();
+                }
+
+            } else {
+                showEmpty();
+            }
 
         } else if (title.equals("5")) {
+
+            if (SharedPreferencesUtils.getParam(mContext, "lujinggaibianl5", "null").equals("no")) {
+                Log.i(TAG, "路径改变删除原来路径下的数据库文件");
+                for (int i = 0; i < mFileName2.size(); i++) {
+                    DaoUtils.FilUserDaoDel(mFileName2.get(i));
+                }
+                SharedPreferencesUtils.setParam(mContext, "lujinggaibianl5", "yes");//处理之后复位
+            }
+            listClear();//清空数据集合
+            if (files != null && files.length > 0) {
+                mRLISTVIEW.setVisibility(View.VISIBLE);
+                rr.setVisibility(View.GONE);
+                String isd = (String) SharedPreferencesUtils.getParam(mContext, "iffirstAdd", "null");
+                for (File f : files) {
+                    if (FileManger.getSingleton().map.containsKey(getExtension(f))) {
+                        mFileName.add(f.getName());
+                        mFilePath.add(f.getAbsolutePath());
+                        if (isd.equals("null")) {
+                            FileUser fileUser = new FileUser();
+                            fileUser.setId(FileUtils.longPressLong(f.getName()));
+                            fileUser.setMFileTypedao(title);
+                            //匹配撤销数据库
+                            updateRevocation(f.getName(), title);
+                            fileUser.setMFileProgresdao(0);
+                            fileUser.setMFileNamedao(f.getName());
+                            fileUser.setMFilePathdao(f.getAbsolutePath());
+                            APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
+                            Log.i(TAG, "第5次添加 " + FileUtils.longPressLong(f.getName()) + "名字是 ：" + f.getName());
+                        } else {
+                            if (!isDaoFileExits(f)) {
+                                FileUser fileUser = new FileUser();
+                                fileUser.setId(FileUtils.longPressLong(f.getName()));
+                                fileUser.setMFileTypedao(title);
+                                //匹配撤销数据库
+                                updateRevocation(f.getName(), title);
+                                fileUser.setMFileProgresdao(0);
+                                fileUser.setMFileNamedao(f.getName());
+                                fileUser.setMFilePathdao(f.getAbsolutePath());
+                                APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
+                            }
+
+                        }
+                    }
+                }
+                SharedPreferencesUtils.setParam(mContext, "iffirstAdd", "2");
+                if (DaoUtils.FileUserDaoQuerywhere(title) != null) {
+                    queryAllFile(title);
+                } else {
+                    showEmpty();
+                }
+
+            } else {
+                showEmpty();
+            }
+
         }
 
         SharedPreferencesUtils.setParam(mContext, Constanxs.FOTERNUMSONE, DaoUtils.FileQueryWsc() + "");
@@ -459,6 +630,15 @@ private void  xxxxx(){
 
     }
 
+    /**
+     * 更新撤销类型
+     */
+    private void updateRevocation(String name, String type) {
+        FileUserRevocation revocation = new FileUserRevocation();
+        revocation.setId(FileUtils.longPressLong(name));
+        revocation.setMFileTypedao(type);
+        APP.getDaoInstant().getFileUserRevocationDao().insertOrReplace(revocation);
+    }
 
     private void queryAllFile(String type) {
         //查询所有类型为1的数据
@@ -566,15 +746,18 @@ private void  xxxxx(){
 
                 break;
             case R.id.update_button:
-                if (!isftpconnet) {
-                    Toast.makeText(mContext, "未连接", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                if (!isftpconnet) {
+//                    Toast.makeText(mContext, "未连接", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+
                 if (checkNum == 0) {
                     showDialog();
                     return;
                 }
-
+                if (!NetUtils.properDetection(mContext)) {
+                    return;
+                }
                 isUplodFirstone = true;
                 for (int i = 0; i < Child1Adapter.getIsSelected().size(); i++) {
                     if (Child1Adapter.getIsSelected().get(i)) {
@@ -584,14 +767,14 @@ private void  xxxxx(){
                         int type = 0;
                         if (famt != null) {
                             if (famt.equals("/Images/")) {
-                                type =  1  ;
+                                type = 1;
                             } else if (famt.equals("/Audios/")) {
                                 type = 2;
                             } else if (famt.equals("/Videos/")) {
-                                type = 3 ;
+                                type = 3;
                             }
                             if (type != 0) {
-                                String remote = "2bgz12yp0_0" + mFileName2.get(i);
+                                String remote = regCodex + mFileName2.get(i);
 //                                startUpdataFile(mFilePath.get(i), remote, type);
                                 Log.i(TAG, "选中的文件名是" + "i==" + i + mFilePath2.get(i) + "文件格式是：" + type + "服务端路径是：" + remote);
 
@@ -618,7 +801,9 @@ private void  xxxxx(){
                                 testBean.setLocfileName(mFileName2.get(i));
                                 testBean.setCrateFileType(famt);
                                 testBean.setCrateFileTypenums(type);
+                                testBean.setUpLoadStatus("1");
                                 uploadFileManager.startUpLoad(testBean);
+
 
 //                                xxxxx();
 //                                startUpdataFile(mFilePath2.get(i),remote,"1");
@@ -746,7 +931,7 @@ private void  xxxxx(){
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         boolean checkIS = true;
-        CheckBox cb = v.findViewById(R.id.dir_list_Check);
+        CheckBox cb = (CheckBox) v.findViewById(R.id.dir_list_Check);
         chcnlSels(position);
         if (checkNum == mFileName2.size()) {
             setBtnSelectAllNo();
@@ -762,11 +947,17 @@ private void  xxxxx(){
     AdapterView.OnItemLongClickListener longchick = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-            Toast.makeText(mContext, "chang  AN" + i, Toast.LENGTH_SHORT).show();
+            FileUtils.openFiles(mContext, mFilePath2.get(i));
             return false;
         }
     };
-
+//    AdapterView.OnItemLongClickListener clickListenerlong = new AdapterView.OnItemLongClickListener() {
+//        @Override
+//        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//            FileUtils.openFiles(mContext,mListpath.get(position));
+//            return false;
+//        }
+//    };
 
 //http://blog.csdn.net/jdsjlzx/article/details/7318659
 

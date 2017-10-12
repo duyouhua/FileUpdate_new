@@ -14,38 +14,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.leng.fileupdate_new.APP;
 import com.leng.fileupdate_new.Adapter.Child2Adapter;
-import com.leng.fileupdate_new.Bean.FileUpdateStatus;
 import com.leng.fileupdate_new.Bean.FileUser;
 import com.leng.fileupdate_new.Bean.FileUser2;
+import com.leng.fileupdate_new.Bean.FileUserRevocation;
 import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
 import com.leng.fileupdate_new.contrl.CabackInfoNums;
 import com.leng.fileupdate_new.contrl.CallBacklistview;
-import com.leng.fileupdate_new.contrl.ContinueFtp;
 import com.leng.fileupdate_new.greendao.gen.DaoUtils;
 import com.leng.fileupdate_new.upload.TestBean;
 import com.leng.fileupdate_new.upload.UploadFileManager;
 import com.leng.fileupdate_new.utils.Constanxs;
 import com.leng.fileupdate_new.utils.FileUtils;
 import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
+import com.leng.fileupdate_new.utils.SpUtil;
 import com.leng.other.CommomDialog2;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import static com.leng.fileupdate_new.greendao.gen.DaoUtils.FileUserDaoQueryPrgresswhere;
 import static com.leng.fileupdate_new.moudle.BlankFragmentChild1.uploadFileManager;
 import static com.leng.fileupdate_new.utils.Constanxs.isUplodFirstone;
-import static com.leng.fileupdate_new.utils.Constanxs.updingMap;
 
 public class BlankFragmentChild2 extends Fragment implements View.OnClickListener, CallBacklistview {
     private View view;
@@ -96,6 +93,8 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                         showFile();
                         isUplodFirstone = false;
                         Log.i(TAG, "只允许走一遍");
+                    }else {
+                        Log.i(TAG, "是不是得从这只允许走一遍");
                     }
 
                     Bundle bundle = msg.getData();
@@ -114,26 +113,33 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
 
                     int prgressValue = FileUserDaoQueryPrgresswhere(pathname);
 
-                    if (mapIndex.size() > 0) {
+                    if (mapIndex!=null&&mapIndex.size() > 0) {
                         int dexwen = mapIndex.get(pathname);
+
                         Child2Adapter.updataView(dexwen, mChild2Listview, prgressValue);
+                        Log.i(TAG, " 按  " + "正在更新的小标是：" + dexwen + "值是 ：" + prgressValue);
                         if (prgressValue == 100) {
+                            //获取是否打开上传完成后删除源文件
+                            boolean isDel = (boolean) SharedPreferencesUtils.getParam(mContext, "checkbox8", false);
                             String activefileName = mListname.get(dexwen);
                             Log.i(TAG, " 谁 ：" + activefileName + " 移除列表");
-
                             FileUser fileUser = new FileUser();
                             fileUser.setId(FileUtils.longPressLong(activefileName));
                             fileUser.setMFileTypedao("7");
                             APP.getDaoInstant().getFileUserDao().update(fileUser);
                             mHandler.sendEmptyMessage(4579);
+                            if (isDel) {
+                                Log.i(TAG, "开启上传完成后删除源文件");
+                                FileUtils.delete(path);
+                            }
                         }
-                        Log.i(TAG, "mapIndex不为空 " + "要更新的下标是 ：" + dexwen + "  更新的值是 ：" + prgressValue);
+                        Log.i(TAG, "mapIndex不为空 " + "要更新的下标是 ：" + dexwen + "  更新的值是 ：" + prgressValue + "  map的大小是：" + mapIndex.size());
                     } else {
                         Log.i(TAG, "mapIndex ==null");
                     }
 
 
-                    Log.i(TAG, pathname + "==" + progress + "int值 ：" + progressv + "名字是 ：" + spitContDBfilename(pathname) + "读取到的值是");
+                    Log.i(TAG, pathname + "==" + progress + "int值 ：" + progressv + "名字是 ：" + spitContDBfilename(pathname) + "读取到的值是" + prgressValue);
                     break;
             }
         }
@@ -282,6 +288,9 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                 }
                 break;
             case R.id.update_button_upding:
+                if (uploadFileManager == null) {
+                    uploadFileManager = new UploadFileManager(mContext);
+                }
                 revocationFile(checkNum);
                 break;
             case R.id.delet_button_upding:
@@ -307,9 +316,17 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                 if (confirm) {
                     for (int i = 0; i < Child2Adapter.getIsSelectedChild2().size(); i++) {
                         if (Child2Adapter.getIsSelectedChild2().get(i)) {
+                            String name = mListname.get(i);
                             Log.i(TAG, "删除的文件是 ：" + mListpath.get(i));
+                            TestBean tt = SpUtil.getObject(mContext, name);
+
+                            if (tt != null && tt.getUpLoadStatus().equals("1")) {//如果撤销的文件正在上传中 就暂停 并且删除远程服务端
+                                tt.setUpLoadStatus("2");
+                                SpUtil.putObject(mContext, name, tt);//再一次序列化
+                                uploadFileManager.pause(tt);
+                            }
                             FileUtils.delete(mListpath.get(i));
-                            DaoUtils.FilUserDaoDel(mListname.get(i));
+                            DaoUtils.FilUserDaoDel(name);
 
                         }
                     }
@@ -327,14 +344,31 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                 if (confirm) {
                     for (int i = 0; i < Child2Adapter.getIsSelectedChild2().size(); i++) {
                         if (Child2Adapter.getIsSelectedChild2().get(i)) {
-                            Log.i(TAG, "撤销的文件是 ：" + mListpath.get(i));
-                            FileUser fileUser = new FileUser();
-                            fileUser.setId(null);
-                            fileUser.setMFileTypedao(null);
-                            fileUser.setMFileNamedao(mListname.get(i));
-                            fileUser.setMFilePathdao(mListpath.get(i));
-                            APP.getDaoInstant().getFileUserDao().update(fileUser);
+                            Log.i(TAG, "撤销的文件是 ：" + mListpath.get(i) + " 撤销的文件类型是： " + DaoUtils.FileUserDaoQuerypathAderesswhere(mListname.get(i)));
 
+                            //获取要撤销的文件来自哪个目录
+                            String revocationType = DaoUtils.FileUserDaoQuerypathAderesswhere(mListname.get(i));
+
+                            String name = mListname.get(i);
+                            String path = mListpath.get(i);
+                            FileUser fileUser = new FileUser();
+                            fileUser.setId(FileUtils.longPressLong(name));
+                            fileUser.setMFileTypedao(revocationType);
+                            fileUser.setMFileProgresdao(0);
+                            fileUser.setMFileNamedao(name);
+                            fileUser.setMFilePathdao(path);
+                            APP.getDaoInstant().getFileUserDao().update(fileUser);
+                            updateRevocation(name, revocationType);
+                            //撤销后删除撤销匹配得文件
+//                            DaoUtils.FilUserRevocationDaoDel(name);
+                            //撤销后停止上传
+                            //?????
+                            TestBean tt = SpUtil.getObject(mContext, name);
+                            if (tt != null && tt.getUpLoadStatus().equals("1")) {//如果撤销的文件正在上传中 就暂停 并且删除远程服务端
+                                tt.setUpLoadStatus("2");
+                                SpUtil.putObject(mContext, name, tt);//再一次序列化
+                                uploadFileManager.pause(tt);
+                            }
                         }
                     }
                     mHandler.sendEmptyMessage(4579);
@@ -342,6 +376,13 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                 dialog.dismiss();
             }
         }).show();
+    }
+
+    private void updateRevocation(String name, String type) {
+        FileUserRevocation revocation = new FileUserRevocation();
+        revocation.setId(FileUtils.longPressLong(name));
+        revocation.setMFileTypedao(type);
+        APP.getDaoInstant().getFileUserRevocationDao().insertOrReplace(revocation);
     }
 
     /**
@@ -396,26 +437,6 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
         @Override
         public void onItemClick(AdapterView<?> adapterView, final View view, int i, long l) {
             boolean checkIS = true;
-//            CheckBox cb = view.findViewById(R.id.dir_list_Check);
-//            final  Button pause = view.findViewById(R.id.pause_button);
-//            final Button start = view.findViewById(R.id.start_button);
-//            pause.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(mContext, "点击暂停按钮", Toast.LENGTH_SHORT).show();
-//                    pause.setVisibility(View.GONE);
-//                    start.setVisibility(View.VISIBLE);
-//                }
-//            });
-//            start.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(mContext, "点击开始按钮", Toast.LENGTH_SHORT).show();
-//                    pause.setVisibility(View.VISIBLE);
-//                    start.setVisibility(View.GONE);
-//                }
-//            });
-
 
             chcnlSels(i);
             if (checkNum == mListname.size()) {
@@ -483,27 +504,73 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
 
     @Override
     public void click(View view) {
-        int postion= (int) view.getTag();
-        Button pbutton = view.findViewById(R.id.pause_button);
-//        Button pbutton = LayoutInflater.from(mContext).inflate(R.layout.child2_item,null).findViewById(R.id.pause_button);
-//        Button sbutton = LayoutInflater.from(mContext).inflate(R.layout.child2_item,null).findViewById(R.id.start_button);
-        Button sbutton = view.findViewById(R.id.start_button);
+        int postion = (int) view.getTag();
+        Button pbutton = (Button) view.findViewById(R.id.pause_button);
+        Button sbutton = (Button) view.findViewById(R.id.start_button);
 
         if (uploadFileManager == null) {
             uploadFileManager = new UploadFileManager(mContext);
         }
-        if (isbtnchick) {
+        String name = mListname.get(postion);
+        TestBean tt = SpUtil.getObject(mContext, name);
+        if (tt != null) {
+            Log.i(TAG, "序列化本地数据" + "点击了继续上传 ：格式" + tt.getCrateFileType() + " type :" + tt.getCrateFileTypenums() + "名字是：" + tt.getLocfileName() + "远程路径名字是 ：" + tt.getRemotefilepath() + "是佛上传标识 ：" + tt.getUpLoadStatus());
+            String statusx = tt.getUpLoadStatus();
+            if (statusx.equals("1")) {//暂停
+                tt.setUpLoadStatus("2");
+                SpUtil.putObject(mContext, name, tt);//再一次序列化
+                pbutton.setText("开始");
+                uploadFileManager.pause(tt);
+            } else if (statusx.equals("2")) {
+                tt.setUpLoadStatus("1");
+                SpUtil.putObject(mContext, name, tt);//再一次序列化
+                pbutton.setText("暂停");
+                uploadFileManager.startUpLoad(tt);
+            } else {
+                Toast.makeText(mContext, "系统文件被删除", Toast.LENGTH_SHORT).show();
+            }
 
-            pbutton.setText("开始");
-            isbtnchick = false;
-//            TestBean testBean=new TestBean();
-//            testBean.setRemotefilepath("2bgz12yp0_0"+mListname.get(postion));
-//            testBean.setLocfilepath(mListpath.get(postion));
-//            testBean.setLocfileName(mListname.get(postion));
-//            uploadFileManager.pause(testBean);
         } else {
-            pbutton.setText("暂停");
-            isbtnchick = true;
+            Toast.makeText(mContext, "获取本地序列化对象失败", Toast.LENGTH_SHORT).show();
         }
+
+//
+//        if (isbtnchick) {//暂停
+//
+////            pbutton.setText("开始");
+////            isbtnchick = false;
+////            TestBean tt = fileStatusBeanMap.get(name);
+////            tt.setUpLoadStatus("2");
+////            uploadFileManager.pause(tt);
+//
+//
+//        } else {
+//
+////            TestBean tt = fileStatusBeanMap.get(name);
+////            tt.setUpLoadStatus("1");
+////            uploadFileManager.startUpLoad(tt);
+////            Log.i(TAG, "" + "点击了继续上传 ：格式" + tt.getCrateFileType() + " type :" + tt.getCrateFileTypenums() + "名字是：" + tt.getLocfileName() + "远程路径名字是 ：" + tt.getRemotefilepath() + "是佛上传标识 ：" + tt.getUpLoadStatus());
+//            pbutton.setText("暂停");
+//            isbtnchick = true;
+//        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+   Log.i(TAG,"onDestroy");
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.i(TAG,"onDestroyView");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.i(TAG,"onDetach");
     }
 }

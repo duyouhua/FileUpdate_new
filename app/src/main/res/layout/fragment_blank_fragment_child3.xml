@@ -34,5 +34,5 @@
 
     <include
         android:id="@+id/default_bottom_upding_xxxx"
-        layout="@layout/default_bottom_upding"/>
+        layout="@layout/default_bottom_upactive"/>
 </RelativeLayout>

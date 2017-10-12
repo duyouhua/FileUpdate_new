@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.leng.fileupdate_new.Adapter.TAB2_Adapter;
 import com.leng.fileupdate_new.R;
+import com.leng.fileupdate_new.utils.HiddnFileter;
 import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
 
 import java.io.File;
@@ -79,7 +80,7 @@ public class TAB2BlankFragment extends ListFragment implements View.OnClickListe
         mFilePath = new ArrayList<String>();
         File file = new File(path);
 
-        File[] files = file.listFiles();
+        File[] files = file.listFiles(new HiddnFileter());
         //如果当前目录不是根目录
         if (!ROOT_PATH.equals(path)) {
             mFileName.add("@1");

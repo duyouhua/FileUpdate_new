@@ -5,18 +5,30 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.leng.fileupdate_new.greendao.gen.DaoMaster;
 import com.leng.fileupdate_new.greendao.gen.DaoSession;
+import com.leng.other.loadingdialog.manager.StyleManager;
+import com.leng.other.loadingdialog.view.LoadingDialog;
 
 /**
  * Created by Administrator on 2017/9/21.
  */
 
 public class APP extends Application {
-    private   static DaoSession daoSession;
+    private static DaoSession daoSession;
+
     @Override
     public void onCreate() {
         super.onCreate();
         setupDatabase();
+
+        StyleManager s = new StyleManager();
+
+            //在这里调用方法设置s的属性
+            //code here...
+        s.Anim(false).repeatTime(0).contentSize(-1).intercept(true);
+
+        LoadingDialog.initStyle(s);
     }
+
     /**
      * 配置数据库
      */

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 
 import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
+import com.leng.fileupdate_new.contrl.CabackAutoUpInit;
 import com.leng.fileupdate_new.services.connectServvice;
 import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
 
@@ -56,6 +58,8 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
     private RelativeLayout mSettingRelativeWifinet;
     private boolean check6boolean = true;
     private boolean check7boolean = true;
+    BlankFragmentChild2 blankFragmentChild2;
+    private FragmentTransaction fragmentTransaction;
     private boolean check8boolean = true;
     private int startType1, startType2, startType3, startType4, startType5;
     private MainActivity mActivity;
@@ -136,12 +140,14 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
     private TextView mSettingPath1, mSettingPath2, mSettingPath3, mSettingPath4, mSettingPath5;
     private RelativeLayout mSettingRelativeYesno;
     private CheckBox mCheckbox8;
+    private CabackAutoUpInit cabackAutoUpInit;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mActivity = (MainActivity) activity;
         mActivity.setHandler3(mHandler);
+        cabackAutoUpInit = (CabackAutoUpInit) mActivity;
     }
 
     @Override
@@ -163,26 +169,44 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         Log.i(TAG, "onPause");
     }
 
     private void initSetPathTxt() {
+        boolean cbx1 = (Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox1", false);
+        boolean cbx2 = (Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox2", false);
+        boolean cbx3 = (Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox3", false);
+        boolean cbx4 = (Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox4", false);
+        boolean cbx5 = (Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox5", false);
         mSettingPath1.setText((String) SharedPreferencesUtils.getParam(mContext, "mSettingPath1", ""));
         mSettingPath2.setText((String) SharedPreferencesUtils.getParam(mContext, "mSettingPath2", ""));
         mSettingPath3.setText((String) SharedPreferencesUtils.getParam(mContext, "mSettingPath3", ""));
         mSettingPath4.setText((String) SharedPreferencesUtils.getParam(mContext, "mSettingPath4", ""));
         mSettingPath5.setText((String) SharedPreferencesUtils.getParam(mContext, "mSettingPath5", ""));
-        mCheckbox1.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox1", false));
-        mCheckbox2.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox2", false));
-        mCheckbox3.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox3", false));
-        mCheckbox4.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox4", false));
-        mCheckbox5.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox5", false));
+        mCheckbox1.setChecked(cbx1);
+        mCheckbox2.setChecked(cbx2);
+        mCheckbox3.setChecked(cbx3);
+        mCheckbox4.setChecked(cbx4);
+        mCheckbox5.setChecked(cbx5);
         mCheckbox6.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox6", false));
         mCheckbox7.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox7", false));
         mCheckbox8.setChecked((Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox8", false));
+        if (cbx1 == true || cbx2 == true || cbx3 == true || cbx4 == true || cbx5 == true) {
+//            showinitChild2();
+        }
+
     }
+
 
     private void initView(View view) {
 
@@ -241,6 +265,7 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
                 startType1 = 1;
                 i1.putExtra("startType", startType1);
                 startActivityForResult(i1, 1);
+
                 break;
             case R.id.setting_btn2:
                 i2 = new Intent(mContext, LiuLanActivity.class);
@@ -271,7 +296,7 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
                 new HideClick().start();
                 if (HideClick.sIsAlive >= 5) {
                     Intent intent = new Intent(getActivity(), SettingServerIP.class);
-                    startActivity(intent);
+                    getActivity().startActivityForResult(intent, 753);//请求码暂时没有用
                 }
                 break;
             case R.id.setting_changepwd_btn:
@@ -411,34 +436,75 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
         }
     }
 
+    /**
+     * 自动启动服务
+     */
+
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
         switch (compoundButton.getId()) {
+
             case R.id.checkbox1:
-                saveCheckStatus(mCheckbox1, b);
-                startServicesx("1", b);
+                String spath1 = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath1", "null");
+                if (spath1.equals("null")) {
+                    mCheckbox1.setChecked(false);
+                    Toast.makeText(mContext, "请先选择默认目录", Toast.LENGTH_SHORT).show();
+                } else {
+                    saveCheckStatus(mCheckbox1, b);
+                    startServicesx("1", b);
+                }
                 break;
             case R.id.checkbox2:
-                saveCheckStatus(mCheckbox2, b);
-                startServicesx("2", b);
+                String spath2 = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath2", "null");
+                if (spath2.equals("null")) {
+                    mCheckbox2.setChecked(false);
+                    Toast.makeText(mContext, "请先选择默认目录", Toast.LENGTH_SHORT).show();
+                } else {
+                    saveCheckStatus(mCheckbox2, b);
+                    startServicesx("2", b);
+                }
+
                 break;
             case R.id.checkbox3:
-                saveCheckStatus(mCheckbox3, b);
-                startServicesx("3", b);
+                String spath3 = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath3", "null");
+                if (spath3.equals("null")) {
+                    mCheckbox3.setChecked(false);
+                    Toast.makeText(mContext, "请先选择默认目录", Toast.LENGTH_SHORT).show();
+                } else {
+                    saveCheckStatus(mCheckbox3, b);
+                    startServicesx("3", b);
+                }
                 break;
             case R.id.checkbox4:
-                saveCheckStatus(mCheckbox4, b);
-                startServicesx("4", b);
+                String spath4 = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath4", "null");
+                if (spath4.equals("null")) {
+                    mCheckbox4.setChecked(false);
+                    Toast.makeText(mContext, "请先选择默认目录", Toast.LENGTH_SHORT).show();
+                } else {
+                    saveCheckStatus(mCheckbox4, b);
+                    startServicesx("4", b);
+                }
                 break;
             case R.id.checkbox5:
-                saveCheckStatus(mCheckbox5, b);
-                startServicesx("5", b);
+                String spath5 = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath5", "null");
+                if (spath5.equals("null")) {
+                    mCheckbox5.setChecked(false);
+                    Toast.makeText(mContext, "请先选择默认目录", Toast.LENGTH_SHORT).show();
+                } else {
+                    saveCheckStatus(mCheckbox5, b);
+                    startServicesx("5", b);
+                }
                 break;
 
         }
     }
 
     private void startServicesx(String mode, boolean onoff) {
+        if (onoff) {
+
+            //不能直接用  那就用接口发送通知吧  待定  先就这样吧
+        }
         Intent intentxx = new Intent(mContext, connectServvice.class);
         intentxx.putExtra("setmode", mode);
         intentxx.putExtra("setstartORstop", onoff);

@@ -1,5 +1,7 @@
 package com.leng.fileupdate_new.utils;
 
+import com.leng.fileupdate_new.upload.TestBean;
+
 import java.util.HashMap;
 
 /**
@@ -24,6 +26,7 @@ public class Constanxs {
 
     public static boolean isftpconnet = false;
     public static HashMap<String, String> updingMap = new HashMap<String, String>();
+    public static HashMap<String, TestBean> fileStatusBeanMap = new HashMap<String, TestBean>();
 
     public static boolean isUplodFirstone;
 

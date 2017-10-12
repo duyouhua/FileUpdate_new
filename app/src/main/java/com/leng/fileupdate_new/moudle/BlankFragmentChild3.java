@@ -20,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.leng.fileupdate_new.Adapter.Child3Adapter;
-import com.leng.fileupdate_new.Adapter.Child3Adapter;
 import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
 import com.leng.fileupdate_new.contrl.CabackInfoNums;
@@ -46,10 +45,7 @@ public class BlankFragmentChild3 extends Fragment implements View.OnClickListene
      * 全选
      */
     private Button mSelectAllUpding;
-    /**
-     * 撤销
-     */
-    private Button mUpdateButtonUpding;
+
     /**
      * 删除
      */
@@ -102,12 +98,12 @@ public class BlankFragmentChild3 extends Fragment implements View.OnClickListene
     private void initView(View view) {
         mChild3Listview = (ListView) view.findViewById(R.id.child3_listview);
         mChild3Listview.setOnItemClickListener(clickListener);
+        mChild3Listview.setOnItemLongClickListener(clickListenerlong);
         mChild3RelativeList = (RelativeLayout) view.findViewById(R.id.child3Relative_list);
         mChild3RelativeEmpty = (RelativeLayout) view.findViewById(R.id.child3Relative_empty);
         mSelectAllUpding = (Button) view.findViewById(R.id.select_all_upding);
         mSelectAllUpding.setOnClickListener(this);
-        mUpdateButtonUpding = (Button) view.findViewById(R.id.update_button_upding);
-        mUpdateButtonUpding.setOnClickListener(this);
+
         mDeletButtonUpding = (Button) view.findViewById(R.id.delet_button_upding);
         mDeletButtonUpding.setOnClickListener(this);
         showFile();
@@ -123,6 +119,7 @@ public class BlankFragmentChild3 extends Fragment implements View.OnClickListene
     }
 
     private void showFile() {
+
         mListname.clear();
         mListpath.clear();
         checkNum = 0;
@@ -137,10 +134,13 @@ public class BlankFragmentChild3 extends Fragment implements View.OnClickListene
                 mChild3RelativeEmpty.setVisibility(View.GONE);
                 mChild3RelativeList.setVisibility(View.VISIBLE);
                 mAdapter = new Child3Adapter(mContext, mListname, mListpath);
+
                 mChild3Listview.setAdapter(mAdapter);
                 //保存正在上传的数量
                 SharedPreferencesUtils.setParam(mContext, Constanxs.FOTERNUMSTHREE, mListname.size() + "");
                 Log.i(TAG, "查询到的数据是 ：" + FileUserDaoQueryPrgressAchieve().size() + name + path);
+
+
             }
         } else {
             Log.i(TAG, "没有查询到数据");
@@ -205,11 +205,19 @@ public class BlankFragmentChild3 extends Fragment implements View.OnClickListene
                 null, null);
     }
 
+    AdapterView.OnItemLongClickListener clickListenerlong = new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+           FileUtils.openFiles(mContext,mListpath.get(position));
+            return false;
+        }
+    };
+
     AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             boolean checkIS = true;
-            CheckBox cb = view.findViewById(R.id.dir_list_Check);
+            CheckBox cb = (CheckBox) view.findViewById(R.id.dir_list_Check);
 
 
             chcnlSels(i);

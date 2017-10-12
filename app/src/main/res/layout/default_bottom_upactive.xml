@@ -10,7 +10,7 @@
     android:orientation="horizontal" >
 
     <Button
-        android:id="@+id/select_all_loc"
+        android:id="@+id/select_all_upding"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -23,34 +23,22 @@
         android:textColor="@color/white"
         android:textSize="@dimen/font_size_small" />
     
-     
+
+
     <!--<Button-->
-        <!--android:id="@+id/update_button_loc"-->
+        <!--android:id="@+id/cut_button"-->
         <!--android:layout_width="0dp"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_marginTop="8dp"-->
         <!--android:layout_weight="1"-->
         <!--android:background="@color/transparent"-->
-        <!--android:drawableTop="@drawable/update"-->
-        <!--android:gravity="center_horizontal"-->
-        <!--android:text="@string/maupdate"-->
+        <!--android:drawableTop="@drawable/cut"-->
+        <!--android:text="@string/moveto"-->
         <!--android:textColor="@color/white"-->
         <!--android:textSize="@dimen/font_size_small" />-->
 
     <Button
-        android:id="@+id/cut_button_loc"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_weight="1"
-        android:background="@color/transparent"
-        android:drawableTop="@drawable/cut"
-        android:text="@string/moveto"
-        android:textColor="@color/white"
-        android:textSize="@dimen/font_size_small" />
-
-    <Button
-        android:id="@+id/delet_button_loc"
+        android:id="@+id/delet_button_upding"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

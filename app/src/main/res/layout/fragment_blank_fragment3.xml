@@ -4,7 +4,14 @@
     android:layout_height="match_parent"
     android:background="@color/bind_bg"
     tools:context="com.leng.fileupdate_new.moudle.BlankFragment3">
+    <LinearLayout
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:id="@+id/content_containerx"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+    </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

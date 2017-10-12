@@ -24,7 +24,7 @@
         android:id="@+id/asdasdasdas"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#000" />
+        android:background="#ccc" />
 
     <LinearLayout
         android:background="#fff"
@@ -53,7 +53,7 @@
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            android:background="#000" />
+            android:background="#ccc" />
         <TextView
             android:id="@+id/moove_quxaio"
             android:layout_width="0dp"

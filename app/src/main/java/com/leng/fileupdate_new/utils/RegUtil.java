@@ -46,7 +46,6 @@ public class RegUtil {
     public static String strreg;
     private DialogCancelInterface dcif;
 
-
     public RegUtil(Context context) {
         this.context = context;
         sp = context.getSharedPreferences("RegCode", MODE_PRIVATE);
@@ -259,8 +258,8 @@ public class RegUtil {
                         isoverTime = false;
                         SharedPreferences.Editor et = sp.edit();
                         et.putString("REGCODE", input);
-                        SharedPreferencesUtils.setParam(context,"regcode",input);
                         et.commit();
+                        SharedPreferencesUtils.setParam(context,"regcode",input+"");
 
 
                         dialog_reg.dismiss();
@@ -360,11 +359,11 @@ public class RegUtil {
      */
     public void showPasswordInputDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        final AlertDialog dialog = builder.create();
+       final AlertDialog    dialogx = builder.create();
         View view = View.inflate(context, R.layout.dialog_input_password, null);
-        dialog.setView(view, 0, 0, 0, 0);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+        dialogx.setView(view, 0, 0, 0, 0);
+        dialogx.setCanceledOnTouchOutside(false);
+        dialogx.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -405,7 +404,7 @@ public class RegUtil {
                     editor.commit();
 
 
-                    dialog.dismiss();
+                    dialogx.dismiss();
 
                 } else if(savedPassword.equals("")) {
                     Toast.makeText(context, "输入不能为空",
@@ -422,7 +421,7 @@ public class RegUtil {
 
         });
 
-        dialog.show();
+        dialogx.show();
 
 
 

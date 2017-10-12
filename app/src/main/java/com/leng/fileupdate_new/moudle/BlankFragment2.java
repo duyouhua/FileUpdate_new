@@ -177,6 +177,17 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener {
 
     private void startLoding() {
         fragmentTransaction = fragmentManager.beginTransaction();
+        //注意  再不是自动上传的情况下  在每个默认界面进来的时候都需要去初始化2界面  要不是会出现空指针
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        if (blankFragmentChild2 == null) {
+            blankFragmentChild2 = new BlankFragmentChild2();
+            fragmentTransaction.add(R.id.content_container2, blankFragmentChild2 );
+        } else {
+
+            fragmentTransaction.show(blankFragmentChild2);
+        }
+        fragmentTransaction.hide(blankFragmentChild2);
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         HideFrament();
         blankFragmentChild1 = new BlankFragmentChild1();
         fragmentTransaction.add(R.id.content_container2, blankFragmentChild1);
@@ -190,12 +201,24 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener {
         if (blankFragmentLocFile != null && blankFragmentLocFile.isResumed()) {
             fragmentTransaction.hide(blankFragmentLocFile);
         }
+
+        //注意  再不是自动上传的情况下  在每个默认界面进来的时候都需要去初始化2界面  要不是会出现空指针
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//        if (blankFragmentChild2 == null) {
+//            blankFragmentChild2 = new BlankFragmentChild2();
+//            fragmentTransaction.add(R.id.content_container2, blankFragmentChild2 );
+//        } else {
+//
+//            fragmentTransaction.show(blankFragmentChild2);
+//        }
+//        fragmentTransaction.hide(blankFragmentChild2);
+     //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
         if (blankFragmentChild1 == null) {
             blankFragmentChild1 = new BlankFragmentChild1();
             fragmentTransaction.add(R.id.content_container2, blankFragmentChild1);
         } else {
             fragmentTransaction.show(blankFragmentChild1);
-
         }
 
         fragmentTransaction.commit();

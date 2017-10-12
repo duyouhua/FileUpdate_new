@@ -35,6 +35,13 @@ public class DaoUtils {
     }
 
     /**
+     * 存入指定键  根据指定建删除文件
+     */
+    public static void FilUserRevocationDaoDel(String name) {
+        APP.getDaoInstant().getFileUserRevocationDao().deleteByKey(FileUtils.longPressLong(name));
+    }
+
+    /**
      * 根据查询条件,返回数据列表
      * 类型查询
      * 倒序列  日期大的在上面  类型查询  所有的数据
@@ -64,6 +71,26 @@ public class DaoUtils {
     public static int FileUserDaoQueryPrgresswhere(String name) {
         long id = FileUtils.longPressLong(name);
         return APP.getDaoInstant().getFileUser2Dao().load(id).getMFileProgresdao();
+    }
+
+    /**
+     * 根据查询条件,返回数据列表
+     * 当前文件从哪个目录进来的
+     *
+     * @return 数据列表
+     */
+
+    public static String FileUserDaoQuerypathAderesswhere(String name) {
+        long id = FileUtils.longPressLong(name);
+        return APP.getDaoInstant().getFileUserRevocationDao().load(id).getMFileTypedao();
+    }
+    public static String FileUserDaoQuerypathFmatswhere(String name) {
+        long id = FileUtils.longPressLong(name);
+        return APP.getDaoInstant().getFileUserRevocationDao().load(id).getMFileOther1();
+    }
+  public static String FileUserDaoQuerypathFmattypeswhere(String name) {
+        long id = FileUtils.longPressLong(name);
+        return APP.getDaoInstant().getFileUserRevocationDao().load(id).getMFileOther2();
     }
 
     /**

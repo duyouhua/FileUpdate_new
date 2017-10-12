@@ -33,4 +33,9 @@ public class LoadingDialog extends Dialog {
         tv_text.setText(message);
         return this;
     }
+
+    public LoadingDialog dismis() {
+        this.dismis();
+        return this;
+    }
 }

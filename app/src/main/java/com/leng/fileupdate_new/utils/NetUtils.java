@@ -1,6 +1,8 @@
 package com.leng.fileupdate_new.utils;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -47,6 +49,35 @@ public class NetUtils {
             Log.d("----result---", "result = " + result);
         }
         return false;
+
+    }
+
+
+    public static boolean properDetection(Context mContext) {
+//        if (!ping()) {
+//            Toast.makeText(mContext, "您的网络似乎有点问题哦", Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+
+        boolean c6 = (Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox6", false);
+        boolean c7 = (Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox7", false);
+        if (c6 == false && c7 == false) {
+            Toast.makeText(mContext, "请到设置页面选择您要使用的网络", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (c6 == true&&c7==false) {
+            Toast.makeText(mContext, "您正在使用移动网络，请注意！", Toast.LENGTH_SHORT).show();
+
+        } else if (c6 == true && c7 == true) {
+            //优先使用wifi网络
+
+        } else if (c7 == true&&c6==false) {
+            //wifi网络
+
+        }
+        return true;
+    }
+
+    private void startDetection() {
 
     }
 }

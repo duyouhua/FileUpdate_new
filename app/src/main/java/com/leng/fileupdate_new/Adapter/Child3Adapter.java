@@ -44,7 +44,7 @@ public class Child3Adapter extends BaseAdapter {
         names = na;
         paths = pa;
         mContext = context;
-        directory = BitmapFactory.decodeResource(context.getResources(), R.mipmap.wenjianjia);
+        directory = BitmapFactory.decodeResource(context.getResources(), R.drawable.weizhiwenjian);
 //        file = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_weishibie);
         //缩小图片
 //        directory = small(directory, 1.16f);
@@ -155,10 +155,12 @@ public class Child3Adapter extends BaseAdapter {
 
                 } else {
                     Glide.with(mContext)
-                            .load(R.drawable.ic_weishibie).error(R.drawable.ic_weishibie2).override(50, 50).into(holder.image);
+                            .load(R.drawable.ic_weishibie).error(R.drawable.ic_weishibie2) .into(holder.image);
                 }
             } else {
-                System.out.println(f.getName());
+                Glide.with(mContext)
+                        .load(R.drawable.ic_weishibie).error(R.drawable.ic_weishibie2) .into(holder.image);
+                holder.cb.setChecked(getIsSelectedchilld3().get(position));
             }
         }
 

@@ -1,16 +1,19 @@
-/**   
- * @Title: httpUtils.java 
- * @Package com.hutu.net 
+/**
+ * @Title: httpUtils.java
+ * @Package com.hutu.net
  * @Description: TODO
- * @author Long Li  
- * @date 2015-9-28 上午8:39:09 
- * @version V1.0   
+ * @author Long Li
+ * @date 2015-9-28 上午8:39:09
+ * @version V1.0
  */
 package com.leng.fileupdate_new.upload.uploadUtil;
 
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -57,7 +60,11 @@ public class httpUtils {
 						.getDeviceId();
 				//for test
 				//String imei = "123456789012345";
-				String regCode = "2bgz12yp";
+				String regCodex = (String) SharedPreferencesUtils.getParam(mContext,"regcode","null");
+				if (regCodex.equals("null")){
+					Toast.makeText(mContext, "獲取到的註冊碼是空", Toast.LENGTH_SHORT).show();
+				}
+				String regCode = regCodex;
 				String fileType = "" + type;
 				String localFileName = localName;
 				String fileName = remoteName;
@@ -75,7 +82,7 @@ public class httpUtils {
 						+ "&fileType=" + type + "&localFileName="
 						+ fileName + "&fileName=" + localFileName;
 				url = url.replaceAll(" ", "%20");
-				
+
 				Log.i("xiaoming", "url is " + url);
 				HttpGet httpGet = null;
 				HttpClient httpClient = null;
@@ -92,7 +99,7 @@ public class httpUtils {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}*/
-				
+
 
 				httpGet = new HttpGet(url);
 				httpClient = new DefaultHttpClient();

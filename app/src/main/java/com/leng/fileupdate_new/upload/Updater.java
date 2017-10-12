@@ -12,16 +12,13 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
-
-import com.leng.fileupdate_new.APP;
-import com.leng.fileupdate_new.Bean.FileUpdateStatus;
-import com.leng.fileupdate_new.Bean.FileUser;
 import com.leng.fileupdate_new.contrl.CabackPv;
-import com.leng.fileupdate_new.contrl.ContinueFTP2;
 import com.leng.fileupdate_new.upload.uploadUtil.PreferenceUtil;
 import com.leng.fileupdate_new.upload.uploadUtil.httpUtils;
-import com.leng.fileupdate_new.utils.FileUtils;
+import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
+import com.leng.fileupdate_new.utils.SpUtil;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -33,8 +30,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.net.SocketException;
-
-import static android.R.attr.type;
 
 /**
  * TODO<上传器>
@@ -74,30 +69,35 @@ public class Updater {
     private Context context;
     // FTP协议里面，规定文件名编码为iso-8859-1
     private String SERVER_CHARSET = "ISO-8859-1";
-
+    private CabackPv cp;
     private Handler mHandler;
 
-    private String FtpUserName = "FTPuser"; // FTP 用户名 密码
+
+        private String FtpUserName = "FTPuser"; // FTP 用户名 密码
     private String FtpUserPwd = "Ftp1029384756";
-    private int FtpHostPort = 21; // 端口
-    private CabackPv cp;
+//    private int FtpHostPort = 21; // 端口
+
+    private int FtpHostPort; // 端口
+    private String FtpHostPortSTR; // 端口
 
     public Updater(Context mContext, TestBean bean, Handler mHandler) {
         this.mHandler = mHandler;
         this.bean = bean;
         this.context = mContext;
         cp = (CabackPv) mContext;
-        FtpHostAdress = "218.246.35.197";
     }
 
     // 开始上传一个文件
     public void StartUpdate() {
+        FtpHostAdress = (String) SharedPreferencesUtils.getParam(context, "ftpIpX", "218.246.35.197");
+        FtpHostPortSTR = (String) SharedPreferencesUtils.getParam(context, "ftpPortX", "21");
+        FtpHostPort =   Integer.parseInt(FtpHostPortSTR);
+        Log.i(TAG, "ip： " + FtpHostAdress + "  端口：" + FtpHostPort + "  用户名： " + FtpUserName + " 密码 ：" + FtpUserPwd);
 
         try {
-
             if (connect()) {
                 UploadStatus mStatus = upload();
-                Log.d(TAG, "ftp result status is " + mStatus);
+                Log.i(TAG, "ftp result status is " + mStatus);
                 if ((UploadStatus.Upload_New_File_Success == mStatus) // 上传成功
                         || (UploadStatus.Upload_From_Break_Success == mStatus)) {
 //					cFtp.sendMsg(100);
@@ -107,16 +107,21 @@ public class Updater {
                 } else if (UploadStatus.File_Exits == mStatus) { // 移除文件到已上传列表
 //					cFtp.sendMsg(100);
                 } else {
-                    Log.d(TAG, "status is " + mStatus);
+                    Log.i(TAG, "status is " + mStatus);
                 }
+            } else {
+                Toast.makeText(context, "连接失败,请检查配置是否正确", Toast.LENGTH_SHORT).show();
             }
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             // pause(); //pase state
+            Log.i(TAG,"连接一场了");
         } catch (NullPointerException e) {
+            Log.i("qweqweasd", "asdasdasdasdasd");
             // TODO: handle exception
             e.printStackTrace();
+
             // pause();
         } finally {
 //			cFtp.setFtpState(ContinueFtp.FtpState.INIT);
@@ -133,7 +138,7 @@ public class Updater {
 
     // 暂停上传
     public void pause() {
-//        bean.setUpLoadStatus("2");
+        bean.setUpLoadStatus("2");
         try {
             disconnect();
         } catch (Exception e) { // IOException
@@ -152,26 +157,29 @@ public class Updater {
     public boolean connect() throws IOException {
         // String LOCAL_CHARSET;
 
+
+
+
         // ftpClient.setControlEncoding("utf-8");// 设置字符集，必须在connect之前设置
         try {
             ftpClient.connect(FtpHostAdress, FtpHostPort);// 地址和端口
         } catch (SocketException e) {
-            Log.d(TAG, "ftp connect failed " + e);
+            Log.i(TAG, "连接失败 " + e);
             return false;
         } catch (IOException e) {
             // TODO: handle exception
-            Log.d(TAG, "ftp connect failed " + e);
+            Log.i(TAG, "ftp 连接失败 " + e);
             return false;
         }
 
 
         if (FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
             if (ftpClient.login(FtpUserName, FtpUserPwd)) {
-                Log.d(TAG, "connect FTP service success");
+                Log.i(TAG, "connect FTP service success");
                 if (FTPReply.isPositiveCompletion(ftpClient.sendCommand(
                         "OPTS UTF8", "ON"))) {// 开启服务器对UTF-8的支持，如果服务器支持就用UTF-8编码，否则就使用本地编码（GBK）.
                     LOCAL_CHARSET = "UTF-8";
-                    Log.d(TAG, "Ftp Mode is UTF-8");
+                    Log.i(TAG, "Ftp Mode is UTF-8");
                 }
                 // ftpClient.setBufferSize(1024);
                 ftpClient.setControlEncoding(LOCAL_CHARSET);
@@ -224,13 +232,13 @@ public class Updater {
             File f = new File(localFilePath);
             long localSize = f.length();
             if (remoteSize == localSize) {
-//				Log.d(TAG, "file name is " + file.getName()
+//				Log.i(TAG, "file name is " + file.getName()
 //						+ " progress is " + mBxFile.getFileProgress());
-//				Log.d(TAG, "服务器中文件等于要上传文件，所以不上传");
+//				Log.i(TAG, "服务器中文件等于要上传文件，所以不上传");
                 sendMsg(100);
                 return UploadStatus.File_Exits;
             } else if (remoteSize > localSize) {
-                Log.d(TAG, "服务器中文件大于要上传文件，所以不上传");
+                Log.i(TAG, "服务器中文件大于要上传文件，所以不上传");
                 return UploadStatus.Remote_Bigger_Local;
             }
 
@@ -303,7 +311,7 @@ public class Updater {
             throws IOException {
         UploadStatus status = UploadStatus.Create_Directory_Success;
         String directory = remote.substring(0, remote.lastIndexOf("/") + 1);
-        Log.d(TAG, "目录名：" + directory);
+        Log.i(TAG, "目录名：" + directory);
         if (!directory.equalsIgnoreCase("/")
                 && !ftpClient.changeWorkingDirectory(new String(directory
                 .getBytes(LOCAL_CHARSET), SERVER_CHARSET))) {
@@ -367,14 +375,20 @@ public class Updater {
     /**
      * 上传文件到服务器,新上传和断点续传
      *
-     * @param remoteFile  远程文件名，在上传之前已经将服务器工作目录做了改变
-     * @param localFile   本地文件 File句柄，绝对路径
-     * @param process 需要显示的处理进度步进值
-     * @param ftpClient   FTPClient 引用
+     * @param remoteFile 远程文件名，在上传之前已经将服务器工作目录做了改变
+     * @param localFile  本地文件 File句柄，绝对路径
+     * @param process    需要显示的处理进度步进值
+     * @param ftpClient  FTPClient 引用
      * @return
      * @throws IOException
      */
     public UploadStatus uploadFile2(String remoteFile, File localFile, FTPClient ftpClient, long remoteSize) throws IOException {
+//        fileStatusBeanMap.put(localFile.getName(), bean);
+
+        //对象序列化保存到本地
+        SpUtil.putObject(context, localFile.getName(), bean);
+        Log.i(TAG, localFile.getName() + "保存对象的名字");
+
         UploadStatus status;
         //显示进度的上传
         long step = localFile.length() / 100;
@@ -393,14 +407,13 @@ public class Updater {
         int c;
 
 
-
-        while ((c = raf.read(bytes)) != -1) {
+        while ((c = raf.read(bytes)) != -1 && !bean.getUpLoadStatus().equals("2")) {
             out.write(bytes, 0, c);
             localreadbytes += c;
             if (localreadbytes / step != process) {
                 process = localreadbytes / step;
-                Log.i(TAG, remoteFile + "的上传进度:" + process+bean.getLocfilepath());
-                cp.setProgresValues(bean.getLocfileName(), process + "",bean.getLocfilepath());
+                Log.i(TAG, remoteFile + "的上传进度:" + process + bean.getLocfilepath());
+                cp.setProgresValues(bean.getLocfileName(), process + "", bean.getLocfilepath());
 //
 //                FileUser uu=new FileUser();
 //                uu.setId(FileUtils.longPressLong(bean.getLocfileName()));
@@ -409,7 +422,7 @@ public class Updater {
                 //TODO 汇报上传状态
             }
         }
-        Log.i(TAG, "本地名字是："+bean.getLocfileName());
+        Log.i(TAG, "本地名字是：" + bean.getLocfileName());
         out.flush();
         raf.close();
         out.close();
@@ -458,7 +471,7 @@ public class Updater {
 //            if (step != 0) {
 //                if ((localreadbytes / step) != process && !bean.getUpLoadStatus().equals("2")) {
 //                    process = localreadbytes / step;
-//                    // Log.d(TAG, "localFile " + localFile.getName()
+//                    // Log.i(TAG, "localFile " + localFile.getName()
 //                    // + " , update process :" + process);
 //                    sendMsg((int) process);
 //                    Log.i("qweqweqwe", "" + process);
@@ -495,7 +508,7 @@ public class Updater {
 //                    : UploadStatus.Upload_New_File_Failed;
 //        }
 //
-//        // Log.d(TAG, "process is " + process + "|exit name is " +
+//        // Log.i(TAG, "process is " + process + "|exit name is " +
 //        // mBxFile.getFileName() + "| status is " + status);
 //        return status;
 //    }

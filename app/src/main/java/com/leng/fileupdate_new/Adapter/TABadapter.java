@@ -48,9 +48,9 @@ public class TABadapter extends BaseAdapter {
             v = new ViewHodler();
 
             view = LayoutInflater.from(mContext).inflate(R.layout.tab_item, null);
-            v.imageView = view.findViewById(R.id.tab_item_image);
-            v.textView = view.findViewById(R.id.tab_item_text);
-            v.textView2 = view.findViewById(R.id.tab_item_text_2);
+            v.imageView = (ImageView) view.findViewById(R.id.tab_item_image);
+            v.textView = (TextView) view.findViewById(R.id.tab_item_text);
+            v.textView2 = (TextView) view.findViewById(R.id.tab_item_text_2);
             view.setTag(v);
         } else {
             v = (ViewHodler) view.getTag();

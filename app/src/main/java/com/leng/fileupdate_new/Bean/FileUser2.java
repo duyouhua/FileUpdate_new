@@ -7,6 +7,7 @@ import org.greenrobot.greendao.annotation.Property;
 
 /**
  * Created by Administrator on 2017/9/28.
+ * 保存文件上传进度的表
  */
 @Entity
 public class FileUser2 {
