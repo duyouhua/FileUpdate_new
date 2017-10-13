@@ -27,6 +27,8 @@ import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
 import com.leng.fileupdate_new.contrl.CabackInfoNums;
 import com.leng.fileupdate_new.contrl.CallBacklistview;
+import com.leng.fileupdate_new.contrl.CallbackNetChanged;
+import com.leng.fileupdate_new.contrl.NetworkReceiver;
 import com.leng.fileupdate_new.greendao.gen.DaoUtils;
 import com.leng.fileupdate_new.upload.TestBean;
 import com.leng.fileupdate_new.upload.UploadFileManager;
@@ -39,6 +41,7 @@ import com.leng.other.CommomDialog2;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.leng.fileupdate_new.greendao.gen.DaoUtils.FileUserDaoQueryPrgresswhere;
 import static com.leng.fileupdate_new.moudle.BlankFragmentChild1.uploadFileManager;
@@ -58,6 +61,8 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
     private RelativeLayout mChild2RelativeEmpty;
     private static final String TAG = "BlankFragmentChild2";
     private boolean isbtnchick = true;
+
+
     /**
      * 全选
      */
@@ -82,8 +87,8 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
             super.handleMessage(msg);
             switch (msg.what) {
                 case 9876:
-//                    showFile();
-
+                    showFile();
+                   Log.i(TAG,"网络断开更新界面"+msg.arg2);
                     break;
                 case 4579:
                     showFile();
@@ -93,7 +98,7 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                         showFile();
                         isUplodFirstone = false;
                         Log.i(TAG, "只允许走一遍");
-                    }else {
+                    } else {
                         Log.i(TAG, "是不是得从这只允许走一遍");
                     }
 
@@ -113,7 +118,7 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
 
                     int prgressValue = FileUserDaoQueryPrgresswhere(pathname);
 
-                    if (mapIndex!=null&&mapIndex.size() > 0) {
+                    if (mapIndex != null && mapIndex.size() > 0) {
                         int dexwen = mapIndex.get(pathname);
 
                         Child2Adapter.updataView(dexwen, mChild2Listview, prgressValue);
@@ -236,11 +241,12 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
         checkNum = 0;
         checktrueNums = 0;
         isSelectdAll = true;//标记删除后不能在全选
-        if (DaoUtils.FileUserDaoQuerywhere("6") != null && DaoUtils.FileUserDaoQuerywhere("6").size() > 0) {
+        List<FileUser> mfileusers = DaoUtils.FileUserDaoQuerywhere("6");
+        if (mfileusers != null && mfileusers.size() > 0) {
             mapIndex.clear();
-            for (int i1 = 0; i1 < DaoUtils.FileUserDaoQuerywhere("6").size(); i1++) {
-                String name = DaoUtils.FileUserDaoQuerywhere("6").get(i1).getMFileNamedao();
-                String path = DaoUtils.FileUserDaoQuerywhere("6").get(i1).getMFilePathdao();
+            for (int i1 = 0; i1 < mfileusers.size(); i1++) {
+                String name = mfileusers.get(i1).getMFileNamedao();
+                String path = mfileusers.get(i1).getMFilePathdao();
                 mListname.add(name);
                 mListpath.add(path);
                 mapIndex.put(name, mapIndex.size());
@@ -250,7 +256,7 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                 mChild2Listview.setAdapter(mAdapter);
                 //保存正在上传的数量
                 SharedPreferencesUtils.setParam(mContext, Constanxs.FOTERNUMSTWO, mListname.size() + "");
-                Log.i(TAG, "查询到的数据是 ：" + DaoUtils.FileUserDaoQuerywhere("6").get(i1).getMFileNamedao() + "  map的size是： " + mapIndex.size());
+                Log.i(TAG, "查询到的数据是 ：" + mfileusers.get(i1).getMFileNamedao() + "  map的size是： " + mapIndex.size());
             }
         } else {
             Log.i(TAG, "没有查询到数据");
@@ -446,7 +452,7 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                 setBtnSelectAllYes();
                 isSelectdAll = true;
             }
-            Toast.makeText(mContext, "==" + checkNum, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "==" + checkNum, Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -474,12 +480,12 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
             Child2Adapter.getIsSelectedChild2().put(a, false);
             checkNum--;
             checktrueNums--;
-            Toast.makeText(mContext, "取消" + a, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "取消" + a, Toast.LENGTH_SHORT).show();
         } else {
             Child2Adapter.getIsSelectedChild2().put(a, true);
             checkNum++;
             checktrueNums++;
-            Toast.makeText(mContext, "选中" + a, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "选中" + a, Toast.LENGTH_SHORT).show();
         }
         dataChanged();
 
@@ -555,22 +561,6 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
 //        }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-   Log.i(TAG,"onDestroy");
-    }
 
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.i(TAG,"onDestroyView");
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.i(TAG,"onDetach");
-    }
 }

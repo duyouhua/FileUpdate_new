@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.leng.fileupdate_new.contrl.CabackPv;
 import com.leng.fileupdate_new.upload.uploadUtil.PreferenceUtil;
 import com.leng.fileupdate_new.upload.uploadUtil.httpUtils;
+import com.leng.fileupdate_new.utils.FileUtils;
 import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
 import com.leng.fileupdate_new.utils.SpUtil;
 
@@ -73,7 +74,7 @@ public class Updater {
     private Handler mHandler;
 
 
-        private String FtpUserName = "FTPuser"; // FTP 用户名 密码
+    private String FtpUserName = "FTPuser"; // FTP 用户名 密码
     private String FtpUserPwd = "Ftp1029384756";
 //    private int FtpHostPort = 21; // 端口
 
@@ -91,7 +92,7 @@ public class Updater {
     public void StartUpdate() {
         FtpHostAdress = (String) SharedPreferencesUtils.getParam(context, "ftpIpX", "218.246.35.197");
         FtpHostPortSTR = (String) SharedPreferencesUtils.getParam(context, "ftpPortX", "21");
-        FtpHostPort =   Integer.parseInt(FtpHostPortSTR);
+        FtpHostPort = Integer.parseInt(FtpHostPortSTR);
         Log.i(TAG, "ip： " + FtpHostAdress + "  端口：" + FtpHostPort + "  用户名： " + FtpUserName + " 密码 ：" + FtpUserPwd);
 
         try {
@@ -116,7 +117,7 @@ public class Updater {
             // TODO Auto-generated catch block
             e.printStackTrace();
             // pause(); //pase state
-            Log.i(TAG,"连接一场了");
+            Log.i(TAG, "连接一场了");
         } catch (NullPointerException e) {
             Log.i("qweqweasd", "asdasdasdasdasd");
             // TODO: handle exception
@@ -156,8 +157,6 @@ public class Updater {
      */
     public boolean connect() throws IOException {
         // String LOCAL_CHARSET;
-
-
 
 
         // ftpClient.setControlEncoding("utf-8");// 设置字符集，必须在connect之前设置
@@ -215,6 +214,7 @@ public class Updater {
         // 对远程目录的处理
         String localFilePath = bean.getLocfilepath();
         String remoteFileName = bean.getRemotefilepath();
+
 
         String creatType = bean.getCrateFileType();
 

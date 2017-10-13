@@ -9,6 +9,7 @@
 package com.leng.fileupdate_new.upload.uploadUtil;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -70,12 +71,26 @@ public class httpUtils {
 				String fileName = remoteName;
 //
 //				//使用上帝从SharedPreferences里面得到保存的ftp IP地址和端口
-//				SharedPreferences ServerSetting = LFBApplication.getApplication().getSharedPreferences("ServerSetting", 0);
-//				String databaseAddress=ServerSetting.getString("databaseIp", "");
-//				String databasePort=ServerSetting.getString("databasePort", "80");  //默认的是80端口
-//
-				String baseURL= "http://kc.xun365.net/Manager/CommitFileInfo";
-//				//要是没有保存的话就使用软件默认的
+				SharedPreferences ServerSetting =  mContext.getSharedPreferences("ServerSetting", 0);
+				String databaseAddress=ServerSetting.getString("databaseIpa", "");
+				String databasePort=ServerSetting.getString("databasePorta", "80");  //默认的是80端口
+
+
+				String baseURL;
+				//要是没有保存的话就使用软件默认的
+				if (databaseAddress.equals("")) {
+					baseURL = "http://kc.xun365.net/Manager/CommitFileInfo";
+					Log.i("QWEQWEQWE", "0baseURL " + baseURL);
+				} else { //要是有保存的话就使用保存好的
+					if (databaseAddress.contains(":")) {
+						baseURL = "http://" + databaseAddress + "/Manager/CommitFileInfo";
+						Log.i("QWEQWEQWE", "1baseURL " + baseURL);
+					} else {
+						baseURL = "http://" + databaseAddress + ":" + databasePort + "/Manager/CommitFileInfo";
+						Log.i("QWEQWEQWE", "2baseURL " + baseURL);
+					}
+
+				}
 
 				System.out.println("databaseIPandPort=="+baseURL);
 				String url = baseURL + "?imei=" + imei + "&regCode=" + regCode

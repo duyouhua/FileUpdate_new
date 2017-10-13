@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.media.ExifInterface;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
@@ -59,7 +60,17 @@ public class FileUtils {
         }
         return as;
     }
-
+    /**
+     * 获取视频文件的方向信息
+     * @param FilePath
+     * @return
+     */
+    public static String  GetVideoOrientation(String FilePath){
+        MediaMetadataRetriever retr = new MediaMetadataRetriever();
+        retr.setDataSource(FilePath);
+        String rotation = retr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
+        return rotation;
+    }
 
     public static File createFile(String folderPath, String fileName) {
         File destDir = new File(folderPath);

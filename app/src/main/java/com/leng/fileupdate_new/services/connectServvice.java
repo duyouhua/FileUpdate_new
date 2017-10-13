@@ -95,7 +95,8 @@ public class connectServvice extends Service {
                             //服务端文件夹名称
                             String famt = getFmat(getExtension2(mFileName2.get(i)));
                             //服务端路径
-                            String remote = regCodex + mFileName2.get(i);
+
+
                             int type = 0;
 //                            if (famt != null) {
                             if (famt.equals("/Images/")) {
@@ -105,6 +106,16 @@ public class connectServvice extends Service {
                             } else if (famt.equals("/Videos/")) {
                                 type = 3;
                             }
+
+
+                            String remote;
+                            if (type != 2&&FileUtils.isPictureIsRotated(mFilePath2.get(i))) {
+                                remote = regCodex + "_0_" + mFileName2.get(i);
+                            } else {
+                                remote = regCodex+"_1_" + mFileName2.get(i);
+                            }
+
+
 
 
                             FileUser fileUser = new FileUser();
@@ -195,7 +206,7 @@ public class connectServvice extends Service {
                             //服务端文件夹名称
                             String famt = getFmat(getExtension2(mFileName2.get(i)));
                             //服务端路径
-                            String remote = regCodex + mFileName2.get(i);
+
                             int type = 0;
 //                            if (famt != null) {
                             if (famt.equals("/Images/")) {
@@ -205,7 +216,12 @@ public class connectServvice extends Service {
                             } else if (famt.equals("/Videos/")) {
                                 type = 3;
                             }
-
+                            String remote;
+                            if (type != 2&&FileUtils.isPictureIsRotated(mFilePath2.get(i))) {
+                                remote = regCodex + "_0_" + mFileName2.get(i);
+                            } else {
+                                remote = regCodex+"_1_" + mFileName2.get(i);
+                            }
 
                             FileUser fileUser = new FileUser();
                             fileUser.setId(FileUtils.longPressLong(mFileName2.get(i)));
@@ -296,7 +312,7 @@ public class connectServvice extends Service {
                             //服务端文件夹名称
                             String famt = getFmat(getExtension2(mFileName2.get(i)));
                             //服务端路径
-                            String remote = regCodex + mFileName2.get(i);
+
                             int type = 0;
 //                            if (famt != null) {
                             if (famt.equals("/Images/")) {
@@ -306,7 +322,12 @@ public class connectServvice extends Service {
                             } else if (famt.equals("/Videos/")) {
                                 type = 3;
                             }
-
+                            String remote;
+                            if (type != 2&&FileUtils.isPictureIsRotated(mFilePath2.get(i))) {
+                                remote = regCodex + "_0_" + mFileName2.get(i);
+                            } else {
+                                remote = regCodex+"_1_" + mFileName2.get(i);
+                            }
 
                             FileUser fileUser = new FileUser();
                             fileUser.setId(FileUtils.longPressLong(mFileName2.get(i)));
@@ -396,7 +417,7 @@ public class connectServvice extends Service {
                             //服务端文件夹名称
                             String famt = getFmat(getExtension2(mFileName2.get(i)));
                             //服务端路径
-                            String remote = regCodex + mFileName2.get(i);
+
                             int type = 0;
 //                            if (famt != null) {
                             if (famt.equals("/Images/")) {
@@ -406,7 +427,12 @@ public class connectServvice extends Service {
                             } else if (famt.equals("/Videos/")) {
                                 type = 3;
                             }
-
+                            String remote;
+                            if (type != 2&&FileUtils.isPictureIsRotated(mFilePath2.get(i))) {
+                                remote = regCodex + "_0_" + mFileName2.get(i);
+                            } else {
+                                remote = regCodex+"_1_" + mFileName2.get(i);
+                            }
 
                             FileUser fileUser = new FileUser();
                             fileUser.setId(FileUtils.longPressLong(mFileName2.get(i)));
@@ -495,7 +521,7 @@ public class connectServvice extends Service {
                             //服务端文件夹名称
                             String famt = getFmat(getExtension2(mFileName2.get(i)));
                             //服务端路径
-                            String remote = regCodex + mFileName2.get(i);
+
                             int type = 0;
 //                            if (famt != null) {
                             if (famt.equals("/Images/")) {
@@ -505,7 +531,12 @@ public class connectServvice extends Service {
                             } else if (famt.equals("/Videos/")) {
                                 type = 3;
                             }
-
+                            String remote;
+                            if (type != 2&&FileUtils.isPictureIsRotated(mFilePath2.get(i))) {
+                                remote = regCodex + "_0_" + mFileName2.get(i);
+                            } else {
+                                remote = regCodex+"_1_" + mFileName2.get(i);
+                            }
 
                             FileUser fileUser = new FileUser();
                             fileUser.setId(FileUtils.longPressLong(mFileName2.get(i)));

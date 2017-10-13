@@ -57,7 +57,7 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
             super.handleMessage(msg);
             switch (msg.what) {
                 case 123123:
-                    Toast.makeText(mContext, "返回根目录", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext, "返回根目录", Toast.LENGTH_SHORT).show();
                     showFileDir2(ROOT_PATH);
                     break;
                 case 1231234:
@@ -199,8 +199,8 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
 
         mSelectAllLoc = (Button) view.findViewById(R.id.select_all_loc);
         mSelectAllLoc.setOnClickListener(this);
-//        mUpdateButtonLoc = (Button) view.findViewById(R.id.update_button_loc);
-//        mUpdateButtonLoc.setOnClickListener(this);
+        mUpdateButtonLoc = (Button) view.findViewById(R.id.update_button_loc);
+        mUpdateButtonLoc.setOnClickListener(this);
         mCutButtonLoc = (Button) view.findViewById(R.id.cut_button_loc);
         mCutButtonLoc.setOnClickListener(this);
         mDeletButtonLoc = (Button) view.findViewById(R.id.delet_button_loc);
@@ -274,8 +274,10 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
                     Toast.makeText(mContext, "当前文件下没有文件", Toast.LENGTH_SHORT).show();
                 }
                 break;
-//            case R.id.update_button_loc:
-//                break;
+            case R.id.update_button_loc:
+                String pathsa = (String) SharedPreferencesUtils.getParam(mContext, "jiluFilePath", "/mnt/");
+                showFileDir2(pathsa);
+                break;
             case R.id.cut_button_loc:
 //                for (int i = 0; i < LocFileAdapter.getIsSelectedLocFile().size(); i++) {
 //                    if (LocFileAdapter.getIsSelectedLocFile().get(i)) {
@@ -359,7 +361,7 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
             }
             Collections.sort(mFileName);
             Collections.sort(mFilePath);
-            Toast.makeText(mContext, "MEIFANGING   " + files.length + " mListBaoHanYSP.size()" + mListBaoHanYSP.size(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "MEIFANGING   " + files.length + " mListBaoHanYSP.size()" + mListBaoHanYSP.size(), Toast.LENGTH_SHORT).show();
             mAdapter = new LocFileAdapter(mContext, mFileName, mFilePath);
             mListviewLocfile.setAdapter(mAdapter);
         } else {
@@ -399,13 +401,13 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
             checktrueNums = 0;
             checktrueNumsmove = 0;
             checkNum--;
-            Toast.makeText(mContext, "取消" + a, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "取消" + a, Toast.LENGTH_SHORT).show();
         } else {
             LocFileAdapter.getIsSelectedLocFile().put(a, true);
             checkNum++;
             checktrueNums = 1;
             checktrueNumsmove = 1;
-            Toast.makeText(mContext, "选中" + a, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "选中" + a, Toast.LENGTH_SHORT).show();
         }
         dataChanged();
 

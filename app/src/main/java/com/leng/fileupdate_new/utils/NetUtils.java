@@ -1,6 +1,8 @@
 package com.leng.fileupdate_new.utils;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -54,23 +56,23 @@ public class NetUtils {
 
 
     public static boolean properDetection(Context mContext) {
-//        if (!ping()) {
-//            Toast.makeText(mContext, "您的网络似乎有点问题哦", Toast.LENGTH_SHORT).show();
-//            return false;
-//        }
+        if (!isNetworkAvailable(mContext)) {
+            Toast.makeText(mContext, "您的网络似乎有点问题哦", Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
         boolean c6 = (Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox6", false);
         boolean c7 = (Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox7", false);
         if (c6 == false && c7 == false) {
             Toast.makeText(mContext, "请到设置页面选择您要使用的网络", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (c6 == true&&c7==false) {
+        } else if (c6 == true && c7 == false) {
             Toast.makeText(mContext, "您正在使用移动网络，请注意！", Toast.LENGTH_SHORT).show();
 
         } else if (c6 == true && c7 == true) {
             //优先使用wifi网络
 
-        } else if (c7 == true&&c6==false) {
+        } else if (c7 == true && c6 == false) {
             //wifi网络
 
         }
@@ -79,5 +81,28 @@ public class NetUtils {
 
     private void startDetection() {
 
+    }
+
+
+    /**
+     * 检测当的网络（WLAN、3G/2G）状态
+     *
+     * @param context Context
+     * @return true 表示网络可用
+     */
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivity = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getActiveNetworkInfo();
+            if (info != null && info.isConnected()) {
+                // 当前网络是连接的
+                if (info.getState() == NetworkInfo.State.CONNECTED) {
+                    // 当前所连接的网络可用
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

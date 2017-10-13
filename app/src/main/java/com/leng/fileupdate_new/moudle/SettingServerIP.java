@@ -85,14 +85,14 @@ public class SettingServerIP extends Activity {
                     SharedPreferencesUtils.setParam(mContext,"databasePortX","80");
                     Log.i("QWEQWEASD",ftpIPString+"=="+ftpPortString+"=="+dataBaseAddressString+"==");
 
-//                    SharedPreferences ServerSetting = getSharedPreferences(
-//                            "ServerSetting", 0);
-//                    SharedPreferences.Editor editor = ServerSetting.edit();
-//                    editor.putString("ftpIp", ftpIPString);
-//                    editor.putString("ftpPort", ftpPortString);
-//                    editor.putString("databaseIp", dataBaseAddressString);
-//                    editor.putString("databasePort", "80");
-//                    editor.commit();
+                    SharedPreferences ServerSetting = getSharedPreferences(
+                            "ServerSetting", 0);
+                    SharedPreferences.Editor editor = ServerSetting.edit();
+                    editor.putString("ftpIpa", ftpIPString);
+                    editor.putString("ftpPorta", ftpPortString);
+                    editor.putString("databaseIpa", dataBaseAddressString);
+                    editor.putString("databasePorta", "80");
+                    editor.commit();
                     SharedPreferences ServerSetting2 = getSharedPreferences(
                             "ServerSetting2", 0);
                     SharedPreferences.Editor editor2 = ServerSetting2.edit();

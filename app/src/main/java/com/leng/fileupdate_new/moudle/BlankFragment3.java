@@ -28,6 +28,7 @@ import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
 import com.leng.fileupdate_new.contrl.CabackAutoUpInit;
 import com.leng.fileupdate_new.services.connectServvice;
+import com.leng.fileupdate_new.utils.NetUtils;
 import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
 
 
@@ -295,6 +296,7 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
             case R.id.setting_serverip_btn:
                 new HideClick().start();
                 if (HideClick.sIsAlive >= 5) {
+
                     Intent intent = new Intent(getActivity(), SettingServerIP.class);
                     getActivity().startActivityForResult(intent, 753);//请求码暂时没有用
                 }
@@ -321,7 +323,7 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
         public void run() {
             sIsAlive++;
             try {
-                Thread.sleep(3000);
+                Thread.sleep(1500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -446,6 +448,10 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
         switch (compoundButton.getId()) {
 
             case R.id.checkbox1:
+                if (!NetUtils.properDetection(mContext)) {
+                    mCheckbox1.setChecked(false);
+                    return;
+                }
                 String spath1 = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath1", "null");
                 if (spath1.equals("null")) {
                     mCheckbox1.setChecked(false);
@@ -456,6 +462,10 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
                 }
                 break;
             case R.id.checkbox2:
+                if (!NetUtils.properDetection(mContext)) {
+                    mCheckbox2.setChecked(false);
+                    return;
+                }
                 String spath2 = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath2", "null");
                 if (spath2.equals("null")) {
                     mCheckbox2.setChecked(false);
@@ -467,6 +477,10 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
 
                 break;
             case R.id.checkbox3:
+                if (!NetUtils.properDetection(mContext)) {
+                    mCheckbox3.setChecked(false);
+                    return;
+                }
                 String spath3 = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath3", "null");
                 if (spath3.equals("null")) {
                     mCheckbox3.setChecked(false);
@@ -477,6 +491,10 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
                 }
                 break;
             case R.id.checkbox4:
+                if (!NetUtils.properDetection(mContext)) {
+                    mCheckbox4.setChecked(false);
+                    return;
+                }
                 String spath4 = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath4", "null");
                 if (spath4.equals("null")) {
                     mCheckbox4.setChecked(false);
@@ -487,10 +505,16 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
                 }
                 break;
             case R.id.checkbox5:
+                if (!NetUtils.properDetection(mContext)) {
+                    mCheckbox5.setChecked(false);
+                    return;
+                }
                 String spath5 = (String) SharedPreferencesUtils.getParam(mContext, "mSettingPath5", "null");
+
                 if (spath5.equals("null")) {
                     mCheckbox5.setChecked(false);
                     Toast.makeText(mContext, "请先选择默认目录", Toast.LENGTH_SHORT).show();
+
                 } else {
                     saveCheckStatus(mCheckbox5, b);
                     startServicesx("5", b);

@@ -26,6 +26,7 @@ import com.leng.fileupdate_new.contrl.CabackPv;
 import com.leng.fileupdate_new.contrl.CallbackChild;
 import com.leng.fileupdate_new.contrl.CallbackChild2;
 import com.leng.fileupdate_new.contrl.CallbackLocFiel;
+import com.leng.fileupdate_new.contrl.CallbackNetChanged;
 import com.leng.fileupdate_new.contrl.ChangeModeFile;
 import com.leng.fileupdate_new.contrl.ContinueFTP2;
 import com.leng.fileupdate_new.moudle.BlankFragment1;
@@ -36,12 +37,13 @@ import com.leng.fileupdate_new.utils.Constanxs;
 import com.leng.fileupdate_new.utils.RegUtil;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.leng.fileupdate_new.utils.Constanxs.INFO1;
 import static com.leng.fileupdate_new.utils.Constanxs.INFO2arg;
 import static com.leng.fileupdate_new.utils.Constanxs.INFO4;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ChangeModeFile, CallbackChild, CallbackLocFiel, CallbackChild2, CabackPv, CabackInfoNums, CabackAutoUpInit {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ChangeModeFile, CallbackChild, CallbackLocFiel, CallbackChild2, CabackPv, CabackInfoNums, CabackAutoUpInit, CallbackNetChanged {
     private BlankFragment1 fragment1;
     public static MainActivity mActivityContext;
     private BlankFragment2 fragment2;
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int mSelectIndex = 0;
     private View last, now;
     private String TAG = "MainActivity";
-    RegUtil regUtil;
+
     public Handler mHandler3, mHandler2, mHandler4, mHandlerChid1, mHandlerLocFile, mHandlerLocFileFragment, mHandlerUpding;
     public Handler mHandlerActive;
     private Handler mHandler = new Handler() {
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startLoding();
         initRegUtil();
         isONaCTIVITYr = false;
-//        threadconnec();
+
     }
 
     public Context initContext() {
@@ -143,11 +145,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initView() {
-
+        //home 广播
         MyReceiver receiver = new MyReceiver();
         IntentFilter homeFilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-
         registerReceiver(receiver, homeFilter);
+        //网络广播
+        registerBoradcastReceiver();
 
         fragmentManager = getSupportFragmentManager();
         mTabBt1 = (Button) findViewById(R.id.tab_bt_1);
@@ -267,6 +270,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             fragmentTransaction.hide(fragment3);
         }
 
+    }
+
+    @Override
+    public void sendMsg(int msg) {
+
+        Log.i(TAG, "===========" + msg);
     }
 
 
@@ -459,6 +468,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterBoradcastReceiver();
     }
 
     @Override
@@ -507,7 +517,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         }
-        Toast.makeText(this, "++" + mode, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "++" + mode, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -578,5 +588,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void setinit(int off) {
 
     }
+
+    public void registerBoradcastReceiver() {
+        IntentFilter myIntentFilter = new IntentFilter();
+        myIntentFilter.addAction("com.fileupdate.networkChange");
+        // 注册广播
+        registerReceiver(mBroadcastReceiver, myIntentFilter);
+    }
+
+    public void unregisterBoradcastReceiver() {
+        unregisterReceiver(mBroadcastReceiver);
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int mAction = intent.getIntExtra("Type", 0);
+            Message ms = new Message();
+            ms.what = 9876;
+            ms.arg2 = mAction;
+            mHandlerUpding.sendMessage(ms);
+        }
+    };
 
 }

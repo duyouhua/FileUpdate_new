@@ -96,6 +96,7 @@
     <string name="notice">警告</string>
     <string name="noticeData">请先设定默认目录</string>
     <string name="maupdate">手动上传</string>
+    <string name="maupdate2">刷新</string>
     <string name="moveto">移动到</string>
     <string name="autoupdate">自动上传</string>
     <string name="setDefaultError">当前目录不支持</string>

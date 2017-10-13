@@ -23,6 +23,7 @@ import com.leng.fileupdate_new.Adapter.Child3Adapter;
 import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
 import com.leng.fileupdate_new.contrl.CabackInfoNums;
+import com.leng.fileupdate_new.contrl.NetworkReceiver;
 import com.leng.fileupdate_new.contrl.ThreadPoolProxy;
 import com.leng.fileupdate_new.greendao.gen.DaoUtils;
 import com.leng.fileupdate_new.utils.Constanxs;
@@ -41,6 +42,7 @@ public class BlankFragmentChild3 extends Fragment implements View.OnClickListene
     private ListView mChild3Listview;
     private RelativeLayout mChild3RelativeList;
     private RelativeLayout mChild3RelativeEmpty;
+
     /**
      * 全选
      */
@@ -70,7 +72,7 @@ public class BlankFragmentChild3 extends Fragment implements View.OnClickListene
                     break;
                 case 4571:
 //                    showFile2();
-                    Toast.makeText(mContext, "GUOLAI MA ", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext, "GUOLAI MA ", Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -228,7 +230,7 @@ public class BlankFragmentChild3 extends Fragment implements View.OnClickListene
                 setBtnSelectAllYes();
                 isSelectdAll = true;
             }
-            Toast.makeText(mContext, "==" + checkNum, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "==" + checkNum, Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -245,12 +247,12 @@ public class BlankFragmentChild3 extends Fragment implements View.OnClickListene
             Child3Adapter.getIsSelectedchilld3().put(a, false);
             checkNum--;
             checktrueNums--;
-            Toast.makeText(mContext, "取消" + a, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "取消" + a, Toast.LENGTH_SHORT).show();
         } else {
             Child3Adapter.getIsSelectedchilld3().put(a, true);
             checkNum++;
             checktrueNums++;
-            Toast.makeText(mContext, "选中" + a, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "选中" + a, Toast.LENGTH_SHORT).show();
         }
         dataChanged();
 

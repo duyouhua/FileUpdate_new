@@ -67,7 +67,6 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener {
                         SharedPreferencesUtils.setParam(mContext, "defultpage", "2");
                         mations = "2";
                         cd.setNums(mations);
-                        Toast.makeText(mContext, "第二个页面", Toast.LENGTH_SHORT).show();
                         break;
                     case 3:
                         SharedPreferencesUtils.setParam(mContext, "defultpage", "3");
@@ -83,7 +82,7 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener {
                         SharedPreferencesUtils.setParam(mContext, "defultpage", "5");
                         mations = "5";
                         cd.setNums(mations);
-                        Toast.makeText(mContext, "第五个页面", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(mContext, "第五个页面", Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         break;
@@ -115,6 +114,7 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             loadFragmentLocFile();
+            changeButton(TITLE1);
 //            Toast.makeText(mContext, "点击TAB2过来的信息", Toast.LENGTH_SHORT).show();
         }
     };
@@ -143,7 +143,7 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume==fragment2");
-        changeButton(TITLE1);
+
     }
 
     @Override
@@ -222,6 +222,7 @@ public class BlankFragment2 extends Fragment implements View.OnClickListener {
         }
 
         fragmentTransaction.commit();
+        changeButton(TITLE1);
     }
 
     private void loadFragmentLocFile() {

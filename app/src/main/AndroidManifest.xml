@@ -14,12 +14,14 @@
     <application
         android:name=".APP"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:screenOrientation="portrait"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,12 +31,15 @@
         </activity>
         <activity
             android:name=".moudle.LiuLanActivity"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Dialog.NoActionBar.MinWidth" />
         <activity
             android:name=".moudle.MoveFileActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AlertNoActionBar" />
 
         <receiver android:name=".contrl.NetworkReceiver">
+
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
@@ -46,6 +51,7 @@
             android:exported="true"></service>
         <activity
             android:name="com.leng.fileupdate_new.moudle.SettingServerIP"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Dialog.NoActionBar"
             >
         </activity>

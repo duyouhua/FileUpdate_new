@@ -19,9 +19,20 @@
     </RelativeLayout>
 
 
-    <include
-        android:id="@+id/shouKONG"
-        layout="@layout/kongbaibuju" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_above="@+id/default_bottom_is"
+        android:layout_height="wrap_content">
+        <include
+
+            android:id="@+id/shouKONG"
+            layout="@layout/kongbaibuju"
+
+            />
+
+    </RelativeLayout>
+
+
     <include layout="@layout/default_bottom"
         android:id="@+id/default_bottom_is"/>
 </RelativeLayout>

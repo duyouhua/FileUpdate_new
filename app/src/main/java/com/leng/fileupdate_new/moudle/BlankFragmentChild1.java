@@ -47,10 +47,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.leng.fileupdate_new.utils.Constanxs.INFO4;
 import static com.leng.fileupdate_new.utils.Constanxs.isUplodFirstone;
-import static com.leng.fileupdate_new.utils.Constanxs.isftpconnet;
 
 public class BlankFragmentChild1 extends ListFragment implements View.OnClickListener {
 
@@ -69,7 +69,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
             super.handleMessage(msg);
             if (msg.arg1 == INFO4) {
                 String as = msg.obj.toString();
-                Toast.makeText(mContext, "CHID  " + msg.obj.toString(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "CHID  " + msg.obj.toString(), Toast.LENGTH_SHORT).show();
                 switch (as) {
                     case "1":
                         break;
@@ -90,7 +90,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                     showDeaufltPageFile(a);
                     break;
                 case 4578:
-                    Toast.makeText(mContext, "连接成功了吗 " + isftpconnet, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext, "连接成功了吗 " + isftpconnet, Toast.LENGTH_SHORT).show();
                     break;
                 case 4579:
                     String path = msg.obj.toString();
@@ -141,7 +141,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
     public static HashMap<Integer, String> mapShangchuanNUMname = new HashMap<>();
     public static HashMap<Integer, String> mapShangchuanNUMpath = new HashMap<>();
 
-    private  boolean isconnet;
+    private boolean isconnet;
     /**
      * 判断当前选中的条目数据  用来处理删除dialog
      */
@@ -394,7 +394,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                 }
                 SharedPreferencesUtils.setParam(mContext, "iffirstAdd", "2");
                 if (DaoUtils.FileUserDaoQuerywhere(title) != null) {
-                    queryAllFile(title);
+                    queryAllFile2(title);
                 } else {
                     showEmpty();
                 }
@@ -448,7 +448,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                 }
                 SharedPreferencesUtils.setParam(mContext, "iffirstAdd", "2");
                 if (DaoUtils.FileUserDaoQuerywhere(title) != null) {
-                    queryAllFile(title);
+                    queryAllFile2(title);
                 } else {
                     showEmpty();
                 }
@@ -502,7 +502,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                 }
                 SharedPreferencesUtils.setParam(mContext, "iffirstAdd", "2");
                 if (DaoUtils.FileUserDaoQuerywhere(title) != null) {
-                    queryAllFile(title);
+                    queryAllFile2(title);
                 } else {
                     showEmpty();
                 }
@@ -557,7 +557,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                 }
                 SharedPreferencesUtils.setParam(mContext, "iffirstAdd", "2");
                 if (DaoUtils.FileUserDaoQuerywhere(title) != null) {
-                    queryAllFile(title);
+                    queryAllFile2(title);
                 } else {
                     showEmpty();
                 }
@@ -613,7 +613,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                 }
                 SharedPreferencesUtils.setParam(mContext, "iffirstAdd", "2");
                 if (DaoUtils.FileUserDaoQuerywhere(title) != null) {
-                    queryAllFile(title);
+                    queryAllFile2(title);
                 } else {
                     showEmpty();
                 }
@@ -660,6 +660,26 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
             showEmpty();
         }
     }
+    private void queryAllFile2(String type) {
+        //查询所有类型为1的数据
+        List<FileUser> fileUsersz = DaoUtils.FileUserDaoQuerywhere(type)  ;
+
+        if (fileUsersz != null && fileUsersz.size() > 0) {
+            for (int i = 0; i < fileUsersz.size(); i++) {
+                mFileName2.add(fileUsersz.get(i).getMFileNamedao());
+                mFilePath2.add(fileUsersz.get(i).getMFilePathdao());
+            }
+//            Collections.sort(mFileName2);
+//            Collections.sort(mFilePath2);
+
+            Log.i(TAG, "查询出来类型为 的数据大小是" + fileUsersz.size());
+            mAdapter = new Child1Adapter(mContext, mFileName2, mFilePath2);
+            mList.setAdapter(mAdapter);
+        } else {
+            Log.i(TAG, "没有查询到类型为1的数据==child1");
+            showEmpty();
+        }
+    }
 
     private void showEmpty() {
         mRLISTVIEW.setVisibility(View.GONE);
@@ -695,12 +715,12 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
             Child1Adapter.getIsSelected().put(a, false);
             checkNum--;
             checktrueNums--;
-            Toast.makeText(mContext, "取消" + a, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "取消" + a, Toast.LENGTH_SHORT).show();
         } else {
             Child1Adapter.getIsSelected().put(a, true);
             checkNum++;
             checktrueNums++;
-            Toast.makeText(mContext, "选中" + a, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "选中" + a, Toast.LENGTH_SHORT).show();
         }
         dataChanged();
 
@@ -761,9 +781,10 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                 isUplodFirstone = true;
                 for (int i = 0; i < Child1Adapter.getIsSelected().size(); i++) {
                     if (Child1Adapter.getIsSelected().get(i)) {
-
+                        String pathsa = mFilePath2.get(i);
+                        String namesa = mFileName2.get(i);
                         // 文件上传格式
-                        String famt = Child1Adapter.getMapFamt().get(mFilePath2.get(i));
+                        String famt = Child1Adapter.getMapFamt().get(pathsa);
                         int type = 0;
                         if (famt != null) {
                             if (famt.equals("/Images/")) {
@@ -774,31 +795,36 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                                 type = 3;
                             }
                             if (type != 0) {
-                                String remote = regCodex + mFileName2.get(i);
-//                                startUpdataFile(mFilePath.get(i), remote, type);
-                                Log.i(TAG, "选中的文件名是" + "i==" + i + mFilePath2.get(i) + "文件格式是：" + type + "服务端路径是：" + remote);
+                                String remote;
+                                if (type != 2 && FileUtils.isPictureIsRotated(pathsa)) {
+                                    remote = regCodex + "_0_" + namesa;
+                                } else {
+                                    remote = regCodex + "_1_" + namesa;
+                                }
 
+//                                startUpdataFile(mFilePath.get(i), remote, type);
+                                Log.i(TAG, "选中的文件名是" + "i==" + i +pathsa + "文件格式是：" + type + "服务端路径是：" + remote);
 
                                 FileUser fileUser = new FileUser();
-                                fileUser.setId(FileUtils.longPressLong(mFileName2.get(i)));
+                                fileUser.setId(FileUtils.longPressLong(namesa));
                                 fileUser.setMFileTypedao("6");
                                 fileUser.setMFileProgresdao(0);
-                                fileUser.setMFileNamedao(mFileName2.get(i));
-                                fileUser.setMFilePathdao(mFilePath2.get(i));
+                                fileUser.setMFileNamedao(namesa);
+                                fileUser.setMFilePathdao(pathsa);
                                 APP.getDaoInstant().getFileUserDao().update(fileUser);
 
                                 FileUser2 ff = new FileUser2();
-                                ff.setId(FileUtils.longPressLong(mFileName2.get(i)));
+                                ff.setId(FileUtils.longPressLong(namesa));
                                 ff.setMFileProgresdao(0);
-                                ff.setMFileNamedao(mFileName2.get(i));
-                                ff.setMFilePathdao(mFilePath2.get(i));
+                                ff.setMFileNamedao(namesa);
+                                ff.setMFilePathdao(pathsa);
                                 APP.getDaoInstant().getFileUser2Dao().insertOrReplace(ff);//更新数据库
 
 
                                 final TestBean testBean = new TestBean();
-                                testBean.setLocfilepath(mFilePath2.get(i));
+                                testBean.setLocfilepath(pathsa);
                                 testBean.setRemotefilepath(remote);
-                                testBean.setLocfileName(mFileName2.get(i));
+                                testBean.setLocfileName(namesa);
                                 testBean.setCrateFileType(famt);
                                 testBean.setCrateFileTypenums(type);
                                 testBean.setUpLoadStatus("1");
@@ -808,7 +834,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
 //                                xxxxx();
 //                                startUpdataFile(mFilePath2.get(i),remote,"1");
 
-                                Log.i(TAG, "开始上传" + "   名字是：" + mFileName2.get(i) + "id :" + FileUtils.longPressLong(mFileName2.get(i)));
+                                Log.i(TAG, "开始上传" + "   名字是：" + namesa + "id :" + FileUtils.longPressLong(namesa));
 
                             } else {
                                 Log.i(TAG, "类型与格式错误");
@@ -859,7 +885,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
 //            }
 //        };
 //        ty.commitTask(runnable);
-        Toast.makeText(mContext, "开始上传", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(mContext, "开始上传", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -940,7 +966,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
             setBtnSelectAllYes();
             isSelectdAll = true;
         }
-        Toast.makeText(mContext, "==" + checkNum, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(mContext, "==" + checkNum, Toast.LENGTH_SHORT).show();
     }
 
 
