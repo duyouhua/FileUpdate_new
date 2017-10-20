@@ -25,7 +25,7 @@ public class DialogUTILS {
                 //                        .setLoadSpeed(speed)
                 //                        .setRepeatCount(repeatTime)
                 //                        .setDrawColor(color)
-                .show();
+               ;
 
         ld.show();
     }

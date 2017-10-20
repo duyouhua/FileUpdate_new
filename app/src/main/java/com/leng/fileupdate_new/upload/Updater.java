@@ -140,6 +140,7 @@ public class Updater {
     // 暂停上传
     public void pause() {
         bean.setUpLoadStatus("2");
+        Log.i(TAG, "*********************************" + bean.hashCode() + bean.getLocfileName());
         try {
             disconnect();
         } catch (Exception e) { // IOException
@@ -235,7 +236,7 @@ public class Updater {
 //				Log.i(TAG, "file name is " + file.getName()
 //						+ " progress is " + mBxFile.getFileProgress());
 //				Log.i(TAG, "服务器中文件等于要上传文件，所以不上传");
-                sendMsg(100);
+//                sendMsg(100);
                 return UploadStatus.File_Exits;
             } else if (remoteSize > localSize) {
                 Log.i(TAG, "服务器中文件大于要上传文件，所以不上传");
@@ -395,7 +396,7 @@ public class Updater {
         long process = 0;
         long localreadbytes = 0L;
         RandomAccessFile raf = new RandomAccessFile(localFile, "r");
-        OutputStream out = ftpClient.appendFileStream(new String(remoteFile.getBytes("GBK"), "iso-8859-1"));
+        OutputStream out = ftpClient.appendFileStream(new String(remoteFile.getBytes("UTF-8"), "iso-8859-1"));
         //断点续传
         if (remoteSize > 0) {
             ftpClient.setRestartOffset(remoteSize);

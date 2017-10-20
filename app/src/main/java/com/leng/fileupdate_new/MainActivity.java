@@ -37,7 +37,6 @@ import com.leng.fileupdate_new.utils.Constanxs;
 import com.leng.fileupdate_new.utils.RegUtil;
 
 import java.io.IOException;
-import java.util.List;
 
 import static com.leng.fileupdate_new.utils.Constanxs.INFO1;
 import static com.leng.fileupdate_new.utils.Constanxs.INFO2arg;
@@ -145,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initView() {
+
         //home 广播
         MyReceiver receiver = new MyReceiver();
         IntentFilter homeFilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
@@ -375,7 +375,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Message msg = new Message();
         msg.obj = data.getStringExtra("strPATH");// 传输的内容
         msg.what = resultCode;
-        Toast.makeText(this, "" + resultCode, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "" + resultCode, Toast.LENGTH_SHORT).show();
         mHandler3.sendMessage(msg);
     }
 

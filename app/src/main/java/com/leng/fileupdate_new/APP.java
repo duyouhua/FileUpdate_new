@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.leng.fileupdate_new.greendao.gen.DaoMaster;
 import com.leng.fileupdate_new.greendao.gen.DaoSession;
+import com.leng.fileupdate_new.utils.CrashHandler;
 import com.leng.other.loadingdialog.manager.StyleManager;
 import com.leng.other.loadingdialog.view.LoadingDialog;
 
@@ -27,6 +28,10 @@ public class APP extends Application {
         s.Anim(false).repeatTime(0).contentSize(-1).intercept(true);
 
         LoadingDialog.initStyle(s);
+
+
+        CrashHandler crashHandler = CrashHandler.getInstance();
+        crashHandler.init(getApplicationContext());
     }
 
     /**

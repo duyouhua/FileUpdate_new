@@ -689,7 +689,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
         mAdapter = new Child1Adapter(mContext, mFileName, mFilePath);
         mList.setAdapter(mAdapter);
         setBtnSelectAllYes();
-        Toast.makeText(mContext, "显示没有文件的布局", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(mContext, "显示没有文件的布局", Toast.LENGTH_SHORT).show();
     }
 
     private static String getExtension(final File file) {
@@ -766,6 +766,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
 
                 break;
             case R.id.update_button:
+                regCodex = (String) SharedPreferencesUtils.getParam(mContext, "regcode", "null");
 //                if (!isftpconnet) {
 //                    Toast.makeText(mContext, "未连接", Toast.LENGTH_SHORT).show();
 //                    return;
@@ -795,7 +796,7 @@ public class BlankFragmentChild1 extends ListFragment implements View.OnClickLis
                                 type = 3;
                             }
                             if (type != 0) {
-                                String remote;
+                                String remote="";
                                 if (type != 2 && FileUtils.isPictureIsRotated(pathsa)) {
                                     remote = regCodex + "_0_" + namesa;
                                 } else {

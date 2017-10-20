@@ -57,11 +57,11 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
     private Context mContext;
     private RelativeLayout mSettingRelativeMobnet;
     private RelativeLayout mSettingRelativeWifinet;
-    private boolean check6boolean = true;
-    private boolean check7boolean = true;
+    private boolean check6boolean  ;
+    private boolean check7boolean ;
     BlankFragmentChild2 blankFragmentChild2;
     private FragmentTransaction fragmentTransaction;
-    private boolean check8boolean = true;
+    private boolean check8boolean  ;
     private int startType1, startType2, startType3, startType4, startType5;
     private MainActivity mActivity;
 
@@ -205,7 +205,9 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
         if (cbx1 == true || cbx2 == true || cbx3 == true || cbx4 == true || cbx5 == true) {
 //            showinitChild2();
         }
-
+//        check6boolean=(Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox6", false);
+//        check7boolean=(Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox7", false);
+//        check8boolean=(Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox8", false);
     }
 
 
@@ -259,6 +261,9 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
 
     @Override
     public void onClick(View v) {
+        check6boolean=(Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox6", false);
+        check7boolean=(Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox7", false);
+        check8boolean=(Boolean) SharedPreferencesUtils.getParam(mContext, "checkbox8", false);
         Intent i1, i2, i3, i4, i5;
         switch (v.getId()) {
             case R.id.setting_btn1:
@@ -401,38 +406,33 @@ public class BlankFragment3 extends Fragment implements View.OnClickListener, Co
     }
 
     private void relativeCheckStatus(View v, boolean b) {
+
         switch (v.getId()) {
             case R.id.checkbox6:
                 if (b) {
-                    mCheckbox6.setChecked(b);
-                    check6boolean = false;
-                    SharedPreferencesUtils.setParam(mContext, "checkbox6", true);
-                } else {
-                    mCheckbox6.setChecked(b);
-                    check6boolean = true;
+                    mCheckbox6.setChecked(false);
                     SharedPreferencesUtils.setParam(mContext, "checkbox6", false);
+                } else {
+                    mCheckbox6.setChecked(true);
+                    SharedPreferencesUtils.setParam(mContext, "checkbox6", true);
                 }
                 break;
             case R.id.checkbox7:
                 if (b) {
-                    mCheckbox7.setChecked(b);
-                    check7boolean = false;
-                    SharedPreferencesUtils.setParam(mContext, "checkbox7", true);
-                } else {
-                    mCheckbox7.setChecked(b);
-                    check7boolean = true;
+                    mCheckbox7.setChecked(false);
                     SharedPreferencesUtils.setParam(mContext, "checkbox7", false);
+                } else {
+                    mCheckbox7.setChecked(true);
+                    SharedPreferencesUtils.setParam(mContext, "checkbox7", true);
                 }
                 break;
             case R.id.checkbox8:
                 if (b) {
-                    mCheckbox8.setChecked(b);
-                    check8boolean = false;
-                    SharedPreferencesUtils.setParam(mContext, "checkbox8", true);
-                } else {
-                    mCheckbox8.setChecked(b);
-                    check8boolean = true;
+                    mCheckbox8.setChecked(false);
                     SharedPreferencesUtils.setParam(mContext, "checkbox8", false);
+                } else {
+                    mCheckbox8.setChecked(true);
+                    SharedPreferencesUtils.setParam(mContext, "checkbox8", true);
                 }
                 break;
         }

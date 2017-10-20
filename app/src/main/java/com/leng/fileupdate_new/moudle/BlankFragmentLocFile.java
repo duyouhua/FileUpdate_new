@@ -107,9 +107,11 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
                                     }
                                 }
                                 mHandler.sendEmptyMessage(4444);
-                                Toast.makeText(mContext, "文件剪切成功", Toast.LENGTH_SHORT).show();
+                                mHandler.sendEmptyMessage(3476);
+//                                Toast.makeText(mContext, "文件剪切成功", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(mContext, "获取剪切路径失败", Toast.LENGTH_SHORT).show();
+                                mHandler.sendEmptyMessage(3477);
+//                                Toast.makeText(mContext, "获取剪切路径失败", Toast.LENGTH_SHORT).show();
                             }
 
                         }
@@ -124,6 +126,13 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
                     else
                         showFileDir2(reslut);
                     dialogUTILS.dialogdismis();
+                    break;
+
+                case 3476:
+                    Toast.makeText(mContext, "文件剪切成功", Toast.LENGTH_SHORT).show();
+                    break;
+                case 3477:
+                    Toast.makeText(mContext, "获取剪切路径失败", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -192,7 +201,7 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
     }
 
     private void initView(View view) {
-
+        dialogUTILS = new DialogUTILS(mContext);
         mListviewLocfile = (ListView) view.findViewById(R.id.listview_locfile);
         mListviewLocfile.setOnItemClickListener(itemchick);
         mListviewLocfile.setOnItemLongClickListener(itemchivklong);
@@ -209,7 +218,7 @@ public class BlankFragmentLocFile extends Fragment implements View.OnClickListen
         mEmptyView = (TextView) view.findViewById(R.id.emptyView);
         showFileDir2(ROOT_PATH);
 
-        dialogUTILS = new DialogUTILS(mContext);
+
     }
 
     AdapterView.OnItemLongClickListener itemchivklong = new AdapterView.OnItemLongClickListener() {

@@ -67,6 +67,10 @@ public class NetUtils {
             Toast.makeText(mContext, "请到设置页面选择您要使用的网络", Toast.LENGTH_SHORT).show();
             return false;
         } else if (c6 == true && c7 == false) {
+           if (isMobileConnected(mContext)){
+               Toast.makeText(mContext, "移动网络不可用", Toast.LENGTH_SHORT).show();
+               return false;
+           }
             Toast.makeText(mContext, "您正在使用移动网络，请注意！", Toast.LENGTH_SHORT).show();
 
         } else if (c6 == true && c7 == true) {
@@ -74,7 +78,10 @@ public class NetUtils {
 
         } else if (c7 == true && c6 == false) {
             //wifi网络
-
+            if (!isWiFiActive(mContext)){
+                Toast.makeText(mContext, "当前wifi不可用", Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }
         return true;
     }
@@ -83,6 +90,22 @@ public class NetUtils {
 
     }
 
+    public static boolean isWiFiActive(Context inContext) {
+        Context context = inContext.getApplicationContext();
+        ConnectivityManager connectivity = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null) {
+                for (int i = 0; i < info.length; i++) {
+                    if (info[i].getTypeName().equals("WIFI") && info[i].isConnected()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * 检测当的网络（WLAN、3G/2G）状态
@@ -101,6 +124,19 @@ public class NetUtils {
                     // 当前所连接的网络可用
                     return true;
                 }
+            }
+        }
+        return false;
+    }
+
+    public static boolean isMobileConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mMobileNetworkInfo = mConnectivityManager
+                    .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (mMobileNetworkInfo != null) {
+                return mMobileNetworkInfo.isAvailable();
             }
         }
         return false;

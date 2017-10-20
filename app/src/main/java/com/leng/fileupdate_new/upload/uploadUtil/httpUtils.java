@@ -75,7 +75,7 @@ public class httpUtils {
 				String databaseAddress=ServerSetting.getString("databaseIpa", "");
 				String databasePort=ServerSetting.getString("databasePorta", "80");  //默认的是80端口
 
-
+//				String baseURL= "http://kc.xun365.net/Manager/CommitFileInfo";
 				String baseURL;
 				//要是没有保存的话就使用软件默认的
 				if (databaseAddress.equals("")) {

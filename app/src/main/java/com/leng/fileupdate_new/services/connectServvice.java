@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.leng.fileupdate_new.APP;
 import com.leng.fileupdate_new.Bean.FileUser;
 import com.leng.fileupdate_new.Bean.FileUser2;
+import com.leng.fileupdate_new.Bean.FileUserRevocation;
 import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.contrl.FileManger;
 import com.leng.fileupdate_new.greendao.gen.DaoUtils;
@@ -24,12 +25,13 @@ import com.leng.fileupdate_new.utils.SharedPreferencesUtils;
 import java.io.File;
 import java.util.ArrayList;
 
+import static com.leng.fileupdate_new.moudle.BlankFragmentChild1.uploadFileManager;
 import static com.leng.fileupdate_new.utils.Constanxs.isUplodFirstone;
 import static com.leng.fileupdate_new.utils.FileUtils.getFmat;
 
 
 public class connectServvice extends Service {
-    private static UploadFileManager uploadFileManager;
+
     private final static String TAG = "connectServvice";
     //存储文件名称
     private ArrayList<String> mFileName = new ArrayList<String>();
@@ -40,6 +42,7 @@ public class connectServvice extends Service {
     private ArrayList<String> mFilePath2 = new ArrayList<String>();
     private Context mContext;
     private String regCodex;
+    private UploadFileManager uploadFileManagerX;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -63,6 +66,8 @@ public class connectServvice extends Service {
                                         fileUser.setId(FileUtils.longPressLong(f.getName()));
                                         fileUser.setMFileTypedao("1");
                                         fileUser.setMFileProgresdao(0);
+                                        //匹配撤销数据库
+                                        updateRevocation(f.getName(), "1");
                                         fileUser.setMFileNamedao(f.getName());
                                         fileUser.setMFilePathdao(f.getAbsolutePath());
                                         APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
@@ -72,6 +77,7 @@ public class connectServvice extends Service {
                                             FileUser fileUser = new FileUser();
                                             fileUser.setId(FileUtils.longPressLong(f.getName()));
                                             fileUser.setMFileTypedao("1");
+                                            updateRevocation(f.getName(), "1");
                                             fileUser.setMFileProgresdao(0);
                                             fileUser.setMFileNamedao(f.getName());
                                             fileUser.setMFilePathdao(f.getAbsolutePath());
@@ -174,6 +180,7 @@ public class connectServvice extends Service {
                                         fileUser.setId(FileUtils.longPressLong(f.getName()));
                                         fileUser.setMFileTypedao("2");
                                         fileUser.setMFileProgresdao(0);
+                                        updateRevocation(f.getName(), "2");
                                         fileUser.setMFileNamedao(f.getName());
                                         fileUser.setMFilePathdao(f.getAbsolutePath());
                                         APP.getDaoInstant().getFileUserDao().insertOrReplace(fileUser);
@@ -183,6 +190,7 @@ public class connectServvice extends Service {
                                             FileUser fileUser = new FileUser();
                                             fileUser.setId(FileUtils.longPressLong(f.getName()));
                                             fileUser.setMFileTypedao("2");
+                                            updateRevocation(f.getName(), "2");
                                             fileUser.setMFileProgresdao(0);
                                             fileUser.setMFileNamedao(f.getName());
                                             fileUser.setMFilePathdao(f.getAbsolutePath());
@@ -268,6 +276,7 @@ public class connectServvice extends Service {
                         final File[] files = file.listFiles();
                         listClear();//清空数据集合
                         if (files != null && files.length > 0) {
+
                             String isd = (String) SharedPreferencesUtils.getParam(getBaseContext(), "iffirstAdd", "null");
                             for (File f : files) {
                                 if (FileManger.getSingleton().map.containsKey(getExtension(f))) {
@@ -277,6 +286,7 @@ public class connectServvice extends Service {
                                         FileUser fileUser = new FileUser();
                                         fileUser.setId(FileUtils.longPressLong(f.getName()));
                                         fileUser.setMFileTypedao("3");
+                                        updateRevocation(f.getName(), "3");
                                         fileUser.setMFileProgresdao(0);
                                         fileUser.setMFileNamedao(f.getName());
                                         fileUser.setMFilePathdao(f.getAbsolutePath());
@@ -287,6 +297,7 @@ public class connectServvice extends Service {
                                             FileUser fileUser = new FileUser();
                                             fileUser.setId(FileUtils.longPressLong(f.getName()));
                                             fileUser.setMFileTypedao("3");
+                                            updateRevocation(f.getName(), "3");
                                             fileUser.setMFileProgresdao(0);
                                             fileUser.setMFileNamedao(f.getName());
                                             fileUser.setMFilePathdao(f.getAbsolutePath());
@@ -384,6 +395,7 @@ public class connectServvice extends Service {
                                         FileUser fileUser = new FileUser();
                                         fileUser.setId(FileUtils.longPressLong(f.getName()));
                                         fileUser.setMFileTypedao("4");
+                                        updateRevocation(f.getName(), "4");
                                         fileUser.setMFileProgresdao(0);
                                         fileUser.setMFileNamedao(f.getName());
                                         fileUser.setMFilePathdao(f.getAbsolutePath());
@@ -394,6 +406,7 @@ public class connectServvice extends Service {
                                             FileUser fileUser = new FileUser();
                                             fileUser.setId(FileUtils.longPressLong(f.getName()));
                                             fileUser.setMFileTypedao("4");
+                                            updateRevocation(f.getName(), "4");
                                             fileUser.setMFileProgresdao(0);
                                             fileUser.setMFileNamedao(f.getName());
                                             fileUser.setMFilePathdao(f.getAbsolutePath());
@@ -488,6 +501,7 @@ public class connectServvice extends Service {
                                         FileUser fileUser = new FileUser();
                                         fileUser.setId(FileUtils.longPressLong(f.getName()));
                                         fileUser.setMFileTypedao("5");
+                                        updateRevocation(f.getName(), "5");
                                         fileUser.setMFileProgresdao(0);
                                         fileUser.setMFileNamedao(f.getName());
                                         fileUser.setMFilePathdao(f.getAbsolutePath());
@@ -498,6 +512,7 @@ public class connectServvice extends Service {
                                             FileUser fileUser = new FileUser();
                                             fileUser.setId(FileUtils.longPressLong(f.getName()));
                                             fileUser.setMFileTypedao("5");
+                                            updateRevocation(f.getName(), "5");
                                             fileUser.setMFileProgresdao(0);
                                             fileUser.setMFileNamedao(f.getName());
                                             fileUser.setMFilePathdao(f.getAbsolutePath());
@@ -590,10 +605,14 @@ public class connectServvice extends Service {
     @Override
     public void onCreate() {
         mContext = MainActivity.mActivityContext;
-        uploadFileManager = new UploadFileManager(mContext);
         super.onCreate();
     }
-
+    private void updateRevocation(String name, String type) {
+        FileUserRevocation revocation = new FileUserRevocation();
+        revocation.setId(FileUtils.longPressLong(name));
+        revocation.setMFileTypedao(type);
+        APP.getDaoInstant().getFileUserRevocationDao().insertOrReplace(revocation);
+    }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (mContext==null){

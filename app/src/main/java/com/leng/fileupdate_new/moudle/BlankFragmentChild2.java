@@ -27,8 +27,6 @@ import com.leng.fileupdate_new.MainActivity;
 import com.leng.fileupdate_new.R;
 import com.leng.fileupdate_new.contrl.CabackInfoNums;
 import com.leng.fileupdate_new.contrl.CallBacklistview;
-import com.leng.fileupdate_new.contrl.CallbackNetChanged;
-import com.leng.fileupdate_new.contrl.NetworkReceiver;
 import com.leng.fileupdate_new.greendao.gen.DaoUtils;
 import com.leng.fileupdate_new.upload.TestBean;
 import com.leng.fileupdate_new.upload.UploadFileManager;
@@ -97,7 +95,7 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                     if (isUplodFirstone) {
                         showFile();
                         isUplodFirstone = false;
-                        Log.i(TAG, "只允许走一遍");
+                        Log.i(TAG, "只允许走一遍=============================================");
                     } else {
                         Log.i(TAG, "是不是得从这只允许走一遍");
                     }
@@ -348,7 +346,8 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
             @Override
             public void onClick(Dialog dialog, boolean confirm) {
                 if (confirm) {
-                    for (int i = 0; i < Child2Adapter.getIsSelectedChild2().size(); i++) {
+                  int sizee=  Child2Adapter.getIsSelectedChild2().size();
+                    for (int i = 0; i < sizee; i++) {
                         if (Child2Adapter.getIsSelectedChild2().get(i)) {
                             Log.i(TAG, "撤销的文件是 ：" + mListpath.get(i) + " 撤销的文件类型是： " + DaoUtils.FileUserDaoQuerypathAderesswhere(mListname.get(i)));
 
@@ -357,6 +356,7 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
 
                             String name = mListname.get(i);
                             String path = mListpath.get(i);
+
                             FileUser fileUser = new FileUser();
                             fileUser.setId(FileUtils.longPressLong(name));
                             fileUser.setMFileTypedao(revocationType);
@@ -364,7 +364,7 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                             fileUser.setMFileNamedao(name);
                             fileUser.setMFilePathdao(path);
                             APP.getDaoInstant().getFileUserDao().update(fileUser);
-                            updateRevocation(name, revocationType);
+//                            updateRevocation(name, revocationType);
                             //撤销后删除撤销匹配得文件
 //                            DaoUtils.FilUserRevocationDaoDel(name);
                             //撤销后停止上传
@@ -374,6 +374,9 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
                                 tt.setUpLoadStatus("2");
                                 SpUtil.putObject(mContext, name, tt);//再一次序列化
                                 uploadFileManager.pause(tt);
+                                Log.i(TAG,"撤销怎么没有暂停  什么鬼"+tt.getLocfileName()+mContext+"***"+tt);
+                            }else {
+                                Log.i(TAG,"撤销怎么没有暂停  什么鬼=null"+tt.getUpLoadStatus());
                             }
                         }
                     }
@@ -520,13 +523,14 @@ public class BlankFragmentChild2 extends Fragment implements View.OnClickListene
         String name = mListname.get(postion);
         TestBean tt = SpUtil.getObject(mContext, name);
         if (tt != null) {
-            Log.i(TAG, "序列化本地数据" + "点击了继续上传 ：格式" + tt.getCrateFileType() + " type :" + tt.getCrateFileTypenums() + "名字是：" + tt.getLocfileName() + "远程路径名字是 ：" + tt.getRemotefilepath() + "是佛上传标识 ：" + tt.getUpLoadStatus());
+            Log.i(TAG, "序列化本地数据" + "***"+mContext+"***"+tt+"点击了继续上传 ：格式" + tt.getCrateFileType() + " type :" + tt.getCrateFileTypenums() + "名字是：" + tt.getLocfileName() + "远程路径名字是 ：" + tt.getRemotefilepath() + "是佛上传标识 ：" + tt.getUpLoadStatus());
             String statusx = tt.getUpLoadStatus();
             if (statusx.equals("1")) {//暂停
                 tt.setUpLoadStatus("2");
                 SpUtil.putObject(mContext, name, tt);//再一次序列化
                 pbutton.setText("开始");
                 uploadFileManager.pause(tt);
+                Log.i(TAG,"暂停的对象是 ："+tt.hashCode()+tt.getLocfileName());
             } else if (statusx.equals("2")) {
                 tt.setUpLoadStatus("1");
                 SpUtil.putObject(mContext, name, tt);//再一次序列化
